@@ -33,5 +33,6 @@ public class BudgetDataController {
     public void updateBudgetDate(
             @Parameter(description = "budgetData集合", required = true) @RequestBody List<BudgetDataVO> list) {
         budgetDataService.updateBudgetDate(list);
+
     }
 }
