@@ -35,7 +35,7 @@ import java.util.List;
  */
 @Tag(name = "预算执行-预算相关")
 @RestController
-@RequestMapping("/budget")
+@RequestMapping("")
 @Slf4j
 public class BudgetController {
 

@@ -31,7 +31,7 @@ import java.util.List;
  */
 @Tag(name = "预算执行-日常性签报")
 @RestController
-@RequestMapping("/budget/agile")
+@RequestMapping("/agile")
 public class BudgetProjectAgileController {
 
     @Resource

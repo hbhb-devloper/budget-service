@@ -18,7 +18,7 @@ import java.util.List;
  */
 @Tag(name = "预算执行-预算相关(预算科目)")
 @RestController
-@RequestMapping("/budget/item")
+@RequestMapping("/item")
 @Slf4j
 public class BudgetItemController {
 

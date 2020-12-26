@@ -20,7 +20,7 @@ import javax.annotation.Resource;
 
 @Tag(name = "预算执行-项目签报附件相关")
 @RestController
-@RequestMapping("/budget/project/file")
+@RequestMapping("/project/file")
 public class BudgetProjectFileController {
     @Resource
     private BudgetProjectFileService fileService;

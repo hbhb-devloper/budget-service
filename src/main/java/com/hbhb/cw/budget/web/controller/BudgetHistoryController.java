@@ -30,7 +30,7 @@ import java.util.List;
  */
 @Tag(name = "预算执行-预算历史相关")
 @RestController
-@RequestMapping("/budget/history")
+@RequestMapping("/history")
 @Slf4j
 public class BudgetHistoryController {
 

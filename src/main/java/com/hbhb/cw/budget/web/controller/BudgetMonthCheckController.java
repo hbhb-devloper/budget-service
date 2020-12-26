@@ -26,7 +26,7 @@ import java.util.List;
  */
 @Tag(name = "预算执行-月度考核情况")
 @RestController
-@RequestMapping("/month/check")
+@RequestMapping("/check")
 public class BudgetMonthCheckController {
     @Resource
     private BudgetMapService budgetMapService;

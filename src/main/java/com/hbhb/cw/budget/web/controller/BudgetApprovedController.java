@@ -27,7 +27,7 @@ import java.util.List;
  */
 @Tag(name = "预算执行-快照相关")
 @RestController
-@RequestMapping("/budget/approved")
+@RequestMapping("/approved")
 public class BudgetApprovedController {
 
     @Resource

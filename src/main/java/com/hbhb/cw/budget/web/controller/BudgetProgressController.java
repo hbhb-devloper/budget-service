@@ -23,7 +23,7 @@ import java.util.List;
 
 @Tag(name = "预算执行-预算目标与进度")
 @RestController
-@RequestMapping("/budget/progress")
+@RequestMapping("/progress")
 public class BudgetProgressController {
 
     @Resource

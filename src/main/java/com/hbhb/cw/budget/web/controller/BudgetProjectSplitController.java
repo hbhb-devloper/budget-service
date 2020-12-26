@@ -17,7 +17,7 @@ import java.util.List;
 
 @Tag(name = "预算执行-项目签报分类预算")
 @RestController
-@RequestMapping("/budget/project/split")
+@RequestMapping("/project/split")
 public class BudgetProjectSplitController {
     @Resource
     private BudgetProjectSplitService bpcService;
