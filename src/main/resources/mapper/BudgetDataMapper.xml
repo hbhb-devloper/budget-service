@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hbhb.cw.mapper.BudgetDataMapper">
+    <resultMap id="BaseResultMap" type="com.hbhb.cw.model.BudgetData">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="budget_id" jdbcType="BIGINT" property="budgetId"/>
+        <result column="unit_id" jdbcType="INTEGER" property="unitId"/>
+        <result column="balance" jdbcType="DECIMAL" property="balance"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, budget_id, unit_id, balance, create_time
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from budget_data
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from budget_data
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" parameterType="com.hbhb.cw.model.BudgetData">
+        insert into budget_data (id, budget_id, unit_id,
+        balance, create_time)
+        values (#{id,jdbcType=BIGINT}, #{budgetId,jdbcType=BIGINT}, #{unitId,jdbcType=INTEGER},
+        #{balance,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.hbhb.cw.model.BudgetData">
+        insert into budget_data
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="budgetId != null">
+                budget_id,
+            </if>
+            <if test="unitId != null">
+                unit_id,
+            </if>
+            <if test="balance != null">
+                balance,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="budgetId != null">
+                #{budgetId,jdbcType=BIGINT},
+            </if>
+            <if test="unitId != null">
+                #{unitId,jdbcType=INTEGER},
+            </if>
+            <if test="balance != null">
+                #{balance,jdbcType=DECIMAL},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.hbhb.cw.model.BudgetData">
+        update budget_data
+        <set>
+            <if test="budgetId != null">
+                budget_id = #{budgetId,jdbcType=BIGINT},
+            </if>
+            <if test="unitId != null">
+                unit_id = #{unitId,jdbcType=INTEGER},
+            </if>
+            <if test="balance != null">
+                balance = #{balance,jdbcType=DECIMAL},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.hbhb.cw.model.BudgetData">
+        update budget_data
+        set budget_id = #{budgetId,jdbcType=BIGINT},
+        unit_id = #{unitId,jdbcType=INTEGER},
+        balance = #{balance,jdbcType=DECIMAL},
+        create_time = #{createTime,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+
+    <select id="selectByBelongVO" parameterType="map" resultMap="BaseResultMap">
+        select
+        bd.id, bd.budget_id, bb.unit_id, bd.balance, bd.create_time
+        from budget_data bd
+        left join budget_belong bb on bb.budget_id = bd.budget_id
+        where bd.budget_id = #{budgetId}
+        and bb.under_unit_id = #{deptId}
+        and bb.unit_id = bd.unit_id
+        group by bb.id
+    </select>
+
+    <select id="selectSumByBudgetId" parameterType="long" resultType="decimal">
+        select SUM(bd.balance)
+        from budget_data bd
+        where bd.budget_id = #{budgetId}
+    </select>
+
+    <insert id="insertBatch" parameterType="java.util.List" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into budget_data (budget_id,unit_id,balance)
+        values
+        <foreach item="item" index="index" collection="list" separator=",">
+            (#{item.budgetId},#{item.unitId},#{item.balance})
+        </foreach>
+        ON DUPLICATE KEY UPDATE balance = VALUES(balance)
+    </insert>
+
+    <delete id="deleteBatch" parameterType="map">
+        delete from budget_data
+        where budget_id = #{budgetId}
+        and unit_id in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <select id="getDataByUnitIdAndBudgetId" parameterType="map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from budget_data
+        where budget_id=#{budgetId} and unit_id=#{unitId}
+    </select>
+
+    <delete id="deleteByBudgetId" parameterType="list">
+        delete from budget_data
+        where budget_id = #{budgetId}
+    </delete>
+
+    <select id="selectListByUnitIds" parameterType="map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from budget_data
+        where budget_id = #{budgetId}
+        and unit_id in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <delete id="deleteBatchByBudgetId" parameterType="list">
+        delete from budget_data
+        where budget_id in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+</mapper>

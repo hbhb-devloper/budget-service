@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hbhb.cw.mapper.BudgetHistoryMapper">
+    <resultMap id="BaseResultMap" type="com.hbhb.cw.model.BudgetHistory">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="budget_id" jdbcType="BIGINT" property="budgetId"/>
+        <result column="unit_id" jdbcType="INTEGER" property="unitId"/>
+        <result column="old_value" jdbcType="DECIMAL" property="oldValue"/>
+        <result column="new_value" jdbcType="DECIMAL" property="newValue"/>
+        <result column="dif_value" jdbcType="DECIMAL" property="difValue"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="create_by" jdbcType="VARCHAR" property="createBy"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, budget_id, unit_id, old_value, new_value, dif_value, create_time, create_by
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from budget_history
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from budget_history
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+    <insert id="insert" parameterType="com.hbhb.cw.model.BudgetHistory">
+    insert into budget_history (budget_id, unit_id, old_value,
+      new_value, dif_value, create_time, create_by
+      )
+    values (#{budgetId,jdbcType=BIGINT},#{unitId,jdbcType=INTEGER}, #{oldValue,jdbcType=DECIMAL},
+      #{newValue,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}
+      )
+  </insert>
+    <insert id="insertSelective" parameterType="com.hbhb.cw.model.BudgetHistory">
+        insert into budget_history
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="budgetId != null">
+                budget_id,
+            </if>
+            <if test="unitId != null">
+                unit_id,
+            </if>
+            <if test="oldValue != null">
+                old_value,
+            </if>
+            <if test="newValue != null">
+                new_value,
+            </if>
+            <if test="difValue != null">
+                dif_value,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="budgetId != null">
+                #{budgetId,jdbcType=BIGINT},
+            </if>
+            <if test="unitId != null">
+                #{unitId,jdbcType=INTEGER},
+            </if>
+            <if test="oldValue != null">
+                #{oldValue,jdbcType=DECIMAL},
+            </if>
+            <if test="newValue != null">
+                #{newValue,jdbcType=DECIMAL},
+            </if>
+            <if test="difValue != null">
+                #{difValue,jdbcType=DECIMAL},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createBy != null">
+                #{createBy,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.hbhb.cw.model.BudgetHistory">
+        update budget_history
+        <set>
+            <if test="budgetId != null">
+                budget_id = #{budgetId,jdbcType=BIGINT},
+            </if>
+            <if test="unitId != null">
+                unit_id = #{unitId,jdbcType=INTEGER},
+            </if>
+            <if test="oldValue != null">
+                old_value = #{oldValue,jdbcType=DECIMAL},
+            </if>
+            <if test="newValue != null">
+                new_value = #{newValue,jdbcType=DECIMAL},
+            </if>
+            <if test="difValue != null">
+                dif_value = #{newValue,jdbcType=DECIMAL},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.hbhb.cw.model.BudgetHistory">
+    update budget_history
+    set budget_id = #{budgetId,jdbcType=BIGINT},
+      unit_id = #{unitId,jdbcType=INTEGER},
+      old_value = #{oldValue,jdbcType=DECIMAL},
+      new_value = #{newValue,jdbcType=DECIMAL},
+      dif_value = #{difValue,jdbcType=DECIMAL},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_by = #{createBy,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+
+    <insert id="insertBatch" parameterType="java.util.List">
+        insert into budget_history (
+        budget_id,
+        unit_id,
+        old_value,
+        new_value,
+        dif_value)
+        values
+        <foreach item="item" index="index" collection="list" separator=",">
+            (#{item.budgetId},
+            #{item.unitId},
+            #{item.oldValue},
+            #{item.newValue},
+            #{item.difValue})
+        </foreach>
+    </insert>
+
+    <resultMap id="BudgetHistoryResult" type="com.hbhb.cw.web.vo.BudgetHistoryVO"
+               autoMapping="true">
+        <result property="budgetId" column="budgetId"/>
+        <collection property="children" resultMap="SubBudgetHistoryResult" columnPrefix="sub_"/>
+    </resultMap>
+
+    <resultMap id="SubBudgetHistoryResult" type="com.hbhb.cw.web.vo.BudgetHistoryVO"
+               autoMapping="true">
+        <result property="budgetId" column="budgetId"/>
+    </resultMap>
+
+    <select id="selectTreeListByCond" parameterType="map" resultMap="BudgetHistoryResult">
+        select t1.*,
+        t2.sub_oldValue as sub_oldValue,
+        t2.sub_newValue as sub_newValue,
+        t2.sub_difValue as sub_difValue
+        from (
+        select distinct bi.id          as budgetId,
+        bi.item_name   as budgetName,
+        b.id           as sub_budgetId,
+        concat(b.budget_num, '_', b.project_item)  as sub_budgetName,
+        b.remark       as sub_remark,
+        b.threshold    as sub_threshold
+        from budget_data bd
+        left join budget b on b.id = bd.budget_id
+        left join budget_item bi on bi.id = b.budget_item_id
+        where b.id is not null
+        and bd.unit_id in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        <if test="cond.importDate != null and cond.importDate != ''">
+            and b.import_date = #{cond.importDate}
+        </if>
+        <if test="cond.projectItem != null and cond.projectItem != ''">
+            and concat(b.budget_num, '_',b.project_item, bi.item_name) like concat ('%', #{cond.projectItem}, '%')
+        </if>
+        order by bi.id, b.id
+        ) t1
+        <!--                 此处组内排序取max，使用内链接效率最高-->
+        left join (select bh.id,
+        bh.budget_id,
+        ifnull(sum(bh.old_value), 0) as sub_oldValue,
+        ifnull(sum(bh.new_value), 0) as sub_newValue,
+        ifnull(sum(bh.dif_value), 0) as sub_difValue
+        from budget_history bh
+        inner join (select max(create_time) as createTime,
+        budget_id        as budgetId,
+        unit_id          as unitId
+        from budget_history
+        where unit_id in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        group by budget_id, unit_id) t on t.budgetId and bh.budget_id
+        where t.budgetId = bh.budget_id
+        and t.createTime = bh.create_time
+        and t.unitId = bh.unit_id
+        group by budget_id) t2 on t1.sub_budgetId = t2.budget_id
+        group by t1.budgetId,t1.sub_budgetId
+        order by t1.budgetId, t1.sub_budgetId
+    </select>
+
+    <select id="selectDetailById" parameterType="long"
+            resultType="com.hbhb.cw.web.vo.BudgetHistoryInfoVO">
+        select bh.id          as id,
+               b.project_item as budgetName,
+               b.budget_num   as budgetNum,
+               bh.old_value   as oldValue,
+               bh.new_value   as newValue,
+               bh.dif_value   as difValue,
+               b.remark       as remark
+        from budget_history bh
+                 left join budget b on bh.budget_id = b.id
+        where bh.budget_id = #{budgetId}
+        order by bh.create_time desc
+        limit 1
+    </select>
+</mapper>

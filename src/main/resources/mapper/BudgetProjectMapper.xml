@@ -1,0 +1,1070 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hbhb.cw.mapper.BudgetProjectMapper">
+  <resultMap id="BaseResultMap" type="com.hbhb.cw.model.BudgetProject">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="budget_id" jdbcType="BIGINT" property="budgetId" />
+    <result column="unit_id" jdbcType="BIGINT" property="unitId" />
+    <result column="project_name" jdbcType="VARCHAR" property="projectName" />
+    <result column="amount" jdbcType="DECIMAL" property="amount" />
+    <result column="available_amount" jdbcType="DECIMAL" property="availableAmount" />
+    <result column="tax_include_amount" jdbcType="DECIMAL" property="taxIncludeAmount" />
+    <result column="cost" jdbcType="DECIMAL" property="cost" />
+    <result column="vat_rate" jdbcType="DECIMAL" property="vatRate" />
+    <result column="vat_amount" jdbcType="DECIMAL" property="vatAmount" />
+    <result column="director" jdbcType="VARCHAR" property="director" />
+    <result column="project_num" jdbcType="VARCHAR" property="projectNum" />
+    <result column="start_time" jdbcType="DATE" property="startTime" />
+    <result column="end_time" jdbcType="DATE" property="endTime" />
+    <result column="supplier" jdbcType="VARCHAR" property="supplier" />
+    <result column="origin" jdbcType="VARCHAR" property="origin" />
+    <result column="introduction" jdbcType="VARCHAR" property="introduction" />
+    <result column="detail" jdbcType="VARCHAR" property="detail" />
+    <result column="target" jdbcType="VARCHAR" property="target" />
+    <result column="engineering_num" jdbcType="VARCHAR" property="engineeringNum" />
+    <result column="delete_flag" jdbcType="INTEGER" property="deleteFlag" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="flow_id" jdbcType="BIGINT" property="flowId" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, budget_id, unit_id, project_name, amount, available_amount, tax_include_amount,
+    cost, vat_rate, vat_amount, director, project_num, start_time, end_time, supplier,
+    origin, introduction, detail, target, engineering_num, delete_flag, remark, state,
+    create_time, create_by, flow_id, update_time, update_by
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from budget_project
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from budget_project
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.hbhb.cw.model.BudgetProject">
+    insert into budget_project (id, budget_id, unit_id,
+      project_name, amount, available_amount,
+      tax_include_amount, cost, vat_rate,
+      vat_amount, director, project_num,
+      start_time, end_time, supplier,
+      origin, introduction, detail,
+      target, engineering_num, delete_flag,
+      remark, state, create_time,
+      create_by, flow_id, update_time,
+      update_by)
+    values (#{id,jdbcType=INTEGER}, #{budgetId,jdbcType=BIGINT}, #{unitId,jdbcType=BIGINT},
+      #{projectName,jdbcType=VARCHAR}, #{amount,jdbcType=DECIMAL}, #{availableAmount,jdbcType=DECIMAL},
+      #{taxIncludeAmount,jdbcType=DECIMAL}, #{cost,jdbcType=DECIMAL}, #{vatRate,jdbcType=DECIMAL},
+      #{vatAmount,jdbcType=DECIMAL}, #{director,jdbcType=VARCHAR}, #{projectNum,jdbcType=VARCHAR},
+      #{startTime,jdbcType=DATE}, #{endTime,jdbcType=DATE}, #{supplier,jdbcType=VARCHAR},
+      #{origin,jdbcType=VARCHAR}, #{introduction,jdbcType=VARCHAR}, #{detail,jdbcType=VARCHAR},
+      #{target,jdbcType=VARCHAR}, #{engineeringNum,jdbcType=VARCHAR}, #{deleteFlag,jdbcType=INTEGER},
+      #{remark,jdbcType=VARCHAR}, #{state,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP},
+      #{createBy,jdbcType=VARCHAR}, #{flowId,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP},
+      #{updateBy,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hbhb.cw.model.BudgetProject" useGeneratedKeys="true" keyProperty="id">
+    insert into budget_project
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="budgetId != null">
+        budget_id,
+      </if>
+      <if test="unitId != null">
+        unit_id,
+      </if>
+      <if test="projectName != null">
+        project_name,
+      </if>
+      <if test="amount != null">
+        amount,
+      </if>
+      <if test="availableAmount != null">
+        available_amount,
+      </if>
+      <if test="taxIncludeAmount != null">
+        tax_include_amount,
+      </if>
+      <if test="cost != null">
+        cost,
+      </if>
+      <if test="vatRate != null">
+        vat_rate,
+      </if>
+      <if test="vatAmount != null">
+        vat_amount,
+      </if>
+      <if test="director != null">
+        director,
+      </if>
+      <if test="projectNum != null">
+        project_num,
+      </if>
+      <if test="startTime != null">
+        start_time,
+      </if>
+      <if test="endTime != null">
+        end_time,
+      </if>
+      <if test="supplier != null">
+        supplier,
+      </if>
+      <if test="origin != null">
+        origin,
+      </if>
+      <if test="introduction != null">
+        introduction,
+      </if>
+      <if test="detail != null">
+        detail,
+      </if>
+      <if test="target != null">
+        target,
+      </if>
+      <if test="engineeringNum != null">
+        engineering_num,
+      </if>
+      <if test="deleteFlag != null">
+        delete_flag,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="state != null">
+        state,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="createBy != null">
+        create_by,
+      </if>
+      <if test="flowId != null">
+        flow_id,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="updateBy != null">
+        update_by,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="budgetId != null">
+        #{budgetId,jdbcType=BIGINT},
+      </if>
+      <if test="unitId != null">
+        #{unitId,jdbcType=BIGINT},
+      </if>
+      <if test="projectName != null">
+        #{projectName,jdbcType=VARCHAR},
+      </if>
+      <if test="amount != null">
+        #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="availableAmount != null">
+        #{availableAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="taxIncludeAmount != null">
+        #{taxIncludeAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="cost != null">
+        #{cost,jdbcType=DECIMAL},
+      </if>
+      <if test="vatRate != null">
+        #{vatRate,jdbcType=DECIMAL},
+      </if>
+      <if test="vatAmount != null">
+        #{vatAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="director != null">
+        #{director,jdbcType=VARCHAR},
+      </if>
+      <if test="projectNum != null">
+        #{projectNum,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null">
+        #{startTime,jdbcType=DATE},
+      </if>
+      <if test="endTime != null">
+        #{endTime,jdbcType=DATE},
+      </if>
+      <if test="supplier != null">
+        #{supplier,jdbcType=VARCHAR},
+      </if>
+      <if test="origin != null">
+        #{origin,jdbcType=VARCHAR},
+      </if>
+      <if test="introduction != null">
+        #{introduction,jdbcType=VARCHAR},
+      </if>
+      <if test="detail != null">
+        #{detail,jdbcType=VARCHAR},
+      </if>
+      <if test="target != null">
+        #{target,jdbcType=VARCHAR},
+      </if>
+      <if test="engineeringNum != null">
+        #{engineeringNum,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteFlag != null">
+        #{deleteFlag,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null">
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="flowId != null">
+        #{flowId,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null">
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hbhb.cw.model.BudgetProject">
+    update budget_project
+    <set>
+      <if test="budgetId != null">
+        budget_id = #{budgetId,jdbcType=BIGINT},
+      </if>
+      <if test="unitId != null">
+        unit_id = #{unitId,jdbcType=BIGINT},
+      </if>
+      <if test="projectName != null">
+        project_name = #{projectName,jdbcType=VARCHAR},
+      </if>
+      <if test="amount != null">
+        amount = #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="availableAmount != null">
+        available_amount = #{availableAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="taxIncludeAmount != null">
+        tax_include_amount = #{taxIncludeAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="cost != null">
+        cost = #{cost,jdbcType=DECIMAL},
+      </if>
+      <if test="vatRate != null">
+        vat_rate = #{vatRate,jdbcType=DECIMAL},
+      </if>
+      <if test="vatAmount != null">
+        vat_amount = #{vatAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="director != null">
+        director = #{director,jdbcType=VARCHAR},
+      </if>
+      <if test="projectNum != null">
+        project_num = #{projectNum,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null">
+        start_time = #{startTime,jdbcType=DATE},
+      </if>
+      <if test="endTime != null">
+        end_time = #{endTime,jdbcType=DATE},
+      </if>
+      <if test="supplier != null">
+        supplier = #{supplier,jdbcType=VARCHAR},
+      </if>
+      <if test="origin != null">
+        origin = #{origin,jdbcType=VARCHAR},
+      </if>
+      <if test="introduction != null">
+        introduction = #{introduction,jdbcType=VARCHAR},
+      </if>
+      <if test="detail != null">
+        detail = #{detail,jdbcType=VARCHAR},
+      </if>
+      <if test="target != null">
+        target = #{target,jdbcType=VARCHAR},
+      </if>
+      <if test="engineeringNum != null">
+        engineering_num = #{engineeringNum,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteFlag != null">
+        delete_flag = #{deleteFlag,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        state = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null">
+        create_by = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="flowId != null">
+        flow_id = #{flowId,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null">
+        update_by = #{updateBy,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hbhb.cw.model.BudgetProject">
+    update budget_project
+    set budget_id = #{budgetId,jdbcType=BIGINT},
+      unit_id = #{unitId,jdbcType=BIGINT},
+      project_name = #{projectName,jdbcType=VARCHAR},
+      amount = #{amount,jdbcType=DECIMAL},
+      available_amount = #{availableAmount,jdbcType=DECIMAL},
+      tax_include_amount = #{taxIncludeAmount,jdbcType=DECIMAL},
+      cost = #{cost,jdbcType=DECIMAL},
+      vat_rate = #{vatRate,jdbcType=DECIMAL},
+      vat_amount = #{vatAmount,jdbcType=DECIMAL},
+      director = #{director,jdbcType=VARCHAR},
+      project_num = #{projectNum,jdbcType=VARCHAR},
+      start_time = #{startTime,jdbcType=DATE},
+      end_time = #{endTime,jdbcType=DATE},
+      supplier = #{supplier,jdbcType=VARCHAR},
+      origin = #{origin,jdbcType=VARCHAR},
+      introduction = #{introduction,jdbcType=VARCHAR},
+      detail = #{detail,jdbcType=VARCHAR},
+      target = #{target,jdbcType=VARCHAR},
+      engineering_num = #{engineeringNum,jdbcType=VARCHAR},
+      delete_flag = #{deleteFlag,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR},
+      state = #{state,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_by = #{createBy,jdbcType=VARCHAR},
+      flow_id = #{flowId,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_by = #{updateBy,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectListByCond" parameterType="com.hbhb.cw.web.vo.BudgetProjectReqVO"
+          resultType="com.hbhb.cw.web.vo.BudgetProjectResVO">
+    select bp.id           as id,
+    bp.project_num  as projectNum,
+    bp.project_name as projectName,
+    b.budget_num    as budgetNum,
+    b.project_item   as projectTypeName,
+    bp.amount       as amount,
+    bp.cost         as cost,
+    bp.vat_amount   as vatAmount,
+    bp.unit_id     as unitId,
+    date_format(bp.create_time, '%Y-%m-%d %H:%i:%s') as createTime,
+    bp.create_by    as createBy,
+    bp.origin       as origin,
+    bp.state        as state
+    from budget_project bp
+    left join budget b on bp.budget_id = b.id
+    where bp.delete_flag = 1
+    and bd.unit_id in
+    <foreach collection="list" item="item" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+    <if test="cond.budgetId != null">
+      and bp.budget_id = #{cond.budgetId}
+    </if>
+    <if test="cond.projectYear != null and cond.projectYear != ''">
+      and year(bp.create_time) = #{cond.projectYear}
+    </if>
+    <if test="cond.createTime != null and cond.createTime != ''">
+      and bp.create_time like concat('%',#{cond.createTime},'%')
+    </if>
+    <if test="cond.projectName != null and cond.projectName != ''">
+      and bp.project_name like concat('%', #{cond.projectName}, '%')
+    </if>
+    <if test="cond.projectNum != null and projectNum != ''">
+      and bp.project_num = #{projectNum}
+    </if>
+    <if test="state != null">
+      and bp.state = #{state}
+    </if>
+    order by bp.create_time desc
+  </select>
+
+  <select id="countListByCond" parameterType="com.hbhb.cw.web.vo.BudgetProjectReqVO"
+          resultType="int">
+    select count(bp.id)
+    from budget_project bp
+    left join budget b on bp.budget_id = b.id
+    left join budget_item bi on b.budget_item_id = bi.id
+    where bp.delete_flag = 1
+    and bd.unit_id in
+    <foreach collection="list" item="item" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+    <if test="budgetId != null">
+      and bp.budget_id = #{budgetId}
+    </if>
+    <if test="projectYear != null and projectYear != ''">
+      and year(bp.create_time) = #{projectYear}
+    </if>
+    <if test="createTime != null and createTime != ''">
+      and day(bp.create_time) = #{createTime}
+    </if>
+    <if test="projectName != null and projectName != ''">
+      and bp.project_name like concat('%', #{projectName}, '%')
+    </if>
+    <if test="projectNum != null and projectNum != ''">
+      and bp.project_num = #{projectNum}
+    </if>
+    <if test="state != null">
+      and bp.state = #{state}
+    </if>
+  </select>
+
+  <select id="selectProgress" parameterType="map" resultType="com.hbhb.cw.web.vo.BudgetProgressResVO">
+    select t1.*,
+    ifnull(sum(t2.amount), 0) + ifnull(t3.amount, 0) as amount
+    from (
+    select b.id                                      as budgetId,
+    bi.item_name                              as budgetItemName,
+    concat(b.budget_num, '_', b.project_item) as projectItemName,
+    ifnull(sum(bd.balance), 0)                as budgetBalance
+    from budget b
+    left join budget_data bd on b.id = bd.budget_id
+    left join budget_item bi on bi.id = b.budget_item_id
+    left join unit u on u.id = bd.unit_id
+    where bd.unit_id in
+    <foreach collection="list" item="item" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+    <if test="cond.projectItem != null">
+      and concat(b.budget_num, '_',b.project_item) like concat ('%',#{cond.projectItem},'%')
+    </if>
+    and b.import_date = #{cond.year}
+    group by b.id, bi.item_name, concat(b.budget_num, '_', b.project_item)
+    order by b.id
+    ) t1
+    left join
+    (
+    select distinct bp.budget_id as budgetId,
+    bp.cost    as amount,
+    bp.id      as id
+    from (select distinct bb.unit_id       as bbId,
+    bb.under_unit_id as unId,
+    bb.budget_id     as bdId
+    from budget_belong bb
+    where bb.under_unit_id in
+    <foreach collection="list" item="item" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+    ) s1
+    left join budget_project bp on s1.bdId = bp.budget_id
+    where bp.unit_id in (s1.bbId)
+    and bp.state  in (31,32)
+    and bp.delete_flag = 1
+    and bp.create_time like concat (#{cond.year},'%')
+    <if test="cond.date != null">
+      and bpa.create_time like concat ('%',#{cond.date},'%')
+    </if>
+    ) t2
+    on t1.budgetId = t2.budgetId
+    left join (
+    select distinct bpa.budget_id as budgetId,
+    ifnull(sum(bpa.cost),0)   as amount,
+    bpa.id        as id
+    from (select distinct bb.unit_id       as bbId,
+    bb.under_unit_id as unId,
+    bb.budget_id     as bdId
+    from budget_belong bb
+    where bb.under_unit_id in
+    <foreach collection="list" item="item" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+    ) s1
+    left join budget_project_agile bpa on s1.bdId = bpa.budget_id
+    where bpa.unit_id in (s1.bbId)
+    and bpa.delete_flag = 1
+    and bpa.create_time like concat(#{cond.year}, '%')
+    <if test="cond.date != null">
+      and bpa.create_time like concat ('%',#{cond.date},'%')
+    </if>
+    group by bpa.budget_id
+    ) t3
+    on t1.budgetId = t3.budgetId
+    group by t1.budgetId
+  </select>
+
+  <select id="selectProgressByBudget" parameterType="map" resultType="com.hbhb.cw.web.vo.BudgetProjectAmountVO">
+    select t1.projectItemName as projectItemName,
+    t2.amount          as amount,
+    t2.id              as id,
+    t2.projectName     as projectName,
+    t2.projectNum      as projectNum,
+    t2.creatBy         as creatBy,
+    t2.createTime      as createTime,
+    u.unit_name        as unitName
+    from (
+    select b.id                                      as budgetId,
+    bi.item_name                              as budgetItemName,
+    concat(b.budget_num, '_', b.project_item) as projectItemName,
+    bd.balance                                as budgetBalance
+    from budget b
+    left join budget_data bd on b.id = bd.budget_id
+    left join budget_item bi on bi.id = b.budget_item_id
+    where bd.unit_id = #{unitId}
+    and b.id = #{budgetId}
+    and b.import_date = #{year}
+    order by b.id
+    ) t1
+
+    left join
+    (
+    select bp.budget_id    as budgetId,
+    bp.cost         as amount,
+    bp.id           as id,
+    bp.project_name as projectName,
+    bp.project_num  as projectNum,
+    bp.create_by    as creatBy,
+    bp.create_time  as createTime
+    from (select distinct bb.unit_id       as bbId,
+    bb.under_unit_id as unId,
+    bb.budget_id     as bdId
+    from budget_belong bb
+    where bb.budget_id = #{budgetId}
+    and bb.under_unit_id = #{unitId}
+    ) s1
+    left join budget_project bp on s1.bdId = bp.budget_id
+    where bp.unit_id in (s1.bbId)
+    and bp.state in
+    <foreach collection="list" item="item" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+    and bp.delete_flag = 1
+    and bp.create_time like concat (#{year},'%')
+    ) t2
+    on t1.budgetId = t2.budgetId
+    left join unit u on u.id = #{unitId}
+    group by t2.id
+  </select>
+
+  <select id="selectProgressByState" parameterType="map" resultType="com.hbhb.cw.web.vo.BudgetProgressResVO">
+    select t1.*,
+    t1.budgetId               as lineNumber,
+    ifnull(sum(t2.amount), 0) as amount,
+    u.unit_name               as unitName
+    from (
+    select b.id                                      as budgetId,
+    bi.item_name                              as budgetItemName,
+    concat(b.project_item)                    as projectItemName,
+    bd.balance                                as budgetBalance,
+    b.remark                                  as remark
+    from budget b
+    left join budget_data bd on b.id = bd.budget_id
+    left join budget_item bi on bi.id = b.budget_item_id
+    where bd.unit_id = #{unitId}
+    and b.id = #{budgetId}
+    <if test="projectItem != null">
+      and concat(b.budget_num, '_',b.project_item) like concat ('%',#{projectItem},'%')
+    </if>
+    and b.import_date = #{year}
+    order by b.id
+    ) t1
+    left join
+    (
+    select distinct bp.budget_id as budgetId,
+    bp.cost    as amount,
+    bp.id        as id
+    from
+    (
+    select distinct bb.unit_id as bbId, bb.under_unit_id as unId, bb.budget_id as bdId, bb.id  as id
+    from budget_belong bb
+    where bb.budget_id = #{budgetId}
+    and bb.under_unit_id = #{unitId}
+    ) s1
+    left join budget_project bp on s1.bdId = bp.budget_id
+    left join budget_project_approved bpa on bpa.project_id = bp.id
+    where bp.unit_id in (s1.bbId)
+    and bp.state = #{state}
+    and bp.delete_flag = 1
+    and bp.create_time like concat(#{year}, '%')
+    ) t2
+    on t1.budgetId = t2.budgetId
+    left join unit u on u.id = #{unitId}
+    group by t1.budgetId
+  </select>
+
+  <select id="selectBudgetProgressByBudgetData" parameterType="map" resultType="com.hbhb.cw.web.vo.BudgetProgressResVO">
+    select t1.budgetId as budgetId,
+    t1.budgetItemName as budgetItemName,
+    t1.projectItemName as projectItemName,
+    t1.budgetNum      as budgetNum,
+    t1.budgetBalance  as budgetBalance,
+    t1.unitName       as unitName,
+    ifnull(sum(t2.amount), 0) + ifnull(sum(t3.amount), 0) as amount
+    from (
+    select b.id                                      as budgetId,
+    bi.item_name                              as budgetItemName,
+    concat(b.budget_num, '_', b.project_item) as projectItemName,
+    b.budget_num                              as budgetNum,
+    bd.balance                                as budgetBalance,
+    u.unit_name                               as unitName
+    from budget b
+    left join budget_data bd on b.id = bd.budget_id
+    left join budget_item bi on bi.id = b.budget_item_id
+    left join unit u on u.id = bd.unit_id
+    where b.import_date = #{lastYear}
+    <if test="unitId != null and unitId != ''">
+      and bd.unit_id = #{unitId}
+    </if>
+    order by b.id
+    ) t1
+    left join
+    (
+    select distinct bp.budget_id as budgetId,
+    bp.cost    as amount,
+    bp.id      as id
+    from
+    (select distinct bb.unit_id       as bbId,
+    bb.under_unit_id as unId,
+    bb.budget_id     as bdId
+    from budget_belong bb
+    <where>
+      <if test="unitId != null and unitId != ''">
+        and bb.under_unit_id = #{unitId}
+      </if>
+    </where>
+    ) s1
+    left join budget_project bp on s1.bdId = bp.budget_id
+    where bp.unit_id in (s1.bbId)
+    and bp.state  in (31,32)
+    and bp.delete_flag = 1
+    and bp.create_time like concat (#{lastYear},'%')
+    ) t2
+    on t1.budgetId = t2.budgetId
+
+    left join
+    (
+    select distinct bpa.budget_id as budgetId,
+    bpa.cost    as amount,
+    bpa.id      as id
+    from
+    (select distinct bb.unit_id       as bbId,
+    bb.under_unit_id as unId,
+    bb.budget_id     as bdId
+    from budget_belong bb
+    <where>
+      <if test="unitId != null and unitId != ''">
+        and bb.under_unit_id = #{unitId}
+      </if>
+    </where>
+    ) s1
+    left join budget_project_agile bpa on s1.bdId = bpa.budget_id
+    where bpa.unit_id in (s1.bbId)
+    and bpa.delete_flag = 1
+    and bpa.create_time like concat (#{lastYear},'%')
+    ) t3
+    on t1.budgetId = t3.budgetId
+    group by t1.budgetId
+  </select>
+
+  <resultMap id="projectFile" type="com.hbhb.cw.web.vo.BudgetProjectDetailVO">
+    <id column="id" property="id"/>
+    <id column="budgetId" property="budgetId"/>
+    <id column="unitId" property="unitId"/>
+    <id column="num" property="projectNum"/>
+    <id column="projectName" property="projectName"/>
+    <id column="amount" property="amount"/>
+    <id column="avamount" property="availableAmount"/>
+    <id column="vatAmount" property="vatAmount"/>
+    <id column="tiamount" property="taxIncludeAmount"/>
+    <id column="cost" property="cost"/>
+    <id column="vatrate" property="vatRate"/>
+    <id column="director" property="director"/>
+    <id column="enum" property="engineeringNum"/>
+    <id column="stime" property="startTime"/>
+    <id column="etime" property="endTime"/>
+    <id column="supplier" property="supplier"/>
+    <id column="origin" property="origin"/>
+    <id column="introduction" property="introduction"/>
+    <id column="detail" property="detail"/>
+    <id column="target" property="target"/>
+    <id column="createTime" property="createTime"/>
+    <id column="remark" property="remark"/>
+    <id column="state" property="state"/>
+    <collection property="files" ofType="com.hbhb.cw.web.vo.BudgetProjectFileVO" column="id">
+      <result column="fileId" property="fileId"/>
+      <result column="fileName" property="fileName"/>
+      <result column="fileSize" property="fileSize"/>
+      <result column="filePath" property="filePath"/>
+      <result column="required" property="required"/>
+      <result column="author" property="author"/>
+      <result   column="times" property="createTime"/>
+      <result column="isApproved" property="isApproved"/>
+    </collection>
+  </resultMap>
+  <select id="selectProjectById" parameterType="com.hbhb.cw.web.vo.BudgetProjectDetailVO" resultMap="projectFile">
+   select sf.id                                 as fileId,
+       sf.file_name                             as fileName,
+       sf.file_size                             as fileSize,
+       sf.file_path                             as filePath,
+       bpf.required                             as required,
+       bpf.author                               as author,
+       bpf.is_approved                          as isApproAved,
+       date_format(bpf.create_time, '%Y-%m-%d') as times,
+       bp.id                                    as id,
+       bp.budget_id                             as budgetId,
+       bp.unit_id                               as unitId,
+       bp.project_num                           as num,
+       bp.project_name                          as projectName,
+       bp.amount                                as amount,
+       bp.vat_amount                            as vatAmount,
+       bp.available_amount                      as avamount,
+       bp.tax_include_amount                    as tiamount,
+       bp.cost                                  as cost,
+       bp.vat_rate                              as vatrate,
+       bp.director                              as director,
+       bp.engineering_num                       as enum,
+       date_format(bp.start_time, '%Y-%m-%d')   as stime,
+       date_format(bp.end_time, '%Y-%m-%d')     as etime,
+       bp.supplier                              as supplier,
+       bp.origin                                as origin,
+       bp.introduction                          as introduction,
+       bp.detail                                as detail,
+       bp.target                                as target,
+       bp.remark                                as remark,
+       date_format( bp.create_time, '%Y')                         as createTime,
+       bp.state                                 as state
+   from budget_project bp
+         left join budget_project_file bpf
+                   on bp.id = bpf.project_id
+         left join sys_file sf on bpf.file_id = sf.id
+    where bp.id = #{id}
+  </select>
+
+  <select id="selectTypeCountByBudgetId" resultType="java.lang.Integer">
+    select max(right(project_num, 4))
+      from budget_project
+     where
+       year(create_time) = #{createTime}
+       and delete_flag = 1
+      <if test="budgetId != null">
+       and  budget_id = #{budgetId}
+      </if>
+      <if test="unitId != null">
+        and unit_id = #{unitId}
+      </if>
+  </select>
+
+  <select id="selectInfoByNum" parameterType="string" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from budget_project
+    where project_num = #{projectNum}
+    and delete_flag = 1
+  </select>
+
+  <update id="updateDeleteFlagById" parameterType="java.lang.Integer">
+    update budget_project set delete_flag=0 where id=#{id}
+  </update>
+
+  <select id="countByBudgetId" parameterType="long" resultType="long">
+    select count(*)
+    from budget_project
+    where budget_id = #{budgetId}
+    and delete_flag = 1
+  </select>
+
+  <select id="selectListByIds" parameterType="java.util.List" resultType="com.hbhb.cw.web.vo.BudgetProjectExportVO">
+    select bp.id           as id,
+    bp.project_num  as projectNum,
+    bp.project_name as projectName,
+    b.budget_num    as budgetNum,
+    b.project_item   as projectTypeName,
+    bp.amount       as amount,
+    bp.cost         as cost,
+    bp.vat_amount   as vatAmount,
+    u.unit_name     as unitName,
+    date_format(bp.create_time, '%Y-%m-%d %H:%i:%s') as createTime,
+    bp.create_by    as createBy,
+    bp.origin       as origin,
+    bp.state        as state
+    from budget_project bp
+    left join budget b on bp.budget_id = b.id
+    left join unit u on bp.unit_id = u.id
+    where bp.delete_flag = 1
+    and bp.id in
+    <trim prefix="(" suffix=")">
+      <foreach collection="ids" index="index" item="id" separator=",">
+        #{id}
+      </foreach>
+    </trim>
+  </select>
+  <select id="selectBudgetIdById" resultType="java.lang.Long">
+    select budget_id from budget_project where id =#{projectId}
+  </select>
+  <select id="selectBudgetProjectById" resultType="com.hbhb.cw.model.BudgetProject">
+    select start_time as startTime ,
+    end_time as endTime,
+    unit_id  as unitId,
+    budget_id as budgetId,
+    amount    as  amount,
+    cost    as cost,
+    project_num as projectNum,
+    project_name as projectName,
+    create_by as createBy
+    from budget_project where id=#{id}
+  </select>
+
+  <update id="updateStateById" parameterType="map">
+    update budget_project
+    set state = #{state}
+    where id = #{id}
+  </update>
+
+  <delete id="deleteByProjectId" parameterType="int">
+    delete budget_project_flow
+    from budget_project_flow
+    where project_id = #{projectId}
+  </delete>
+
+  <select id="countFlowId" resultType="java.lang.Integer">
+    select count(id) from budget_project
+    where flow_id=#{flowId}
+    and state != 10
+    and state != 31
+  </select>
+
+  <select id="countListByUnitIds" parameterType="map" resultType="int">
+    select count(1)
+    from budget_project
+    where budget_id = #{budgetId}
+    and state in (20,50)
+    and unit_id in
+    <foreach collection="list" item="item" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </select>
+
+  <select id="selectJieZhuan" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from budget_project
+    where origin = '结转'
+    and create_time like concat (#{year},'%')
+  </select>
+
+  <update id="updateBatchById" parameterType="list">
+    update budget_project
+    <trim prefix="set" suffixOverrides=",">
+      <trim prefix="budget_id=case" suffix="end,">
+        <foreach collection="list" item="i" index="index">
+          <if test="i.budgetId!=null">
+            when id=#{i.id} then #{i.budgetId}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="unit_id=case" suffix="end,">
+        <foreach collection="list" item="i" index="index">
+          <if test="i.unitId!=null">
+            when id=#{i.id} then #{i.unitId}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="project_name=case" suffix="end,">
+        <foreach collection="list" item="i" index="index">
+          <if test="i.projectName!=null">
+            when id=#{i.id} then #{i.projectName}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="amount=case" suffix="end,">
+        <foreach collection="list" item="i" index="index">
+          <if test="i.amount!=null">
+            when id=#{i.id} then #{i.amount}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="available_amount=case" suffix="end,">
+        <foreach collection="list" item="i" index="index">
+          <if test="i.availableAmount!=null">
+            when id=#{i.id} then #{i.availableAmount}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="tax_include_amount=case" suffix="end,">
+        <foreach collection="list" item="i" index="index">
+          <if test="i.taxIncludeAmount!=null">
+            when id=#{i.id} then #{i.taxIncludeAmount}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="cost=case" suffix="end,">
+        <foreach collection="list" item="i" index="index">
+          <if test="i.cost!=null">
+            when id=#{i.id} then #{i.cost}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="vat_rate=case" suffix="end,">
+        <foreach collection="list" item="i" index="index">
+          <if test="i.vatRate!=null">
+            when id=#{i.id} then #{i.vatRate}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="vat_amount=case" suffix="end,">
+        <foreach collection="list" item="i" index="index">
+          <if test="i.vatAmount!=null">
+            when id=#{i.id} then #{i.vatAmount}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="director=case" suffix="end,">
+        <foreach collection="list" item="i" index="index">
+          <if test="i.director!=null">
+            when id=#{i.id} then #{i.director}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="project_num=case" suffix="end,">
+        <foreach collection="list" item="i" index="index">
+          <if test="i.projectNum!=null">
+            when id=#{i.id} then #{i.projectNum}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="start_time=case" suffix="end,">
+        <foreach collection="list" item="i" index="index">
+          <if test="i.startTime!=null">
+            when id=#{i.id} then #{i.startTime}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="end_time=case" suffix="end,">
+        <foreach collection="list" item="i" index="index">
+          <if test="i.endTime!=null">
+            when id=#{i.id} then #{i.endTime}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="supplier=case" suffix="end,">
+        <foreach collection="list" item="i" index="index">
+          <if test="i.supplier!=null">
+            when id=#{i.id} then #{i.supplier}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="origin=case" suffix="end,">
+        <foreach collection="list" item="i" index="index">
+          <if test="i.origin!=null">
+            when id=#{i.id} then #{i.origin}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="introduction=case" suffix="end,">
+        <foreach collection="list" item="i" index="index">
+          <if test="i.introduction!=null">
+            when id=#{i.id} then #{i.introduction}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="detail=case" suffix="end,">
+        <foreach collection="list" item="i" index="index">
+          <if test="i.detail!=null">
+            when id=#{i.id} then #{i.detail}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="target=case" suffix="end,">
+        <foreach collection="list" item="i" index="index">
+          <if test="i.target!=null">
+            when id=#{i.id} then #{i.target}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="engineering_num=case" suffix="end,">
+        <foreach collection="list" item="i" index="index">
+          <if test="i.engineeringNum!=null">
+            when id=#{i.id} then #{i.engineeringNum}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="delete_flag=case" suffix="end,">
+        <foreach collection="list" item="i" index="index">
+          <if test="i.deleteFlag!=null">
+            when id=#{i.id} then #{i.deleteFlag}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="remark=case" suffix="end,">
+        <foreach collection="list" item="i" index="index">
+          <if test="i.remark!=null">
+            when id=#{i.id} then #{i.remark}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="state=case" suffix="end,">
+        <foreach collection="list" item="i" index="index">
+          <if test="i.state!=null">
+            when id=#{i.id} then #{i.state}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="create_time=case" suffix="end,">
+        <foreach collection="list" item="i" index="index">
+          <if test="i.createTime!=null">
+            when id=#{i.id} then #{i.createTime}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="create_by=case" suffix="end,">
+        <foreach collection="list" item="i" index="index">
+          <if test="i.createBy!=null">
+            when id=#{i.id} then #{i.createBy}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="flow_id=case" suffix="end,">
+        <foreach collection="list" item="i" index="index">
+          <if test="i.flowId!=null">
+            when id=#{i.id} then #{i.flowId}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="update_time=case" suffix="end,">
+        <foreach collection="list" item="i" index="index">
+          <if test="i.updateTime!=null">
+            when id=#{i.id} then #{i.updateTime}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="update_by=case" suffix="end,">
+        <foreach collection="list" item="i" index="index">
+          <if test="i.updateBy!=null">
+            when id=#{i.id} then #{i.updateBy}
+          </if>
+        </foreach>
+      </trim>
+    </trim>
+    where
+    <foreach collection="list" separator="or" item="i" index="index">
+      id=#{i.id}
+    </foreach>
+  </update>
+</mapper>

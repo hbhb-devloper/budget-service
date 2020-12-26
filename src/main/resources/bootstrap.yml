@@ -1,0 +1,120 @@
+server:
+  port: 8886
+
+spring:
+  profiles:
+    active: @env@
+  application:
+    name: @project.artifactId@-@env@
+  cloud:
+    consul:
+      config:
+        format: yaml
+        prefix: config/@project.artifactId@
+        default-context: @env@
+        profile-separator: ' '
+
+feign:
+  client:
+    config:
+      default:
+        # 指定Feign客户端连接提供者的超时时限（取决于网络环境）
+        connectTimeout: 5000
+        # 指定Feign客户端从请求到获取到提供者给出的响应的超时时限（取决于业务逻辑运算时间）
+        readTimeout: 5000
+  # 启用压缩（从该实例到接口提供方）
+  compression:
+    request:
+      enabled: true
+      min-request-size: 512
+    response:
+      enabled: true
+      useGzipDecoder: true
+
+# 开启健康检查
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+# 宿主机相关配置
+host:
+  # docker0地址
+  docker0: 172.17.0.1
+  # 代理ip（解决docker容器内部无法访问宿主机ip的问题）
+  proxy: 47.96.83.55
+
+port:
+  default: 10060
+  dev: 10027
+  dev-proxy: 10007
+  test: 10028
+  test-proxy: 10008
+  prd: 10006
+
+# 指定服务提供方实例地址（为空则不指定）
+feign-url:
+#feign-url: 192.168.28.58:8887
+
+# 服务提供方实例名称
+provider:
+  system-center: system-center-@env@
+  flow-center: flow-center-@env@
+
+################### 本地环境配置 ###################
+---
+spring:
+  profiles: default
+  cloud:
+    consul:
+      host: consul.yeexun.com.cn
+      discovery:
+#        prefer-ip-address: true
+        instance-id: ${spring.application.name}-${server.port}-${spring.cloud.client.ip-address}
+        service-name: ${spring.application.name}
+        # 本地调试使用frp代理ip
+        health-check-url: http://${host.docker0}:${port.default}/actuator/health
+        hostname: ${host.docker0}
+        port: ${port.default}
+################### 开发环境配置 ###################
+---
+spring:
+  profiles: dev
+  cloud:
+    consul:
+      host: consul.yeexun.com.cn
+      discovery:
+        instance-id: ${spring.application.name}-${port.dev}-${spring.cloud.client.ip-address}
+        service-name: ${spring.application.name}
+        health-check-url: http://${host.docker0}:${port.dev}/actuator/health
+        # 开发环境使用代理ip
+        hostname: ${host.proxy}
+        port: ${port.dev-proxy}
+################### 测试环境配置 ###################
+---
+spring:
+  profiles: test
+  cloud:
+    consul:
+      host: consul.yeexun.com.cn
+      discovery:
+        instance-id: ${spring.application.name}-${port.test}-${spring.cloud.client.ip-address}
+        service-name: ${spring.application.name}
+        health-check-url: http://${host.docker0}:${port.test}/actuator/health
+        # 测试环境使用代理ip
+        hostname: ${host.proxy}
+        port: ${port.test-proxy}
+################### 正式环境配置 ###################
+---
+spring:
+  profiles: prd
+  cloud:
+    consul:
+      host: ${host.docker0}
+      discovery:
+        instance-id: ${spring.application.name}-${port.prd}-${spring.cloud.client.ip-address}
+        service-name: ${spring.application.name}
+        health-check-url: http://${host.docker0}:${port.prd}/actuator/health
+        hostname: ${host.docker0}
+        port: ${port.prd}

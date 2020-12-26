@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hbhb.cw.mapper.BudgetProjectSplitMapper">
+    <resultMap id="BaseResultMap" type="com.hbhb.cw.model.BudgetProjectSplit">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="project_id" jdbcType="INTEGER" property="projectId"/>
+        <result column="year" jdbcType="VARCHAR" property="years"/>
+        <result column="class_name" jdbcType="VARCHAR" property="className"/>
+        <result column="price" jdbcType="DECIMAL" property="price"/>
+        <result column="amount" jdbcType="INTEGER" property="amount"/>
+        <result column="cost" jdbcType="DECIMAL" property="cost"/>
+        <result column="explains" jdbcType="VARCHAR" property="explains"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="create_by" jdbcType="VARCHAR" property="createBy"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, project_id,  year, class_name, price, amount, cost, explains,create_time,create_by
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from budget_project_split
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from budget_project_split
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.hbhb.cw.model.BudgetProjectSplit">
+    insert into budget_project_split (id, project_id,
+      year, class_name, price, 
+      amount, cost, explains,crete_time,create_by
+      )
+    values (#{id,jdbcType=INTEGER}, #{projectId,jdbcType=INTEGER},
+      #{year,jdbcType=TIME}, #{className,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, 
+      #{amount,jdbcType=INTEGER}, #{cost,jdbcType=DECIMAL}, #{explains,jdbcType=VARCHAR},
+       #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}
+      )
+  </insert>
+    <insert id="insertSelective" parameterType="com.hbhb.cw.model.BudgetProjectSplit" useGeneratedKeys="true" keyProperty="id">
+        insert into budget_project_split
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="projectId != null">
+                project_id,
+            </if>
+            <if test="years != null">
+                year,
+            </if>
+            <if test="className != null">
+                class_name,
+            </if>
+            <if test="price != null">
+                price,
+            </if>
+            <if test="amount != null">
+                amount,
+            </if>
+            <if test="cost != null">
+                cost,
+            </if>
+            <if test="explains != null">
+                explains,
+            </if>
+            <if test="createTime !=null">
+                create_time,
+            </if>
+            <if test="createBy !=null">
+                create_by,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="projectId != null">
+                #{projectId,jdbcType=INTEGER},
+            </if>
+            <if test="years != null">
+                #{years,jdbcType=TIME},
+            </if>
+            <if test="className != null">
+                #{className,jdbcType=VARCHAR},
+            </if>
+            <if test="price != null">
+                #{price,jdbcType=DECIMAL},
+            </if>
+            <if test="amount != null">
+                #{amount,jdbcType=INTEGER},
+            </if>
+            <if test="cost != null">
+                #{cost,jdbcType=DECIMAL},
+            </if>
+            <if test="explains != null">
+                #{explains,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime !=null">
+               #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createBy !=null">
+                #{createBy,jdbcType=VARCHAR}
+            </if>
+        </trim>
+    </insert>
+
+
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.hbhb.cw.model.BudgetProjectSplit">
+        update budget_project_split
+        <set>
+            <if test="projectId != null">
+                project_id = #{projectId,jdbcType=INTEGER},
+            </if>
+            <if test="years != null">
+                year = #{years,jdbcType=TIME},
+            </if>
+            <if test="className != null">
+                class_name = #{className,jdbcType=VARCHAR},
+            </if>
+            <if test="price != null or price == null">
+                price = #{price,jdbcType=DECIMAL},
+            </if>
+            <if test="amount != null or amount == null">
+                amount = #{amount,jdbcType=INTEGER},
+            </if>
+            <if test="cost != null">
+                cost = #{cost,jdbcType=DECIMAL},
+            </if>
+            <if test="explains != null">
+                explains = #{explains,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime !=null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createBy !=null">
+                create_by =#{createBy,jdbcType=VARCHAR}
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.hbhb.cw.model.BudgetProjectSplit">
+    update budget_project_split
+    set project_id = #{projectId,jdbcType=INTEGER},
+      year = #{years,jdbcType=TIME},
+      class_name = #{className,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DECIMAL},
+      amount = #{amount,jdbcType=INTEGER},
+      cost = #{cost,jdbcType=DECIMAL},
+      explains = #{explain,jdbcType=VARCHAR},
+      create_time= #{createTime,jdbcType=TIMESTAMP},
+      create_by= #{createBy,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+    <select id="selectSplitByProjectId" resultType="com.hbhb.cw.web.vo.BudgetProjectSplitVO">
+         select bpc.id        as id ,
+               bpc.year       as years,
+               bpc.class_name as className,
+               bpc.price      as price ,
+               bpc.amount     as amount,
+               bpc.cost       as cost,
+               bpc.explains   as explains,
+               bi.item_name   as itemName
+        from budget_project_split bpc
+                 left join budget_project bp on bpc.project_id = bp.id
+                 left join budget b on bp.budget_id = b.id
+                 left join budget_item bi on b.budget_item_id = bi.id
+        where project_id = #{projectId}
+  </select>
+
+    <select id="selectSplitAllByProjectId" parameterType="int" resultType="com.hbhb.cw.model.BudgetProjectSplit">
+        select
+        bpc.id as id,
+        bpc.project_id as projectId,
+        bpc.year as years,
+        bpc.class_name as className,
+        bpc.price price,
+        bpc.amount as amount,
+        bpc.cost as cost,
+        bpc.explains as explains,
+        bpc.create_time as createTime,
+        bpc.create_by as createBy
+        from budget_project_split bpc
+        where project_id = #{projectId}
+    </select>
+
+
+    <select id="selectBudgetProjectSplitById" parameterType="integer"
+            resultType="com.hbhb.cw.web.vo.BudgetProjectSplitVO">
+       select bpc.id  as id,
+       b.id           as budgetId,
+       bpc.year       as years,
+       bpc.class_name as className,
+       bpc.price      as price,
+       bpc.amount     as amount,
+       bpc.cost       as cost,
+       bpc.explains   as explains
+       from budget_project_split bpc
+        left join  budget_project bp on bpc.project_id=bp.id
+         left join budget b on bp.budget_id = b.id
+         left join budget_item bi on b.budget_item_id = bi.id
+       where bpc.id =#{id}
+    </select>
+  <select id="selectCondByProjectId" resultType="java.lang.Integer">
+    select count(project_id) from budget_project_split where project_id=#{projectId}
+  </select>
+    <select id="selectSumAmountByProjectId" resultType="java.math.BigDecimal">
+        select sum(cost) from budget_project_split where project_id=#{projectId}
+    </select>
+
+    <insert id="insertBatch" parameterType="list">
+        insert into budget_project_split
+        (
+        project_id,
+        year,
+        class_name,
+        price,
+        amount,
+        cost,
+        explains,
+        create_time,
+        create_by
+        )
+        values
+        <foreach collection="list" item="item" separator="," index="index">
+            (
+                #{item.projectId},
+                #{item.years},
+                #{item.className},
+                #{item.price},
+                #{item.amount},
+                #{item.cost},
+                #{item.explains},
+                #{item.createTime},
+                #{item.createBy}
+            )
+        </foreach>
+    </insert>
+
+    <delete id="deleteByProjectId" parameterType="java.lang.Integer">
+        delete from budget_project_split
+        where project_id = #{projectId}
+    </delete>
+</mapper>

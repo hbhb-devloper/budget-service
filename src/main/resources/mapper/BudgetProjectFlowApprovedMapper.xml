@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hbhb.cw.mapper.BudgetProjectFlowApprovedMapper">
+  <resultMap id="BaseResultMap" type="com.hbhb.cw.model.BudgetProjectFlowApproved">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="budget_project_flow_id" jdbcType="BIGINT" property="budgetProjectFlowId" />
+    <result column="project_id" jdbcType="BIGINT" property="projectId" />
+    <result column="flow_node_id" jdbcType="VARCHAR" property="flowNodeId" />
+    <result column="under_unit_id" jdbcType="INTEGER" property="underUnitId" />
+    <result column="flow_role_id" jdbcType="BIGINT" property="flowRoleId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="role_desc" jdbcType="VARCHAR" property="roleDesc" />
+    <result column="assigner" jdbcType="BIGINT" property="assigner" />
+    <result column="control_access" jdbcType="TINYINT" property="controlAccess" />
+    <result column="is_join" jdbcType="TINYINT" property="isJoin" />
+    <result column="operation" jdbcType="INTEGER" property="operation" />
+    <result column="suggestion" jdbcType="VARCHAR" property="suggestion" />
+    <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, budget_project_flow_id, project_id, flow_node_id, under_unit_id, flow_role_id, user_id,
+    role_desc, assigner, control_access, is_join, operation, suggestion, is_delete, create_time, 
+    create_by, update_time, update_by
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from budget_project_flow_approved
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from budget_project_flow_approved
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.hbhb.cw.model.BudgetProjectFlowApproved">
+    insert into budget_project_flow_approved (id, budget_project_flow_id, project_id,
+      flow_node_id, under_unit_id, flow_role_id, 
+      user_id, role_desc, assigner, 
+      control_access, is_join, operation, 
+      suggestion, is_delete, create_time, 
+      create_by, update_time, update_by
+      )
+    values (#{id,jdbcType=BIGINT}, #{budgetProjectFlowId,jdbcType=BIGINT}, #{projectId,jdbcType=BIGINT},
+      #{flowNodeId,jdbcType=VARCHAR}, #{underUnitId,jdbcType=INTEGER}, #{flowRoleId,jdbcType=BIGINT}, 
+      #{userId,jdbcType=INTEGER}, #{roleDesc,jdbcType=VARCHAR}, #{assigner,jdbcType=BIGINT}, 
+      #{controlAccess,jdbcType=TINYINT}, #{isJoin,jdbcType=TINYINT}, #{operation,jdbcType=INTEGER}, 
+      #{suggestion,jdbcType=VARCHAR}, #{isDelete,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{createBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hbhb.cw.model.BudgetProjectFlowApproved">
+    insert into budget_project_flow_approved
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="budgetProjectFlowId != null">
+        budget_project_flow_id,
+      </if>
+      <if test="projectId != null">
+        project_id,
+      </if>
+      <if test="flowNodeId != null">
+        flow_node_id,
+      </if>
+      <if test="underUnitId != null">
+        under_unit_id,
+      </if>
+      <if test="flowRoleId != null">
+        flow_role_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="roleDesc != null">
+        role_desc,
+      </if>
+      <if test="assigner != null">
+        assigner,
+      </if>
+      <if test="controlAccess != null">
+        control_access,
+      </if>
+      <if test="isJoin != null">
+        is_join,
+      </if>
+      <if test="operation != null">
+        operation,
+      </if>
+      <if test="suggestion != null">
+        suggestion,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="createBy != null">
+        create_by,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="updateBy != null">
+        update_by,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="budgetProjectFlowId != null">
+        #{budgetProjectFlowId,jdbcType=BIGINT},
+      </if>
+      <if test="projectId != null">
+        #{projectId,jdbcType=BIGINT},
+      </if>
+      <if test="flowNodeId != null">
+        #{flowNodeId,jdbcType=VARCHAR},
+      </if>
+      <if test="underUnitId != null">
+        #{underUnitId,jdbcType=INTEGER},
+      </if>
+      <if test="flowRoleId != null">
+        #{flowRoleId,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="roleDesc != null">
+        #{roleDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="assigner != null">
+        #{assigner,jdbcType=BIGINT},
+      </if>
+      <if test="controlAccess != null">
+        #{controlAccess,jdbcType=TINYINT},
+      </if>
+      <if test="isJoin != null">
+        #{isJoin,jdbcType=TINYINT},
+      </if>
+      <if test="operation != null">
+        #{operation,jdbcType=INTEGER},
+      </if>
+      <if test="suggestion != null">
+        #{suggestion,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null">
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null">
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hbhb.cw.model.BudgetProjectFlowApproved">
+    update budget_project_flow_approved
+    <set>
+      <if test="budgetProjectFlowId != null">
+        budget_project_flow_id = #{budgetProjectFlowId,jdbcType=BIGINT},
+      </if>
+      <if test="projectId != null">
+        project_id = #{projectId,jdbcType=BIGINT},
+      </if>
+      <if test="flowNodeId != null">
+        flow_node_id = #{flowNodeId,jdbcType=VARCHAR},
+      </if>
+      <if test="underUnitId != null">
+        under_unit_id = #{underUnitId,jdbcType=INTEGER},
+      </if>
+      <if test="flowRoleId != null">
+        flow_role_id = #{flowRoleId,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="roleDesc != null">
+        role_desc = #{roleDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="assigner != null">
+        assigner = #{assigner,jdbcType=BIGINT},
+      </if>
+      <if test="controlAccess != null">
+        control_access = #{controlAccess,jdbcType=TINYINT},
+      </if>
+      <if test="isJoin != null">
+        is_join = #{isJoin,jdbcType=TINYINT},
+      </if>
+      <if test="operation != null">
+        operation = #{operation,jdbcType=INTEGER},
+      </if>
+      <if test="suggestion != null">
+        suggestion = #{suggestion,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null">
+        create_by = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null">
+        update_by = #{updateBy,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hbhb.cw.model.BudgetProjectFlowApproved">
+    update budget_project_flow_approved
+    set budget_project_flow_id = #{budgetProjectFlowId,jdbcType=BIGINT},
+      project_id = #{projectId,jdbcType=BIGINT},
+      flow_node_id = #{flowNodeId,jdbcType=VARCHAR},
+      under_unit_id = #{underUnitId,jdbcType=INTEGER},
+      flow_role_id = #{flowRoleId,jdbcType=BIGINT},
+      user_id = #{userId,jdbcType=INTEGER},
+      role_desc = #{roleDesc,jdbcType=VARCHAR},
+      assigner = #{assigner,jdbcType=BIGINT},
+      control_access = #{controlAccess,jdbcType=TINYINT},
+      is_join = #{isJoin,jdbcType=TINYINT},
+      operation = #{operation,jdbcType=INTEGER},
+      suggestion = #{suggestion,jdbcType=VARCHAR},
+      is_delete = #{isDelete,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_by = #{createBy,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_by = #{updateBy,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <insert id="insertBatch" parameterType="list">
+    insert into budget_project_flow_approved (
+    project_id,
+    flow_node_id,
+    under_unit_id,
+    flow_role_id,
+    user_id,
+    role_desc,
+    assigner,
+    control_access,
+    is_join,
+    operation,
+    suggestion,
+    is_delete,
+    create_time,
+    create_by,
+    update_time,
+    update_by,
+    budget_project_flow_id) values
+    <foreach item="item" index="index" collection="list" separator=",">
+      (#{item.projectId},
+      #{item.flowNodeId},
+      #{item.underUnitId},
+      #{item.flowRoleId},
+      #{item.userId},
+      #{item.roleDesc},
+      #{item.assigner},
+      #{item.controlAccess},
+      #{item.isJoin},
+      #{item.operation},
+      #{item.suggestion},
+      #{item.isDelete},
+      #{item.createTime},
+      #{item.createBy},
+      #{item.updateTime},
+      #{item.updateBy},
+      #{item.budgetProjectFlowId})
+    </foreach>
+  </insert>
+
+  <select id="selectByProjectId" parameterType="long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from budget_project_flow_approved
+    where project_id = #{projectId}
+  </select>
+
+  <select id="selectApprovedByProjectId" parameterType="long" resultType="com.hbhb.cw.web.vo.BudgetProjectFlowVO">
+    select bpf.budget_project_flow_id             as id,
+    bpf.project_id     as projectId,
+    bpf.flow_node_id   as flowNodeId,
+    bpf.flow_role_id   as flowRoleId,
+    fr.role_name       as approverRole,
+    su.nick_name       as nickName,
+    bpf.user_id        as approver,
+    bpf.operation      as operation,
+    bpf.suggestion     as suggestion,
+    bpf.control_access as controlAccess,
+    bpf.is_join        as isJoin,
+    bpf.assigner       as assigner,
+    bpf.role_desc      as roleDesc,
+    bpf.update_time    as updateTime
+    from budget_project_flow_approved bpf
+    left join flow_role fr on bpf.flow_role_id = fr.id
+    left join sys_user su on su.id = bpf.user_id
+    where bpf.is_delete = 0
+    and bpf.project_id = #{projectId}
+  </select>
+
+  <delete id="deleteByProjectId" parameterType="long">
+    delete from budget_project_flow_approved
+    where project_id = #{projectId}
+  </delete>
+</mapper>
