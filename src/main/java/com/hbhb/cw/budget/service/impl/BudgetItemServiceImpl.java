@@ -1,21 +1,20 @@
 package com.hbhb.cw.budget.service.impl;
 
-import com.hbhb.cw.common.exception.BizException;
-import com.hbhb.cw.common.exception.BizStatus;
-import com.hbhb.cw.mapper.BudgetItemMapper;
-import com.hbhb.cw.model.BudgetItem;
-import com.hbhb.cw.service.BudgetItemService;
-import com.hbhb.cw.service.BudgetService;
-import com.hbhb.cw.web.vo.BudgetItemVO;
-import com.hbhb.cw.web.vo.SelectVO;
 
+import com.hbhb.api.core.bean.SelectVO;
+import com.hbhb.cw.budget.enums.BudgetErrorCode;
+import com.hbhb.cw.budget.exception.BudgetException;
+import com.hbhb.cw.budget.mapper.BudgetItemMapper;
+import com.hbhb.cw.budget.model.BudgetItem;
+import com.hbhb.cw.budget.service.BudgetItemService;
+import com.hbhb.cw.budget.service.BudgetService;
+import com.hbhb.cw.budget.web.vo.BudgetItemVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
-
-import javax.annotation.Resource;
 
 /**
  * @author yzc
@@ -56,7 +55,7 @@ public class BudgetItemServiceImpl implements BudgetItemService {
         budgetItemId = budgetItemId >> 10;
         Integer budgetCount = budgetService.getBudgetCount(budgetItemId);
         if (budgetCount != 0) {
-            throw new BizException(BizStatus.THE_ITEM_IS_BUDGET.getCode());
+            throw new BudgetException(BudgetErrorCode.THE_ITEM_IS_BUDGET);
         }
         budgetItemMapper.deleteByPrimaryKey(budgetItemId);
     }

@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hbhb.cw.mapper.BudgetProjectAgileMapper">
-  <resultMap id="BaseResultMap" type="com.hbhb.cw.model.BudgetProjectAgile">
-    <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="project_num" jdbcType="VARCHAR" property="projectNum" />
-    <result column="project_name" jdbcType="VARCHAR" property="projectName" />
-    <result column="unit_id" jdbcType="INTEGER" property="unitId" />
-    <result column="budget_id" jdbcType="BIGINT" property="budgetId" />
-    <result column="cost" jdbcType="DECIMAL" property="cost" />
-    <result column="vat_rate" jdbcType="DECIMAL" property="vatRate" />
-    <result column="tax_include_amount" jdbcType="DECIMAL" property="taxIncludeAmount" />
-    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+<mapper namespace="com.hbhb.cw.budget.mapper.BudgetProjectAgileMapper">
+    <resultMap id="BaseResultMap" type="com.hbhb.cw.budget.model.BudgetProjectAgile">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="project_num" jdbcType="VARCHAR" property="projectNum"/>
+        <result column="project_name" jdbcType="VARCHAR" property="projectName"/>
+        <result column="unit_id" jdbcType="INTEGER" property="unitId"/>
+        <result column="budget_id" jdbcType="BIGINT" property="budgetId"/>
+        <result column="cost" jdbcType="DECIMAL" property="cost"/>
+        <result column="vat_rate" jdbcType="DECIMAL" property="vatRate"/>
+        <result column="tax_include_amount" jdbcType="DECIMAL" property="taxIncludeAmount"/>
+        <result column="create_by" jdbcType="VARCHAR" property="createBy"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
   </resultMap>
   <sql id="Base_Column_List">
     id, project_num, project_name, unit_id, budget_id, cost, vat_rate, tax_include_amount, 
@@ -27,7 +27,7 @@
     delete from budget_project_agile
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.hbhb.cw.model.BudgetProjectAgile">
+    <insert id="insert" parameterType="com.hbhb.cw.budget.model.BudgetProjectAgile">
     insert into budget_project_agile (id, project_num, project_name, 
       unit_id, budget_id, cost, 
       vat_rate, tax_include_amount, create_by, 
@@ -37,17 +37,18 @@
       #{vatRate,jdbcType=DECIMAL}, #{taxIncludeAmount,jdbcType=DECIMAL}, #{createBy,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.hbhb.cw.model.BudgetProjectAgile" useGeneratedKeys="true" keyProperty="id">
-    insert into budget_project_agile
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="projectNum != null">
-        project_num,
-      </if>
-      <if test="projectName != null">
-        project_name,
+    <insert id="insertSelective" parameterType="com.hbhb.cw.budget.model.BudgetProjectAgile" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into budget_project_agile
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="projectNum != null">
+                project_num,
+            </if>
+            <if test="projectName != null">
+                project_name,
       </if>
       <if test="unitId != null">
         unit_id,
@@ -104,17 +105,17 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hbhb.cw.model.BudgetProjectAgile">
-    update budget_project_agile
-    <set>
-      <if test="projectNum != null">
-        project_num = #{projectNum,jdbcType=VARCHAR},
-      </if>
-      <if test="projectName != null">
-        project_name = #{projectName,jdbcType=VARCHAR},
-      </if>
-      <if test="unitId != null">
-        unit_id = #{unitId,jdbcType=INTEGER},
+    <update id="updateByPrimaryKeySelective" parameterType="com.hbhb.cw.budget.model.BudgetProjectAgile">
+        update budget_project_agile
+        <set>
+            <if test="projectNum != null">
+                project_num = #{projectNum,jdbcType=VARCHAR},
+            </if>
+            <if test="projectName != null">
+                project_name = #{projectName,jdbcType=VARCHAR},
+            </if>
+            <if test="unitId != null">
+                unit_id = #{unitId,jdbcType=INTEGER},
       </if>
       <if test="budgetId != null">
         budget_id = #{budgetId,jdbcType=BIGINT},
@@ -137,7 +138,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.hbhb.cw.model.BudgetProjectAgile">
+    <update id="updateByPrimaryKey" parameterType="com.hbhb.cw.budget.model.BudgetProjectAgile">
     update budget_project_agile
     set project_num = #{projectNum,jdbcType=VARCHAR},
       project_name = #{projectName,jdbcType=VARCHAR},
@@ -151,17 +152,17 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
 
-  <select id="selectAgileList" parameterType="map" resultType="com.hbhb.cw.web.vo.BudgetProjectAgileVO">
-    select
-    bpa.id                 as id,
-    bpa.project_num        as projectNum,
-    bpa.project_name       as projectName,
-    u.unit_name            as unitName,
-    b.project_item         as budgetName,
-    bpa.cost               as cost,
-    bpa.vat_rate           as vatRate,
-    bpa.tax_include_amount as taxIncludeAmount,
-    bpa.create_by          as createBy
+    <select id="selectAgileList" parameterType="map" resultType="com.hbhb.cw.budget.web.vo.BudgetProjectAgileVO">
+        select
+        bpa.id as id,
+        bpa.project_num as projectNum,
+        bpa.project_name as projectName,
+        u.unit_name as unitName,
+        b.project_item as budgetName,
+        bpa.cost as cost,
+        bpa.vat_rate as vatRate,
+        bpa.tax_include_amount as taxIncludeAmount,
+        bpa.create_by as createBy
     from budget_project_agile bpa
     left join unit u on bpa.unit_id = u.id
     left join budget b on bpa.budget_id = b.id
@@ -209,17 +210,17 @@
     </if>
   </select>
 
-  <select id="selectParentAgileList" parameterType="map" resultType="com.hbhb.cw.web.vo.BudgetProjectAgileVO">
-    select
-    bpa.id                 as id,
-    bpa.project_num        as projectNum,
-    bpa.project_name       as projectName,
-    u.unit_name            as unitName,
-    b.project_item         as budgetName,
-    bpa.cost               as cost,
-    bpa.vat_rate           as vatRate,
-    bpa.tax_include_amount as taxIncludeAmount,
-    bpa.create_by          as createBy
+    <select id="selectParentAgileList" parameterType="map" resultType="com.hbhb.cw.budget.web.vo.BudgetProjectAgileVO">
+        select
+        bpa.id as id,
+        bpa.project_num as projectNum,
+        bpa.project_name as projectName,
+        u.unit_name as unitName,
+        b.project_item as budgetName,
+        bpa.cost as cost,
+        bpa.vat_rate as vatRate,
+        bpa.tax_include_amount as taxIncludeAmount,
+        bpa.create_by as createBy
     from budget_project_agile bpa
     left join unit u on bpa.unit_id = u.id
     left join budget b on bpa.budget_id = b.id
@@ -283,24 +284,24 @@
     </if>
   </select>
 
-  <resultMap id="projectFile" type="com.hbhb.cw.web.vo.BudgetProjectAgileInfoVO">
-    <id column="budgetName" property="budgetName"/>
-    <id column="projectNum" property="projectNum"/>
-    <id column="projectName" property="projectName"/>
-    <id column="taxIncludeAmount" property="taxIncludeAmount"/>
-    <id column="cost" property="cost"/>
-    <id column="vatRate" property="vatRate"/>
-    <id column="unitName" property="unitName"/>
-    <id column="createBy" property="createBy"/>
-    <collection property="files" ofType="com.hbhb.cw.web.vo.BudgetProjectAgileFileVO" column="id">
-      <result column="fileId" property="fileId"/>
-      <result column="fileName" property="fileName"/>
-      <result column="fileSize" property="fileSize"/>
-      <result column="filePath" property="filePath"/>
-      <result column="required" property="required"/>
-      <result column="author" property="author"/>
-      <result  column="createTime" property="createTime"/>
-    </collection>
+    <resultMap id="projectFile" type="com.hbhb.cw.budget.web.vo.BudgetProjectAgileInfoVO">
+        <id column="budgetName" property="budgetName"/>
+        <id column="projectNum" property="projectNum"/>
+        <id column="projectName" property="projectName"/>
+        <id column="taxIncludeAmount" property="taxIncludeAmount"/>
+        <id column="cost" property="cost"/>
+        <id column="vatRate" property="vatRate"/>
+        <id column="unitName" property="unitName"/>
+        <id column="createBy" property="createBy"/>
+        <collection property="files" ofType="com.hbhb.cw.budget.web.vo.BudgetProjectAgileFileVO" column="id">
+            <result column="fileId" property="fileId"/>
+            <result column="fileName" property="fileName"/>
+            <result column="fileSize" property="fileSize"/>
+            <result column="filePath" property="filePath"/>
+            <result column="required" property="required"/>
+            <result column="author" property="author"/>
+            <result column="createTime" property="createTime"/>
+        </collection>
   </resultMap>
  <select id="selectAgileInfoById" parameterType="long" resultMap="projectFile">
    select
@@ -336,7 +337,8 @@
     update budget_project_agile set delete_flag = 0 where id=#{id}
   </update>
 
-  <select id="selectProgressByBudget" parameterType="map" resultType="com.hbhb.cw.web.vo.BudgetProjectAmountVO">
+    <select id="selectProgressByBudget" parameterType="map"
+            resultType="com.hbhb.cw.budget.web.vo.BudgetProjectAmountVO">
     select t1.projectItemName as projectItemName,
     t2.amount          as amount,
     t2.id              as id,
@@ -385,17 +387,17 @@
     group by t2.id
   </select>
 
-  <select id="selectProgressByState" parameterType="map" resultType="com.hbhb.cw.web.vo.BudgetProgressResVO">
-    select t1.*,
-    t1.budgetId               as lineNumber,
-    ifnull(sum(t2.amount), 0) as amount,
-    u.unit_name               as unitName
-    from (
-    select b.id                                      as budgetId,
-    bi.item_name                              as budgetItemName,
-    concat(b.project_item)                    as projectItemName,
-    bd.balance                                as budgetBalance,
-    b.remark                                  as remark
+    <select id="selectProgressByState" parameterType="map" resultType="com.hbhb.cw.budget.web.vo.BudgetProgressResVO">
+        select t1.*,
+        t1.budgetId as lineNumber,
+        ifnull(sum(t2.amount), 0) as amount,
+        u.unit_name as unitName
+        from (
+        select b.id as budgetId,
+        bi.item_name as budgetItemName,
+        concat(b.project_item) as projectItemName,
+        bd.balance as budgetBalance,
+        b.remark as remark
     from budget b
     left join budget_data bd on b.id = bd.budget_id
     left join budget_item bi on bi.id = b.budget_item_id

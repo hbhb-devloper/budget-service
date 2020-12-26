@@ -1,15 +1,8 @@
 package com.hbhb.cw.budget.mapper;
 
-import com.hbhb.cw.model.BudgetProject;
-import com.hbhb.cw.web.vo.BudgetProgressReqVO;
-import com.hbhb.cw.web.vo.BudgetProgressResVO;
-import com.hbhb.cw.web.vo.BudgetProjectAmountVO;
-import com.hbhb.cw.web.vo.BudgetProjectDetailVO;
-import com.hbhb.cw.web.vo.BudgetProjectExportVO;
-import com.hbhb.cw.web.vo.BudgetProjectReqVO;
-import com.hbhb.cw.web.vo.BudgetProjectResVO;
-import com.hbhb.cw.web.vo.BudgetReqVO;
 
+import com.hbhb.cw.budget.model.BudgetProject;
+import com.hbhb.cw.budget.web.vo.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -27,9 +20,9 @@ public interface BudgetProjectMapper extends BaseMapper<BudgetProject, Integer> 
                                              @Param("list") List<Integer> unitIds);
 
     List<BudgetProjectAmountVO> selectProgressByBudget(@Param("unitId") Integer unitId,
-                                                       @Param(value = "budgetId") Long budgetId,
-                                                       @Param(value = "year") String year,
-                                                       @Param(value = "list") List<Integer> states);
+                                                       @Param("budgetId") Long budgetId,
+                                                       @Param("year") String year,
+                                                       @Param("list") List<Integer> states);
 
     BudgetProjectDetailVO selectProjectById(@Param("id") Long id);
 

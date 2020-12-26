@@ -1,29 +1,28 @@
 package com.hbhb.cw.budget.service.impl;
 
-import com.hbhb.cw.common.exception.BizException;
-import com.hbhb.cw.common.exception.BizStatus;
-import com.hbhb.cw.mapper.BudgetBelongMapper;
-import com.hbhb.cw.mapper.BudgetDataMapper;
-import com.hbhb.cw.model.BudgetBelong;
-import com.hbhb.cw.model.BudgetData;
-import com.hbhb.cw.model.BudgetHistory;
-import com.hbhb.cw.rpc.UnitApiExp;
-import com.hbhb.cw.service.BudgetDataService;
-import com.hbhb.cw.service.BudgetHistoryService;
-import com.hbhb.cw.service.BudgetService;
-import com.hbhb.cw.utils.BeanConverter;
-import com.hbhb.cw.web.vo.BudgetAdjustVO;
-import com.hbhb.cw.web.vo.BudgetBelongVO;
-import com.hbhb.cw.web.vo.BudgetDataResVO;
-import com.hbhb.cw.web.vo.BudgetDataVO;
 
+import com.hbhb.core.bean.BeanConverter;
+import com.hbhb.cw.budget.enums.BudgetErrorCode;
+import com.hbhb.cw.budget.exception.BudgetException;
+import com.hbhb.cw.budget.mapper.BudgetBelongMapper;
+import com.hbhb.cw.budget.mapper.BudgetDataMapper;
+import com.hbhb.cw.budget.model.BudgetBelong;
+import com.hbhb.cw.budget.model.BudgetData;
+import com.hbhb.cw.budget.model.BudgetHistory;
+import com.hbhb.cw.budget.rpc.UnitApiExp;
+import com.hbhb.cw.budget.service.BudgetDataService;
+import com.hbhb.cw.budget.service.BudgetHistoryService;
+import com.hbhb.cw.budget.service.BudgetService;
+import com.hbhb.cw.budget.web.vo.BudgetAdjustVO;
+import com.hbhb.cw.budget.web.vo.BudgetBelongVO;
+import com.hbhb.cw.budget.web.vo.BudgetDataResVO;
+import com.hbhb.cw.budget.web.vo.BudgetDataVO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.List;
-
-import javax.annotation.Resource;
 
 @Service
 public class BudgetDataServiceImpl implements BudgetDataService {
@@ -83,7 +82,7 @@ public class BudgetDataServiceImpl implements BudgetDataService {
             }
             return budgetDataRes;
         }
-        throw new BizException(BizStatus.BUDGET_NO_DATA.getCode());
+        throw new BudgetException(BudgetErrorCode.BUDGET_NO_DATA);
     }
 
     /**
@@ -94,7 +93,7 @@ public class BudgetDataServiceImpl implements BudgetDataService {
     public void updateBudgetDate(List<BudgetDataVO> list) {
         for (BudgetDataVO budgetDataVO : list) {
             if (budgetDataVO.getBalance() != null && budgetDataVO.getBalance().intValue() < 0) {
-                throw new BizException(BizStatus.BUDGET_DATA_NOT_NEGATIVE.getCode());
+                throw new BudgetException(BudgetErrorCode.BUDGET_DATA_NOT_NEGATIVE);
             }
         }
         // 得到预算id

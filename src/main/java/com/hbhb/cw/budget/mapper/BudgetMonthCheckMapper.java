@@ -1,7 +1,7 @@
 package com.hbhb.cw.budget.mapper;
 
-import com.hbhb.cw.model.BudgetMonthCheck;
 
+import com.hbhb.cw.budget.model.BudgetMonthCheck;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.repository.MongoRepository;
 

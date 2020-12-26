@@ -1,12 +1,7 @@
 package com.hbhb.cw.budget.service;
 
-import com.hbhb.cw.web.vo.BudgetProgressDeclareVO;
-import com.hbhb.cw.web.vo.BudgetProgressExportVO;
-import com.hbhb.cw.web.vo.BudgetProgressReqVO;
-import com.hbhb.cw.web.vo.BudgetProgressVO;
-import com.hbhb.cw.web.vo.BudgetProjectAllVO;
-import com.hbhb.cw.web.vo.BudgetProjectAmountVO;
-import com.hbhb.cw.web.vo.BudgetProjectStateVO;
+
+import com.hbhb.cw.budget.web.vo.*;
 
 import java.util.List;
 
@@ -20,7 +15,7 @@ public interface BudgetProgressService {
     /**
      * 通过unitId和budgetId查询该立项值下的所有签报
      */
-    List<BudgetProjectAmountVO> getProgressByBudgetId(BudgetProjectStateVO vo);
+    List<BudgetProjectAmountVO> getProgressByBudgetId(BudgetFlowStateVO vo);
 
     /**
      * 导出excel表

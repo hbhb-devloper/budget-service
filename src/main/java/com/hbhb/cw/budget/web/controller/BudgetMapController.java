@@ -2,34 +2,31 @@ package com.hbhb.cw.budget.web.controller;
 
 
 import com.alibaba.excel.EasyExcel;
-import com.hbhb.cw.common.exception.BizException;
-import com.hbhb.cw.common.exception.BizStatus;
-import com.hbhb.cw.model.BudgetMap;
-import com.hbhb.cw.service.BudgetMapService;
-import com.hbhb.cw.service.listener.BudgetMapListener;
-import com.hbhb.cw.utils.ExcelUtil;
-import com.hbhb.cw.web.vo.BudgetMapVO;
-
+import com.hbhb.core.utils.ExcelUtil;
+import com.hbhb.cw.budget.enums.BudgetErrorCode;
+import com.hbhb.cw.budget.exception.BudgetException;
+import com.hbhb.cw.budget.model.BudgetMap;
+import com.hbhb.cw.budget.service.BudgetMapService;
+import com.hbhb.cw.budget.service.listener.BudgetMapListener;
+import com.hbhb.cw.budget.web.vo.BudgetMapVO;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.List;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * @author ln
  */
-@Api(tags = "预算执行-预算映射相关")
+@Tag(name = "预算执行-预算映射相关")
 @RestController
 @RequestMapping("/budget/map")
 public class BudgetMapController {
@@ -37,24 +34,24 @@ public class BudgetMapController {
     @Resource
     private BudgetMapService budgetMapService;
 
-    @ApiOperation("获取预算映射列表")
+    @Operation(summary = "获取预算映射列表")
     @GetMapping("/list")
     public List<BudgetMapVO> getBudget() {
         return budgetMapService.getBudgetMapList();
     }
 
-    @ApiOperation("预算映射导入")
+    @Operation(summary = "预算映射导入")
     @PostMapping("/import")
     public void importBudgetBreak(MultipartFile file) {
         try {
             EasyExcel.read(file.getInputStream(), BudgetMap.class,
                     new BudgetMapListener(budgetMapService)).sheet().doRead();
         } catch (IOException e) {
-            throw new BizException(BizStatus.BUDGET_MAP_DATA_IMPORT_ERROR.getCode());
+            throw new BudgetException(BudgetErrorCode.BUDGET_MAP_DATA_IMPORT_ERROR);
         }
     }
 
-    @ApiOperation("导出预算映射列表")
+    @Operation(summary = "导出预算映射列表")
     @PostMapping("/export")
     public void export(HttpServletRequest request, HttpServletResponse response) {
         List<BudgetMapVO> list = budgetMapService.getBudgetMapList();

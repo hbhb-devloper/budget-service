@@ -1,11 +1,10 @@
 package com.hbhb.cw.budget.service;
 
-import com.hbhb.cw.systemcenter.vo.UserInfo;
-import com.hbhb.cw.web.vo.BudgetProjectNoticeReqVO;
-import com.hbhb.cw.web.vo.BudgetProjectNoticeResVO;
-import com.hbhb.cw.web.vo.BudgetProjectNoticeVO;
-import com.hbhb.cw.web.vo.WorkBenchAgendaVO;
-import com.hbhb.springboot.web.view.Page;
+import com.hbhb.cw.budget.model.Page;
+import com.hbhb.cw.budget.web.vo.BudgetProjectNoticeReqVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectNoticeResVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectNoticeVO;
+import com.hbhb.cw.budget.web.vo.WorkBenchAgendaVO;
 
 import java.util.List;
 
@@ -40,11 +39,11 @@ public interface BudgetProjectNoticeService {
     /**
      * 跟据用户id统计提醒数量
      */
-    int getNoticeAccount(Integer id);
+    Long getNoticeAccount(Integer id);
 
     /**
      * 跟据登录用户查看提醒信息
      */
-    List<WorkBenchAgendaVO> getBudgetNoticeList(UserInfo user);
+    List<WorkBenchAgendaVO> getBudgetNoticeList(Integer userId);
 
 }

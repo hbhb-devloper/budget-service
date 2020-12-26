@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hbhb.cw.mapper.BudgetHistoryMapper">
-    <resultMap id="BaseResultMap" type="com.hbhb.cw.model.BudgetHistory">
+<mapper namespace="com.hbhb.cw.budget.mapper.BudgetHistoryMapper">
+    <resultMap id="BaseResultMap" type="com.hbhb.cw.budget.model.BudgetHistory">
         <id column="id" jdbcType="BIGINT" property="id"/>
         <result column="budget_id" jdbcType="BIGINT" property="budgetId"/>
         <result column="unit_id" jdbcType="INTEGER" property="unitId"/>
@@ -25,7 +25,7 @@
     delete from budget_history
     where id = #{id,jdbcType=BIGINT}
   </delete>
-    <insert id="insert" parameterType="com.hbhb.cw.model.BudgetHistory">
+    <insert id="insert" parameterType="com.hbhb.cw.budget.model.BudgetHistory">
     insert into budget_history (budget_id, unit_id, old_value,
       new_value, dif_value, create_time, create_by
       )
@@ -33,7 +33,7 @@
       #{newValue,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}
       )
   </insert>
-    <insert id="insertSelective" parameterType="com.hbhb.cw.model.BudgetHistory">
+    <insert id="insertSelective" parameterType="com.hbhb.cw.budget.model.BudgetHistory">
         insert into budget_history
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -89,7 +89,7 @@
         </trim>
     </insert>
 
-    <update id="updateByPrimaryKeySelective" parameterType="com.hbhb.cw.model.BudgetHistory">
+    <update id="updateByPrimaryKeySelective" parameterType="com.hbhb.cw.budget.model.BudgetHistory">
         update budget_history
         <set>
             <if test="budgetId != null">
@@ -99,13 +99,13 @@
                 unit_id = #{unitId,jdbcType=INTEGER},
             </if>
             <if test="oldValue != null">
-                old_value = #{oldValue,jdbcType=DECIMAL},
+                old_ #{oldValue,jdbcType=DECIMAL},
             </if>
             <if test="newValue != null">
-                new_value = #{newValue,jdbcType=DECIMAL},
+                new_ #{newValue,jdbcType=DECIMAL},
             </if>
             <if test="difValue != null">
-                dif_value = #{newValue,jdbcType=DECIMAL},
+                dif_ #{newValue,jdbcType=DECIMAL},
             </if>
             <if test="createTime != null">
                 create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -116,13 +116,13 @@
         </set>
         where id = #{id,jdbcType=BIGINT}
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.hbhb.cw.model.BudgetHistory">
+    <update id="updateByPrimaryKey" parameterType="com.hbhb.cw.budget.model.BudgetHistory">
     update budget_history
     set budget_id = #{budgetId,jdbcType=BIGINT},
       unit_id = #{unitId,jdbcType=INTEGER},
-      old_value = #{oldValue,jdbcType=DECIMAL},
-      new_value = #{newValue,jdbcType=DECIMAL},
-      dif_value = #{difValue,jdbcType=DECIMAL},
+      old_ #{oldValue,jdbcType=DECIMAL},
+      new_ #{newValue,jdbcType=DECIMAL},
+      dif_ #{difValue,jdbcType=DECIMAL},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       create_by = #{createBy,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
@@ -146,13 +146,13 @@
         </foreach>
     </insert>
 
-    <resultMap id="BudgetHistoryResult" type="com.hbhb.cw.web.vo.BudgetHistoryVO"
+    <resultMap id="BudgetHistoryResult" type="com.hbhb.cw.budget.web.vo.BudgetHistoryVO"
                autoMapping="true">
         <result property="budgetId" column="budgetId"/>
         <collection property="children" resultMap="SubBudgetHistoryResult" columnPrefix="sub_"/>
     </resultMap>
 
-    <resultMap id="SubBudgetHistoryResult" type="com.hbhb.cw.web.vo.BudgetHistoryVO"
+    <resultMap id="SubBudgetHistoryResult" type="com.hbhb.cw.budget.web.vo.BudgetHistoryVO"
                autoMapping="true">
         <result property="budgetId" column="budgetId"/>
     </resultMap>
@@ -210,7 +210,7 @@
     </select>
 
     <select id="selectDetailById" parameterType="long"
-            resultType="com.hbhb.cw.web.vo.BudgetHistoryInfoVO">
+            resultType="com.hbhb.cw.budget.web.vo.BudgetHistoryInfoVO">
         select bh.id          as id,
                b.project_item as budgetName,
                b.budget_num   as budgetNum,

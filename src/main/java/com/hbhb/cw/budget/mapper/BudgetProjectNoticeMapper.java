@@ -1,10 +1,10 @@
 package com.hbhb.cw.budget.mapper;
 
-import com.hbhb.cw.model.BudgetProjectNotice;
-import com.hbhb.cw.web.vo.BudgetProjectNoticeResVO;
-import com.hbhb.cw.web.vo.BudgetProjectNoticeVO;
-import com.hbhb.cw.web.vo.WorkBenchAgendaVO;
 
+import com.hbhb.cw.budget.model.BudgetProjectNotice;
+import com.hbhb.cw.budget.web.vo.BudgetProjectNoticeResVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectNoticeVO;
+import com.hbhb.cw.budget.web.vo.WorkBenchAgendaVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -22,7 +22,7 @@ public interface BudgetProjectNoticeMapper extends BaseMapper<BudgetProjectNotic
 
     int countListByCond(BudgetProjectNoticeVO bpnVo);
 
-    int selectCountByUserId(@Param("userId") Integer userId);
+    Long selectCountByUserId(@Param("userId") Integer userId);
 
     List<WorkBenchAgendaVO> selectNoticeByUserId(Integer id);
 }

@@ -1,33 +1,31 @@
 package com.hbhb.cw.budget.web.controller;
 
-import com.hbhb.cw.security.CurrentUser;
-import com.hbhb.cw.security.LoginUser;
-import com.hbhb.cw.service.BudgetProjectFlowService;
-import com.hbhb.cw.service.BudgetProjectService;
-import com.hbhb.cw.service.BudgetProjectSplitService;
-import com.hbhb.cw.web.vo.BudgetProjectApprovedFlowInfoVO;
-import com.hbhb.cw.web.vo.BudgetProjectDetailVO;
-import com.hbhb.cw.web.vo.BudgetProjectSplitVO;
 
+import com.hbhb.cw.budget.service.BudgetProjectFlowService;
+import com.hbhb.cw.budget.service.BudgetProjectService;
+import com.hbhb.cw.budget.service.BudgetProjectSplitService;
+import com.hbhb.cw.budget.web.vo.BudgetProjectApprovedFlowInfoVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectDetailVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectSplitVO;
+import com.hbhb.web.annotation.UserId;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import java.util.List;
 
-import javax.annotation.Resource;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * @author yzc
  * @since 2020-11-12
  */
-@Api(tags = "预算执行-快照相关")
+@Tag(name = "预算执行-快照相关")
 @RestController
 @RequestMapping("/budget/approved")
 public class BudgetApprovedController {
@@ -39,27 +37,27 @@ public class BudgetApprovedController {
     @Resource
     private BudgetProjectService budgetProjectService;
 
-    @ApiOperation("快照流程展示")
+    @Operation(summary = "快照流程展示")
     @GetMapping("/{projectId}")
     public List<BudgetProjectApprovedFlowInfoVO> getProjectApproved(@PathVariable Integer projectId,
-                                                                    @ApiIgnore @CurrentUser LoginUser loginUser) {
-        return budgetProjectFlowService.getBudgetApprovedFlow(projectId, loginUser.getUser().getId());
+                                                                    @UserId Integer userId) {
+        return budgetProjectFlowService.getBudgetApprovedFlow(projectId, userId);
     }
 
-    @ApiOperation("根据签报id查找分类预算快照")
+    @Operation(summary = "根据签报id查找分类预算快照")
     @GetMapping("/list/{projectId}")
     public List<BudgetProjectSplitVO> getBudgetProjectSplitApprovedList(
-            @ApiParam(value = "签报id", required = true) @PathVariable Integer projectId) {
+            @Parameter(description = "签报id", required = true) @PathVariable Integer projectId) {
         return budgetProjectSplitService.getBudgetApprovedSplitList(projectId);
     }
 
-    @ApiOperation("根据签报id查找签报快照")
+    @Operation(summary = "根据签报id查找签报快照")
     @GetMapping("/info/{id}")
     public BudgetProjectDetailVO getBudgetProjectApprovedList(@PathVariable Integer id) {
         return budgetProjectService.getBudgetProjectApproved(id);
     }
 
-    @ApiOperation("判断是否有快照")
+    @Operation(summary = "判断是否有快照")
     @GetMapping("/state/{id}")
     public boolean getBudgetApprovedState(@PathVariable Integer id) {
         return budgetProjectService.getBudgetApprovedState(id);

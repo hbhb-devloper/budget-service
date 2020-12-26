@@ -1,47 +1,34 @@
 package com.hbhb.cw.budget.web.controller;
 
 import com.alibaba.excel.EasyExcel;
-import com.hbhb.cw.common.exception.BizException;
-import com.hbhb.cw.common.exception.BizStatus;
-import com.hbhb.cw.service.BudgetHistoryService;
-import com.hbhb.cw.service.BudgetService;
-import com.hbhb.cw.service.listener.BudgetListener;
-import com.hbhb.cw.utils.DateUtil;
-import com.hbhb.cw.utils.ExcelUtil;
-import com.hbhb.cw.utils.RegexUtil;
-import com.hbhb.cw.web.vo.BudgetHistoryExportVO;
-import com.hbhb.cw.web.vo.BudgetHistoryInfoVO;
-import com.hbhb.cw.web.vo.BudgetHistoryVO;
-import com.hbhb.cw.web.vo.BudgetImportVO;
-import com.hbhb.cw.web.vo.BudgetReqVO;
-
+import com.hbhb.core.utils.DateUtil;
+import com.hbhb.core.utils.ExcelUtil;
+import com.hbhb.core.utils.RegexUtil;
+import com.hbhb.cw.budget.enums.BudgetErrorCode;
+import com.hbhb.cw.budget.exception.BudgetException;
+import com.hbhb.cw.budget.service.BudgetHistoryService;
+import com.hbhb.cw.budget.service.BudgetService;
+import com.hbhb.cw.budget.service.listener.BudgetListener;
+import com.hbhb.cw.budget.web.vo.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import lombok.extern.slf4j.Slf4j;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author xiaokang
  * @since 2020-07-20
  */
-@Api(tags = "预算执行-预算历史相关")
+@Tag(name = "预算执行-预算历史相关")
 @RestController
 @RequestMapping("/budget/history")
 @Slf4j
@@ -52,9 +39,9 @@ public class BudgetHistoryController {
     @Resource
     private BudgetHistoryService budgetHistoryService;
 
-    @ApiOperation(value = "按条件获取中期预算调整列表", notes = "树形结构")
+    @Operation(summary = "按条件获取中期预算调整列表 树形结构")
     @GetMapping("/list")
-    public List<BudgetHistoryVO> getBudgetHistoryByCond(@ApiParam(value = "条件") BudgetReqVO cond) {
+    public List<BudgetHistoryVO> getBudgetHistoryByCond(@Parameter(description = "条件") BudgetReqVO cond) {
         if (cond.getUnitId() == null) {
             return new ArrayList<>();
         }
@@ -64,35 +51,35 @@ public class BudgetHistoryController {
         return budgetHistoryService.getListByCond(cond);
     }
 
-    @ApiOperation("获取预算历史详情")
+    @Operation(summary = "获取预算历史详情")
     @GetMapping("/{budgetId}")
     public BudgetHistoryInfoVO getInfoById(
-            @ApiParam(value = "预算id", required = true) @PathVariable Long budgetId) {
+            @Parameter(description = "预算id", required = true) @PathVariable Long budgetId) {
         return budgetHistoryService.getInfoById(budgetId);
     }
 
-    @ApiOperation("预算历史模板导入")
+    @Operation(summary = "预算历史模板导入")
     @PostMapping("/import")
     public void importBudgetBreak(MultipartFile file,
-                                  @ApiParam(value = "导入年份（默认为当年）", required = true) @RequestParam String importDate) {
+                                  @Parameter(description = "导入年份（默认为当年）", required = true) @RequestParam String importDate) {
         long begin = System.currentTimeMillis();
         if (StringUtils.isEmpty(importDate)) {
             importDate = DateUtil.getCurrentYear();
         }
         if (!RegexUtil.isYear(importDate)) {
-            throw new BizException(BizStatus.BUDGET_IMPORT_DATE_ERROR.getCode());
+            throw new BudgetException(BudgetErrorCode.BUDGET_IMPORT_DATE_ERROR);
         }
         try {
             EasyExcel.read(file.getInputStream(), BudgetImportVO.class,
                     new BudgetListener(budgetService, importDate)).sheet().doRead();
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            throw new BizException(BizStatus.BUDGET_DATA_IMPORT_ERROR.getCode());
+            throw new BudgetException(BudgetErrorCode.BUDGET_DATA_IMPORT_ERROR);
         }
         log.info("预算历史模板导入结束，总共耗时：" + (System.currentTimeMillis() - begin) / 1000 + "s");
     }
 
-    @ApiOperation("预算历史导出")
+    @Operation(summary = "预算历史导出")
     @PostMapping("/export")
     public void export(HttpServletRequest request, HttpServletResponse response,
                        @RequestBody BudgetReqVO vo) {

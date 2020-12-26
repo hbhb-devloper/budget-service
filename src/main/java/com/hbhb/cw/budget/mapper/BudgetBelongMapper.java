@@ -1,7 +1,7 @@
 package com.hbhb.cw.budget.mapper;
 
-import com.hbhb.cw.model.BudgetBelong;
 
+import com.hbhb.cw.budget.model.BudgetBelong;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

@@ -1,8 +1,8 @@
 package com.hbhb.cw.budget.mapper;
 
-import com.hbhb.cw.model.BudgetProjectFlowApproved;
-import com.hbhb.cw.web.vo.BudgetProjectFlowVO;
 
+import com.hbhb.cw.budget.model.BudgetProjectFlowApproved;
+import com.hbhb.cw.budget.web.vo.BudgetProjectFlowVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

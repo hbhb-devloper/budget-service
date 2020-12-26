@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hbhb.cw.mapper.BudgetProjectFlowMapper">
-  <resultMap id="BaseResultMap" type="com.hbhb.cw.model.BudgetProjectFlow">
-    <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="project_id" jdbcType="BIGINT" property="projectId" />
-    <result column="flow_node_id" jdbcType="VARCHAR" property="flowNodeId" />
-    <result column="under_unit_id" jdbcType="INTEGER" property="underUnitId" />
-    <result column="flow_role_id" jdbcType="BIGINT" property="flowRoleId" />
-    <result column="user_id" jdbcType="INTEGER" property="userId" />
-    <result column="role_desc" jdbcType="VARCHAR" property="roleDesc" />
-    <result column="assigner" jdbcType="BIGINT" property="assigner" />
-    <result column="control_access" jdbcType="TINYINT" property="controlAccess" />
-    <result column="is_join" jdbcType="TINYINT" property="isJoin" />
+<mapper namespace="com.hbhb.cw.budget.mapper.BudgetProjectFlowMapper">
+  <resultMap id="BaseResultMap" type="com.hbhb.cw.budget.model.BudgetProjectFlow">
+    <id column="id" jdbcType="BIGINT" property="id"/>
+    <result column="project_id" jdbcType="BIGINT" property="projectId"/>
+    <result column="flow_node_id" jdbcType="VARCHAR" property="flowNodeId"/>
+    <result column="under_unit_id" jdbcType="INTEGER" property="underUnitId"/>
+    <result column="flow_role_id" jdbcType="BIGINT" property="flowRoleId"/>
+    <result column="user_id" jdbcType="INTEGER" property="userId"/>
+    <result column="role_desc" jdbcType="VARCHAR" property="roleDesc"/>
+    <result column="assigner" jdbcType="BIGINT" property="assigner"/>
+    <result column="control_access" jdbcType="TINYINT" property="controlAccess"/>
+    <result column="is_join" jdbcType="TINYINT" property="isJoin"/>
     <result column="operation" jdbcType="INTEGER" property="operation" />
     <result column="suggestion" jdbcType="VARCHAR" property="suggestion" />
     <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
@@ -34,7 +34,7 @@
     delete from budget_project_flow
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.hbhb.cw.model.BudgetProjectFlow">
+  <insert id="insert" parameterType="com.hbhb.cw.budget.model.BudgetProjectFlow">
     insert into budget_project_flow (id, project_id, flow_node_id, 
       under_unit_id, flow_role_id, user_id, 
       assigner, control_access, is_join, 
@@ -48,7 +48,7 @@
       #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
       #{updateBy,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.hbhb.cw.model.BudgetProjectFlow">
+  <insert id="insertSelective" parameterType="com.hbhb.cw.budget.model.BudgetProjectFlow">
     insert into budget_project_flow
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -151,7 +151,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hbhb.cw.model.BudgetProjectFlow">
+  <update id="updateByPrimaryKeySelective" parameterType="com.hbhb.cw.budget.model.BudgetProjectFlow">
     update budget_project_flow
     <set>
       <if test="projectId != null">
@@ -202,7 +202,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.hbhb.cw.model.BudgetProjectFlow">
+  <update id="updateByPrimaryKey" parameterType="com.hbhb.cw.budget.model.BudgetProjectFlow">
     update budget_project_flow
     set project_id = #{projectId,jdbcType=BIGINT},
       flow_node_id = #{flowNodeId,jdbcType=VARCHAR},
@@ -276,7 +276,7 @@
     </foreach>
   </insert>
 
-  <select id="selectNodeByNodeId" resultType="com.hbhb.cw.web.vo.FlowRoleResVO">
+  <select id="selectNodeByNodeId" resultType="com.hbhb.cw.flowcenter.vo.FlowRoleResVO">
     select fru.user_id              as userId,
     su.nick_name         as nickName
     from budget_project_flow bpf
@@ -288,7 +288,7 @@
   </select>
 
 
-  <select id="selectByProjectId" parameterType="int" resultType="com.hbhb.cw.web.vo.BudgetProjectFlowVO">
+  <select id="selectByProjectId" parameterType="int" resultType="com.hbhb.cw.budget.web.vo.BudgetProjectFlowVO">
     select bpf.id             as id,
     bpf.project_id     as projectId,
     bpf.flow_node_id   as flowNodeId,

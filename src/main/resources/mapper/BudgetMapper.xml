@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hbhb.cw.mapper.BudgetMapper">
-    <resultMap id="BaseResultMap" type="com.hbhb.cw.model.Budget">
+<mapper namespace="com.hbhb.cw.budget.mapper.BudgetMapper">
+    <resultMap id="BaseResultMap" type="com.hbhb.cw.budget.model.Budget">
         <id column="id" jdbcType="BIGINT" property="id"/>
         <result column="budget_item_id" jdbcType="BIGINT" property="budgetItemId"/>
         <result column="project_item" jdbcType="VARCHAR" property="projectItem"/>
@@ -32,7 +32,7 @@
     delete from budget
     where id = #{id,jdbcType=BIGINT}
   </delete>
-    <insert id="insert" parameterType="com.hbhb.cw.model.Budget">
+    <insert id="insert" parameterType="com.hbhb.cw.budget.model.Budget">
     insert into budget (id, budget_item_id,
       project_item, budget_num, balance,
       last_year_balance,last_year_finished_balance, threshold, import_date,
@@ -45,7 +45,7 @@
       #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR},
       #{updateTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR})
   </insert>
-    <insert id="insertSelective" parameterType="com.hbhb.cw.model.Budget">
+    <insert id="insertSelective" parameterType="com.hbhb.cw.budget.model.Budget">
         insert into budget
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -136,7 +136,7 @@
             </if>
         </trim>
     </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="com.hbhb.cw.model.Budget">
+    <update id="updateByPrimaryKeySelective" parameterType="com.hbhb.cw.budget.model.Budget">
         update budget
         <set>
             <if test="budgetItemId != null">
@@ -181,7 +181,7 @@
         </set>
         where id = #{id,jdbcType=BIGINT}
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.hbhb.cw.model.Budget">
+    <update id="updateByPrimaryKey" parameterType="com.hbhb.cw.budget.model.Budget">
     update budget
     set budget_item_id = #{budgetItemId,jdbcType=BIGINT},
       project_item = #{projectItem,jdbcType=VARCHAR},
@@ -265,11 +265,11 @@
         </foreach>
     </update>
 
-    <resultMap id="BudgetResult" type="com.hbhb.cw.web.vo.BudgetVO" autoMapping="true">
+    <resultMap id="BudgetResult" type="com.hbhb.cw.budget.web.vo.BudgetVO" autoMapping="true">
         <result property="id" column="id"/>
         <collection property="children" resultMap="SubBudgetResult" columnPrefix="sub_"/>
     </resultMap>
-    <resultMap id="SubBudgetResult" type="com.hbhb.cw.web.vo.BudgetVO" autoMapping="true">
+    <resultMap id="SubBudgetResult" type="com.hbhb.cw.budget.web.vo.BudgetVO" autoMapping="true">
         <result property="id" column="id"/>
     </resultMap>
     <select id="selectTreeListByCond" parameterType="map" resultMap="BudgetResult">

@@ -1,47 +1,23 @@
 package com.hbhb.cw.budget.service.impl;
 
-import com.hbhb.cw.common.AllName;
-import com.hbhb.cw.common.FlowNodeNoticeState;
-import com.hbhb.cw.common.OperationType;
-import com.hbhb.cw.common.ProjectState;
-import com.hbhb.cw.common.exception.BizException;
-import com.hbhb.cw.common.exception.BizStatus;
-import com.hbhb.cw.mapper.BudgetProjectApprovedMapper;
-import com.hbhb.cw.mapper.BudgetProjectFlowApprovedMapper;
-import com.hbhb.cw.mapper.BudgetProjectFlowMapper;
-import com.hbhb.cw.model.BudgetProject;
-import com.hbhb.cw.model.BudgetProjectApproved;
-import com.hbhb.cw.model.BudgetProjectFlow;
-import com.hbhb.cw.model.BudgetProjectFlowApproved;
-import com.hbhb.cw.model.BudgetProjectSplit;
-import com.hbhb.cw.model.BudgetProjectSplitApproved;
-import com.hbhb.cw.model.Flow;
-import com.hbhb.cw.rpc.UserApiExp;
-import com.hbhb.cw.service.BudgetProjectFlowService;
-import com.hbhb.cw.service.BudgetProjectNoticeService;
-import com.hbhb.cw.service.BudgetProjectService;
-import com.hbhb.cw.service.BudgetProjectSplitService;
-import com.hbhb.cw.service.FlowNodeNoticeService;
-import com.hbhb.cw.service.FlowRoleUserService;
-import com.hbhb.cw.service.FlowService;
-import com.hbhb.cw.service.FlowTypeService;
-import com.hbhb.cw.service.MailService;
-import com.hbhb.cw.systemcenter.vo.UserInfo;
-import com.hbhb.cw.utils.BeanConverter;
-import com.hbhb.cw.web.vo.BudgetProjectApproveVO;
-import com.hbhb.cw.web.vo.BudgetProjectApprovedFlowInfoVO;
-import com.hbhb.cw.web.vo.BudgetProjectDetailVO;
-import com.hbhb.cw.web.vo.BudgetProjectFlowApproverVO;
-import com.hbhb.cw.web.vo.BudgetProjectFlowInfoVO;
-import com.hbhb.cw.web.vo.BudgetProjectFlowNodeVO;
-import com.hbhb.cw.web.vo.BudgetProjectFlowOperationVO;
-import com.hbhb.cw.web.vo.BudgetProjectFlowSuggestionVO;
-import com.hbhb.cw.web.vo.BudgetProjectFlowVO;
-import com.hbhb.cw.web.vo.BudgetProjectNoticeReqVO;
-import com.hbhb.cw.web.vo.FlowNodeNoticeResVO;
-import com.hbhb.cw.web.vo.FlowNodeOperationVO;
-import com.hbhb.cw.web.vo.FlowRoleResVO;
 
+import com.hbhb.core.bean.BeanConverter;
+import com.hbhb.cw.budget.enums.BudgetErrorCode;
+import com.hbhb.cw.budget.enums.OperationType;
+import com.hbhb.cw.budget.exception.BudgetException;
+import com.hbhb.cw.budget.mapper.BudgetProjectApprovedMapper;
+import com.hbhb.cw.budget.mapper.BudgetProjectFlowApprovedMapper;
+import com.hbhb.cw.budget.mapper.BudgetProjectFlowMapper;
+import com.hbhb.cw.budget.model.*;
+import com.hbhb.cw.budget.rpc.*;
+import com.hbhb.cw.budget.service.*;
+import com.hbhb.cw.budget.web.vo.*;
+import com.hbhb.cw.flowcenter.enums.FlowNodeNoticeState;
+import com.hbhb.cw.flowcenter.enums.FlowNodeNoticeTemp;
+import com.hbhb.cw.flowcenter.model.Flow;
+import com.hbhb.cw.flowcenter.vo.FlowRoleResVO;
+import com.hbhb.cw.flowcenter.vo.NodeOperationReqVO;
+import com.hbhb.cw.systemcenter.vo.UserInfo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -49,15 +25,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.annotation.Resource;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import javax.annotation.Resource;
+import static com.hbhb.cw.flowcenter.enums.FlowState.*;
 
 @Service
 public class BudgetProjectFlowServiceImpl implements BudgetProjectFlowService {
@@ -75,17 +48,22 @@ public class BudgetProjectFlowServiceImpl implements BudgetProjectFlowService {
     @Resource
     private BudgetProjectNoticeService budgetProjectNoticeService;
     @Resource
-    private FlowService flowService;
+    private FlowNodeApiExp nodeApi;
     @Resource
-    private FlowTypeService flowTypeService;
+    private FlowRoleUserApiExp roleUserApi;
     @Resource
-    private FlowRoleUserService flowRoleUserService;
+    private FlowApiExp flowApi;
     @Resource
-    private FlowNodeNoticeService flowNodeNoticeService;
+    private FlowNodePropApiExp propApi;
+    @Resource
+    private FlowNoticeApiExp noticeApi;
     @Resource
     private MailService mailService;
     @Resource
     private UserApiExp userApi;
+
+    @Resource
+    private FlowTypeApiExp typeApi;
 
     @Value("${mail.enable}")
     private Boolean mailEnable;
@@ -100,12 +78,12 @@ public class BudgetProjectFlowServiceImpl implements BudgetProjectFlowService {
         BudgetProject info = budgetProjectService.getInfo(projectId);
         if (info.getFlowId() != null) {
             // 通过flowId得到流程名称
-            Flow flow = flowService.getFlow(info.getFlowId());
+            Flow flow = flowApi.getFlowById(info.getFlowId());
             // 通过节点id得到流程类型名称
             flowName = flow.getFlowName();
         } else {
             // 通过节点id得到流程类型名称
-            flowName = flowService.getNameByNodeId(flowNodes.get(0).getFlowNodeId());
+            flowName = flowApi.getNameByNodeId(flowNodes.get(0).getFlowNodeId());
 
         }
         // 通过签报id得到签报名称
@@ -139,7 +117,7 @@ public class BudgetProjectFlowServiceImpl implements BudgetProjectFlowService {
         Map<String, BudgetProjectFlowVO> flowNodeMap = flowNodes.stream().collect(
                 Collectors.toMap(BudgetProjectFlowVO::getFlowNodeId, Function.identity()));
         // 通过userId得到该用户的所有流程角色
-        List<Long> flowRoleIds = flowRoleUserService.getFlowRoleIdByUserId(userId);
+        List<Long> flowRoleIds = roleUserApi.getRoleIdByUserId(userId);
         // 1.先获取流程流转的当前节点<currentNode>
         // 2.再判断<loginUser>是否为<currentNode>的审批人
         //   2-1.如果不是，则所有节点信息全部为只读
@@ -150,8 +128,8 @@ public class BudgetProjectFlowServiceImpl implements BudgetProjectFlowService {
         //        其他节点的审批人<approver>
 
         // 1.先获取流程流转的当前节点
-        List<FlowNodeOperationVO> voList = new ArrayList<>();
-        flowNodes.forEach(flowNode -> voList.add(FlowNodeOperationVO.builder()
+        List<NodeOperationReqVO> voList = new ArrayList<>();
+        flowNodes.forEach(flowNode -> voList.add(NodeOperationReqVO.builder()
                 .flowNodeId(flowNode.getFlowNodeId())
                 .operation(flowNode.getOperation())
                 .build()));
@@ -226,7 +204,7 @@ public class BudgetProjectFlowServiceImpl implements BudgetProjectFlowService {
                 .selectByPrimaryKey(approveVO.getId());
         // 校验审批人是否为本人
         if (!currentFlow.getUserId().equals(userId)) {
-            throw new BizException(BizStatus.LOCK_OF_APPROVAL_ROLE.getCode());
+            throw new BudgetException(BudgetErrorCode.LOCK_OF_APPROVAL_ROLE);
         }
 
 
@@ -248,7 +226,7 @@ public class BudgetProjectFlowServiceImpl implements BudgetProjectFlowService {
             approverMap.put(approver.getFlowNodeId(), approver.getUserId());
         }
         Integer operation = null;
-        Integer projectState = null;
+        Integer FlowState = null;
         List<Integer> projectIds = new ArrayList<>();
         // 同意
         if (approveVO.getOperation().equals(OperationType.AGREE.value())) {
@@ -257,9 +235,9 @@ public class BudgetProjectFlowServiceImpl implements BudgetProjectFlowService {
             if (isLastNode(currentFlowNodeId, flowNodes)) {
                 // 判断是否为调整后的审批
                 if (budgetProjectApprovedMapper.selectByProjectId(Math.toIntExact(projectId)) != null) {
-                    projectState = ProjectState.ADJUST_APPROVED.value();
+                    FlowState = ADJUST_APPROVED.value();
                 } else {
-                    projectState = ProjectState.APPROVED.value();
+                    FlowState = APPROVED.value();
                     // 1.得到新增签报的id列表 2，如果id列表有值，则新增流程信息列表，列表内容和当前的列表一致（状态为31） 3，同时新增快照
                     projectIds = budgetProjectService.addProject(Math.toIntExact(projectId));
                     if (approveds == null || approveds.size() == 0) {
@@ -277,12 +255,12 @@ public class BudgetProjectFlowServiceImpl implements BudgetProjectFlowService {
                 }
             } else {
                 // 获取用户的所有流程角色
-                List<Long> flowRoleIds = flowRoleUserService.getFlowRoleIdByUserId(userId);
+                List<Long> flowRoleIds = roleUserApi.getRoleIdByUserId(userId);
                 // 判断当前用户是否为分配者。如果是分配者，则判断是否已指定所有审批人
                 if (flowRoleIds.contains(currentFlow.getAssigner())) {
                     // 判断是否所有审批人已指定
                     if (!isAllApproverAssigned(approvers)) {
-                        throw new BizException(BizStatus.NOT_ALL_APPROVERS_ASSIGNED.getCode());
+                        throw new BudgetException(BudgetErrorCode.NOT_ALL_APPROVERS_ASSIGNED);
                     }
                     // 更新各节点审批人
                     budgetProjectFlowMapper.updateBatchByNodeId(approvers, projectId);
@@ -293,7 +271,7 @@ public class BudgetProjectFlowServiceImpl implements BudgetProjectFlowService {
                     Integer nextApprover = approverMap
                             .get(getNextNode(currentFlowNodeId, flowNodes));
                     if (nextApprover == null) {
-                        throw new BizException(BizStatus.NOT_ALL_APPROVERS_ASSIGNED.getCode());
+                        throw new BudgetException(BudgetErrorCode.NOT_ALL_APPROVERS_ASSIGNED);
                     }
                 }
             }
@@ -301,7 +279,7 @@ public class BudgetProjectFlowServiceImpl implements BudgetProjectFlowService {
         // 拒绝
         else if (approveVO.getOperation().equals(OperationType.REJECT.value())) {
             operation = OperationType.REJECT.value();
-            projectState = ProjectState.APPROVE_REJECTED.value();
+            FlowState = APPROVE_REJECTED.value();
         }
 
         // 同意或者拒绝后对该签报的代办提醒进行删除
@@ -321,8 +299,8 @@ public class BudgetProjectFlowServiceImpl implements BudgetProjectFlowService {
                 .build());
 
         // 更新项目的流程状态
-        if (projectState != null) {
-            budgetProjectService.updateState(Math.toIntExact(projectId), projectState);
+        if (FlowState != null) {
+            budgetProjectService.updateState(Math.toIntExact(projectId), FlowState);
         }
 
         // 判断是否为最后一个节点且同意
@@ -365,15 +343,8 @@ public class BudgetProjectFlowServiceImpl implements BudgetProjectFlowService {
 
     @Override
     public String getInform(String flowNodeId, Integer state) {
-        String inform = null;
-        List<FlowNodeNoticeResVO> flowNodeNotices = flowNodeNoticeService
-                .getFlowNodeNotice(flowNodeId);
-        for (FlowNodeNoticeResVO flowNodeNotice : flowNodeNotices) {
-            if (flowNodeNotice.getState().equals(state)) {
-                inform = flowNodeNotice.getInform();
-            }
-        }
-        return inform;
+        return noticeApi.getInform(flowNodeId, state);
+
     }
 
     @Override
@@ -395,12 +366,12 @@ public class BudgetProjectFlowServiceImpl implements BudgetProjectFlowService {
         BudgetProject info = budgetProjectService.getInfo(projectId);
         if (info.getFlowId() != null) {
             // 通过flowId得到流程名称
-            Flow flow = flowService.getFlow(info.getFlowId());
+            Flow flow = flowApi.getFlowById(info.getFlowId());
             // 通过节点id得到流程类型名称
             flowName = flow.getFlowName();
         } else {
             // 通过节点id得到流程类型名称
-            flowName = flowService.getNameByNodeId(flowNodes.get(0).getFlowNodeId());
+            flowName = flowApi.getNameByNodeId(flowNodes.get(0).getFlowNodeId());
 
         }
         // 通过签报id得到签报快照名称
@@ -500,9 +471,9 @@ public class BudgetProjectFlowServiceImpl implements BudgetProjectFlowService {
      * @param list 已排序
      * @return 当前节点的id
      */
-    private String getCurrentNode(List<FlowNodeOperationVO> list) {
+    private String getCurrentNode(List<NodeOperationReqVO> list) {
         // 通过检查operation状态来确定流程流传到哪个节点
-        for (FlowNodeOperationVO vo : list) {
+        for (NodeOperationReqVO vo : list) {
             if (OperationType.UN_EXECUTED.value().equals(vo.getOperation())) {
                 return vo.getFlowNodeId();
             }
@@ -547,7 +518,7 @@ public class BudgetProjectFlowServiceImpl implements BudgetProjectFlowService {
                           Integer userId, Long projectId, String currentFlowNodeId, List<String> flowNodes,
                           Map<String, Integer> approverMap, String suggestion) {
         // 通过flowNodeId得到流程类型id
-        Long flowTypeId = flowTypeService.getIdByNodeId(flowNodes.get(0));
+        Long flowTypeId = typeApi.getTypeIdByNode(flowNodes.get(0));
         BudgetProjectDetailVO budgetProject = budgetProjectService.getBudgetProject(projectId);
         // 签报名称
         String projectName = budgetProject.getProjectName();
@@ -565,7 +536,7 @@ public class BudgetProjectFlowServiceImpl implements BudgetProjectFlowService {
                 if (inform == null) {
                     return;
                 }
-                inform = inform.replace(AllName.TITLE.getValue(), projectNum + "_" + projectName);
+                inform = inform.replace(FlowNodeNoticeTemp.TITLE.value(), projectNum + "_" + projectName);
                 // 推送下一位审批者
                 Integer nextApprover = approverMap.get(getNextNode(currentFlowNodeId, flowNodes));
                 budgetProjectNoticeService.andSaveBudgetProjectNotice(
@@ -589,8 +560,8 @@ public class BudgetProjectFlowServiceImpl implements BudgetProjectFlowService {
             if (inform == null) {
                 return;
             }
-            inform = inform.replace(AllName.TITLE.getValue(), projectNum + "_" + projectName);
-            inform = inform.replace(AllName.APPROVE.getValue(), user.getNickName());
+            inform = inform.replace(FlowNodeNoticeTemp.TITLE.value(), projectNum + "_" + projectName);
+            inform = inform.replace(FlowNodeNoticeTemp.APPROVE.value(), user.getNickName());
             // 推送发起人
             budgetProjectNoticeService.andSaveBudgetProjectNotice(
                     BudgetProjectNoticeReqVO.builder().projectId(Math.toIntExact(projectId))
@@ -607,9 +578,9 @@ public class BudgetProjectFlowServiceImpl implements BudgetProjectFlowService {
             if (inform == null) {
                 return;
             }
-            String replace = inform.replace(AllName.TITLE.getValue(), projectNum + "_" + projectName);
-            inform = replace.replace(AllName.APPROVE.getValue(), user.getNickName());
-            inform = inform.replace(AllName.CAUSE.getValue(), suggestion);
+            String replace = inform.replace(FlowNodeNoticeTemp.TITLE.value(), projectNum + "_" + projectName);
+            inform = replace.replace(FlowNodeNoticeTemp.APPROVE.value(), user.getNickName());
+            inform = inform.replace(FlowNodeNoticeTemp.CAUSE.value(), suggestion);
             budgetProjectNoticeService.andSaveBudgetProjectNotice(
                     BudgetProjectNoticeReqVO.builder().projectId(Math.toIntExact(projectId))
                             .receiver(approvers.get(0).getUserId())
@@ -657,7 +628,7 @@ public class BudgetProjectFlowServiceImpl implements BudgetProjectFlowService {
         BeanUtils.copyProperties(budgetProject, budgetProjectApproved);
         budgetProjectApproved.setId(null);
         budgetProjectApproved.setProjectId(budgetProject.getId());
-        budgetProjectApproved.setState(ProjectState.APPROVED.value());
+        budgetProjectApproved.setState(APPROVED.value());
         budgetProjectApproved.setTaixIncloudAmount(budgetProject.getTaxIncludeAmount());
         budgetProjectApproved.setFlowId(Math.toIntExact(budgetProject.getFlowId()));
         budgetProjectApprovedMapper.insertSelective(budgetProjectApproved);

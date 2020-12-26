@@ -1,22 +1,20 @@
 package com.hbhb.cw.budget.service.impl;
 
-import com.hbhb.cw.common.AllName;
-import com.hbhb.cw.mapper.BudgetProjectFlowHistoryMapper;
-import com.hbhb.cw.model.BudgetProjectFlowHistory;
-import com.hbhb.cw.rpc.UserApiExp;
-import com.hbhb.cw.service.BudgetProjectFlowHistoryService;
-import com.hbhb.cw.service.BudgetProjectService;
-import com.hbhb.cw.utils.DateUtil;
-import com.hbhb.cw.web.vo.BudgetProjectDetailVO;
-import com.hbhb.cw.web.vo.BudgetProjectFlowHistoryVO;
 
+import com.hbhb.core.utils.DateUtil;
+import com.hbhb.cw.budget.mapper.BudgetProjectFlowHistoryMapper;
+import com.hbhb.cw.budget.model.BudgetProjectFlowHistory;
+import com.hbhb.cw.budget.rpc.UserApiExp;
+import com.hbhb.cw.budget.service.BudgetProjectFlowHistoryService;
+import com.hbhb.cw.budget.service.BudgetProjectService;
+import com.hbhb.cw.budget.web.vo.BudgetProjectDetailVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectFlowHistoryVO;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import javax.annotation.Resource;
 
 @Service
 public class BudgetProjectFlowHistoryServiceImpl implements BudgetProjectFlowHistoryService {
@@ -39,12 +37,16 @@ public class BudgetProjectFlowHistoryServiceImpl implements BudgetProjectFlowHis
     @Override
     public List<BudgetProjectFlowHistoryVO> getBudgetProjectFlowHistory(Long projectId) {
         List<BudgetProjectFlowHistoryVO> historyVos = new ArrayList<>();
-        // userId <=> userName
-        Map<Integer, String> userMap = userApi.getUserMapById();
+
         List<BudgetProjectFlowHistory> list = budgetProjectFlowHistoryMapper.selectByProjectId(Math.toIntExact(projectId));
+
         if (list == null || list.size() == 0) {
             return historyVos;
         }
+        List<Integer> userIds = new ArrayList<>();
+        list.forEach(item -> userIds.add(item.getUserId()));
+        // userId <=> userName
+        Map<Integer, String> userMap = userApi.getUserMapById(userIds);
         BudgetProjectDetailVO budgetProject = budgetProjectService.getBudgetProject(projectId);
 
         for (int i = 0; i < list.size(); i++) {
@@ -61,7 +63,7 @@ public class BudgetProjectFlowHistoryServiceImpl implements BudgetProjectFlowHis
                         .operation(list.get(i).getOperation())
                         .suggestion(list.get(i).getSuggestion())
                         .roleDesc(list.get(i).getRoleDesc())
-                        .moder(budgetProject.getProjectName() + AllName.FLOW_NAME.getValue() +
+                        .moder(budgetProject.getProjectName() + "流程" +
                                 DateUtil.dateToString(list.get(list.size() - 1).getUpdateTime()))
                         .build());
             } else {
@@ -72,7 +74,7 @@ public class BudgetProjectFlowHistoryServiceImpl implements BudgetProjectFlowHis
                         .operation(list.get(i).getOperation())
                         .suggestion(list.get(i).getSuggestion())
                         .roleDesc(list.get(i).getRoleDesc())
-                        .moder(budgetProject.getProjectName() + AllName.FLOW_NAME.value() +
+                        .moder(budgetProject.getProjectName() + "流程" +
                                 DateUtil.dateToString(list.get(list.size() - 1).getUpdateTime()))
                         .build());
             }

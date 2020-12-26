@@ -1,22 +1,14 @@
 package com.hbhb.cw.budget.service;
 
-import com.hbhb.cw.model.BudgetProjectAgile;
-import com.hbhb.cw.systemcenter.vo.UserInfo;
-import com.hbhb.cw.web.vo.BudgetAgileAddVO;
-import com.hbhb.cw.web.vo.BudgetProgressReqVO;
-import com.hbhb.cw.web.vo.BudgetProgressResVO;
-import com.hbhb.cw.web.vo.BudgetProjectAgileExportVO;
-import com.hbhb.cw.web.vo.BudgetProjectAgileInfoVO;
-import com.hbhb.cw.web.vo.BudgetProjectAgileReqVO;
-import com.hbhb.cw.web.vo.BudgetProjectAgileVO;
-import com.hbhb.cw.web.vo.BudgetProjectAmountVO;
-import com.hbhb.springboot.web.view.Page;
 
+import com.hbhb.cw.budget.model.BudgetProjectAgile;
+import com.hbhb.cw.budget.model.Page;
+import com.hbhb.cw.budget.web.vo.*;
+import com.hbhb.cw.systemcenter.vo.UserInfo;
 import org.apache.ibatis.annotations.Param;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * @author yzc
@@ -58,8 +50,8 @@ public interface BudgetProjectAgileService {
      * 日常性签报费用统计
      */
     List<BudgetProjectAmountVO> getProgressByBudget(@Param("unitId") Integer unitId,
-                                                    @Param(value = "budgetId") Long budgetId,
-                                                    @Param(value = "year") String year);
+                                                    @Param("budgetId") Long budgetId,
+                                                    @Param("year") String year);
 
     /**
      * 日常费用签报统计

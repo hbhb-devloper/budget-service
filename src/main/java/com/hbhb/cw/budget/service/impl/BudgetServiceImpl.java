@@ -1,61 +1,40 @@
 package com.hbhb.cw.budget.service.impl;
 
-import com.github.promeg.pinyinhelper.Pinyin;
-import com.hbhb.cw.common.AllName;
-import com.hbhb.cw.common.exception.BizException;
-import com.hbhb.cw.common.exception.BizStatus;
-import com.hbhb.cw.mapper.BudgetBelongMapper;
-import com.hbhb.cw.mapper.BudgetDataMapper;
-import com.hbhb.cw.mapper.BudgetItemMapper;
-import com.hbhb.cw.mapper.BudgetMapper;
-import com.hbhb.cw.model.Budget;
-import com.hbhb.cw.model.BudgetBelong;
-import com.hbhb.cw.model.BudgetData;
-import com.hbhb.cw.model.BudgetHistory;
-import com.hbhb.cw.model.BudgetItem;
-import com.hbhb.cw.model.BudgetProject;
-import com.hbhb.cw.rpc.UnitApiExp;
-import com.hbhb.cw.service.BudgetDataService;
-import com.hbhb.cw.service.BudgetHistoryService;
-import com.hbhb.cw.service.BudgetProjectService;
-import com.hbhb.cw.service.BudgetService;
-import com.hbhb.cw.systemcenter.vo.TreeSelectParentVO;
-import com.hbhb.cw.utils.BeanConverter;
-import com.hbhb.cw.utils.DateUtil;
-import com.hbhb.cw.web.vo.BudgetAdjustVO;
-import com.hbhb.cw.web.vo.BudgetExportVO;
-import com.hbhb.cw.web.vo.BudgetHistoryInfoVO;
-import com.hbhb.cw.web.vo.BudgetImportVO;
-import com.hbhb.cw.web.vo.BudgetInfoVO;
-import com.hbhb.cw.web.vo.BudgetProgressResVO;
-import com.hbhb.cw.web.vo.BudgetReqVO;
-import com.hbhb.cw.web.vo.BudgetVO;
-import com.hbhb.cw.web.vo.SelectVO;
 
+import com.alibaba.excel.support.ExcelTypeEnum;
+import com.github.promeg.pinyinhelper.Pinyin;
+import com.hbhb.api.core.bean.SelectVO;
+import com.hbhb.core.bean.BeanConverter;
+import com.hbhb.core.utils.DateUtil;
+import com.hbhb.cw.budget.enums.BudgetErrorCode;
+import com.hbhb.cw.budget.exception.BudgetException;
+import com.hbhb.cw.budget.mapper.BudgetBelongMapper;
+import com.hbhb.cw.budget.mapper.BudgetDataMapper;
+import com.hbhb.cw.budget.mapper.BudgetItemMapper;
+import com.hbhb.cw.budget.mapper.BudgetMapper;
+import com.hbhb.cw.budget.model.*;
+import com.hbhb.cw.budget.rpc.UnitApiExp;
+import com.hbhb.cw.budget.service.BudgetDataService;
+import com.hbhb.cw.budget.service.BudgetHistoryService;
+import com.hbhb.cw.budget.service.BudgetProjectService;
+import com.hbhb.cw.budget.service.BudgetService;
+import com.hbhb.cw.budget.web.vo.*;
+import com.hbhb.cw.systemcenter.vo.TreeSelectParentVO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.Resource;
 import java.beans.PropertyDescriptor;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import javax.annotation.Resource;
-
-import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
@@ -692,7 +671,7 @@ public class BudgetServiceImpl implements BudgetService {
         // 删除
         // 判断签报是否被用过，如果用过不予删除
         if (budgetProjectService.existByBudgetId(budgetId)) {
-            throw new BizException(BizStatus.THE_PROJECT_IS_CONNECTED.getCode());
+            throw new BudgetException(BudgetErrorCode.THE_PROJECT_IS_CONNECTED);
         }
         // 删除主表
         budgetMapper.deleteByPrimaryKey(budgetId);
@@ -754,7 +733,7 @@ public class BudgetServiceImpl implements BudgetService {
             return (BigDecimal) pd.getReadMethod().invoke(budgetImportVO);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            throw new BizException(BizStatus.BUDGET_DATA_PARSE_ERROR.getCode());
+            throw new BudgetException(BudgetErrorCode.BUDGET_DATA_PARSE_ERROR);
         }
     }
 
@@ -831,8 +810,8 @@ public class BudgetServiceImpl implements BudgetService {
     public void judegFileName(String fileName) {
         int i = fileName.lastIndexOf(".");
         String name = fileName.substring(i);
-        if (!(AllName.XLS.getValue().equals(name) || AllName.XLSX.getValue().equals(name))) {
-            throw new BizException(BizStatus.BUDGET_DATA_NAME_ERROR.getCode());
+        if (!(ExcelTypeEnum.XLS.getValue().equals(name) || ExcelTypeEnum.XLSX.getValue().equals(name))) {
+            throw new BudgetException(BudgetErrorCode.BUDGET_DATA_NAME_ERROR);
         }
     }
 

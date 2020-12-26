@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hbhb.cw.mapper.BudgetProjectMapper">
-  <resultMap id="BaseResultMap" type="com.hbhb.cw.model.BudgetProject">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="budget_id" jdbcType="BIGINT" property="budgetId" />
-    <result column="unit_id" jdbcType="BIGINT" property="unitId" />
-    <result column="project_name" jdbcType="VARCHAR" property="projectName" />
-    <result column="amount" jdbcType="DECIMAL" property="amount" />
-    <result column="available_amount" jdbcType="DECIMAL" property="availableAmount" />
-    <result column="tax_include_amount" jdbcType="DECIMAL" property="taxIncludeAmount" />
-    <result column="cost" jdbcType="DECIMAL" property="cost" />
-    <result column="vat_rate" jdbcType="DECIMAL" property="vatRate" />
-    <result column="vat_amount" jdbcType="DECIMAL" property="vatAmount" />
+<mapper namespace="com.hbhb.cw.budget.mapper.BudgetProjectMapper">
+    <resultMap id="BaseResultMap" type="com.hbhb.cw.budget.model.BudgetProject">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="budget_id" jdbcType="BIGINT" property="budgetId"/>
+        <result column="unit_id" jdbcType="BIGINT" property="unitId"/>
+        <result column="project_name" jdbcType="VARCHAR" property="projectName"/>
+        <result column="amount" jdbcType="DECIMAL" property="amount"/>
+        <result column="available_amount" jdbcType="DECIMAL" property="availableAmount"/>
+        <result column="tax_include_amount" jdbcType="DECIMAL" property="taxIncludeAmount"/>
+        <result column="cost" jdbcType="DECIMAL" property="cost"/>
+        <result column="vat_rate" jdbcType="DECIMAL" property="vatRate"/>
+        <result column="vat_amount" jdbcType="DECIMAL" property="vatAmount"/>
     <result column="director" jdbcType="VARCHAR" property="director" />
     <result column="project_num" jdbcType="VARCHAR" property="projectNum" />
     <result column="start_time" jdbcType="DATE" property="startTime" />
@@ -47,7 +47,7 @@
     delete from budget_project
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.hbhb.cw.model.BudgetProject">
+    <insert id="insert" parameterType="com.hbhb.cw.budget.model.BudgetProject">
     insert into budget_project (id, budget_id, unit_id,
       project_name, amount, available_amount,
       tax_include_amount, cost, vat_rate,
@@ -69,17 +69,18 @@
       #{createBy,jdbcType=VARCHAR}, #{flowId,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP},
       #{updateBy,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.hbhb.cw.model.BudgetProject" useGeneratedKeys="true" keyProperty="id">
-    insert into budget_project
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="budgetId != null">
-        budget_id,
-      </if>
-      <if test="unitId != null">
-        unit_id,
+    <insert id="insertSelective" parameterType="com.hbhb.cw.budget.model.BudgetProject" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into budget_project
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="budgetId != null">
+                budget_id,
+            </if>
+            <if test="unitId != null">
+                unit_id,
       </if>
       <if test="projectName != null">
         project_name,
@@ -244,17 +245,17 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hbhb.cw.model.BudgetProject">
-    update budget_project
-    <set>
-      <if test="budgetId != null">
-        budget_id = #{budgetId,jdbcType=BIGINT},
-      </if>
-      <if test="unitId != null">
-        unit_id = #{unitId,jdbcType=BIGINT},
-      </if>
-      <if test="projectName != null">
-        project_name = #{projectName,jdbcType=VARCHAR},
+    <update id="updateByPrimaryKeySelective" parameterType="com.hbhb.cw.budget.model.BudgetProject">
+        update budget_project
+        <set>
+            <if test="budgetId != null">
+                budget_id = #{budgetId,jdbcType=BIGINT},
+            </if>
+            <if test="unitId != null">
+                unit_id = #{unitId,jdbcType=BIGINT},
+            </if>
+            <if test="projectName != null">
+                project_name = #{projectName,jdbcType=VARCHAR},
       </if>
       <if test="amount != null">
         amount = #{amount,jdbcType=DECIMAL},
@@ -331,7 +332,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.hbhb.cw.model.BudgetProject">
+    <update id="updateByPrimaryKey" parameterType="com.hbhb.cw.budget.model.BudgetProject">
     update budget_project
     set budget_id = #{budgetId,jdbcType=BIGINT},
       unit_id = #{unitId,jdbcType=BIGINT},
@@ -363,18 +364,18 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
-  <select id="selectListByCond" parameterType="com.hbhb.cw.web.vo.BudgetProjectReqVO"
-          resultType="com.hbhb.cw.web.vo.BudgetProjectResVO">
-    select bp.id           as id,
-    bp.project_num  as projectNum,
-    bp.project_name as projectName,
-    b.budget_num    as budgetNum,
-    b.project_item   as projectTypeName,
-    bp.amount       as amount,
-    bp.cost         as cost,
-    bp.vat_amount   as vatAmount,
-    bp.unit_id     as unitId,
-    date_format(bp.create_time, '%Y-%m-%d %H:%i:%s') as createTime,
+    <select id="selectListByCond" parameterType="com.hbhb.cw.budget.web.vo.BudgetProjectReqVO"
+            resultType="com.hbhb.cw.budget.web.vo.BudgetProjectResVO">
+        select bp.id as id,
+        bp.project_num as projectNum,
+        bp.project_name as projectName,
+        b.budget_num as budgetNum,
+        b.project_item as projectTypeName,
+        bp.amount as amount,
+        bp.cost as cost,
+        bp.vat_amount as vatAmount,
+        bp.unit_id as unitId,
+        date_format(bp.create_time, '%Y-%m-%d %H:%i:%s') as createTime,
     bp.create_by    as createBy,
     bp.origin       as origin,
     bp.state        as state
@@ -406,17 +407,17 @@
     order by bp.create_time desc
   </select>
 
-  <select id="countListByCond" parameterType="com.hbhb.cw.web.vo.BudgetProjectReqVO"
-          resultType="int">
-    select count(bp.id)
-    from budget_project bp
-    left join budget b on bp.budget_id = b.id
-    left join budget_item bi on b.budget_item_id = bi.id
-    where bp.delete_flag = 1
-    and bd.unit_id in
-    <foreach collection="list" item="item" open="(" separator="," close=")">
-      #{item}
-    </foreach>
+    <select id="countListByCond" parameterType="com.hbhb.cw.budget.web.vo.BudgetProjectReqVO"
+            resultType="int">
+        select count(bp.id)
+        from budget_project bp
+        left join budget b on bp.budget_id = b.id
+        left join budget_item bi on b.budget_item_id = bi.id
+        where bp.delete_flag = 1
+        and bd.unit_id in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
     <if test="budgetId != null">
       and bp.budget_id = #{budgetId}
     </if>
@@ -437,17 +438,17 @@
     </if>
   </select>
 
-  <select id="selectProgress" parameterType="map" resultType="com.hbhb.cw.web.vo.BudgetProgressResVO">
-    select t1.*,
-    ifnull(sum(t2.amount), 0) + ifnull(t3.amount, 0) as amount
-    from (
-    select b.id                                      as budgetId,
-    bi.item_name                              as budgetItemName,
-    concat(b.budget_num, '_', b.project_item) as projectItemName,
-    ifnull(sum(bd.balance), 0)                as budgetBalance
-    from budget b
-    left join budget_data bd on b.id = bd.budget_id
-    left join budget_item bi on bi.id = b.budget_item_id
+    <select id="selectProgress" parameterType="map" resultType="com.hbhb.cw.budget.web.vo.BudgetProgressResVO">
+        select t1.*,
+        ifnull(sum(t2.amount), 0) + ifnull(t3.amount, 0) as amount
+        from (
+        select b.id as budgetId,
+        bi.item_name as budgetItemName,
+        concat(b.budget_num, '_', b.project_item) as projectItemName,
+        ifnull(sum(bd.balance), 0) as budgetBalance
+        from budget b
+        left join budget_data bd on b.id = bd.budget_id
+        left join budget_item bi on bi.id = b.budget_item_id
     left join unit u on u.id = bd.unit_id
     where bd.unit_id in
     <foreach collection="list" item="item" open="(" separator="," close=")">
@@ -510,17 +511,18 @@
     group by t1.budgetId
   </select>
 
-  <select id="selectProgressByBudget" parameterType="map" resultType="com.hbhb.cw.web.vo.BudgetProjectAmountVO">
-    select t1.projectItemName as projectItemName,
-    t2.amount          as amount,
-    t2.id              as id,
-    t2.projectName     as projectName,
-    t2.projectNum      as projectNum,
-    t2.creatBy         as creatBy,
-    t2.createTime      as createTime,
-    u.unit_name        as unitName
-    from (
-    select b.id                                      as budgetId,
+    <select id="selectProgressByBudget" parameterType="map"
+            resultType="com.hbhb.cw.budget.web.vo.BudgetProjectAmountVO">
+        select t1.projectItemName as projectItemName,
+        t2.amount as amount,
+        t2.id as id,
+        t2.projectName as projectName,
+        t2.projectNum as projectNum,
+        t2.creatBy as creatBy,
+        t2.createTime as createTime,
+        u.unit_name as unitName
+        from (
+        select b.id as budgetId,
     bi.item_name                              as budgetItemName,
     concat(b.budget_num, '_', b.project_item) as projectItemName,
     bd.balance                                as budgetBalance
@@ -563,17 +565,17 @@
     group by t2.id
   </select>
 
-  <select id="selectProgressByState" parameterType="map" resultType="com.hbhb.cw.web.vo.BudgetProgressResVO">
-    select t1.*,
-    t1.budgetId               as lineNumber,
-    ifnull(sum(t2.amount), 0) as amount,
-    u.unit_name               as unitName
-    from (
-    select b.id                                      as budgetId,
-    bi.item_name                              as budgetItemName,
-    concat(b.project_item)                    as projectItemName,
-    bd.balance                                as budgetBalance,
-    b.remark                                  as remark
+    <select id="selectProgressByState" parameterType="map" resultType="com.hbhb.cw.budget.web.vo.BudgetProgressResVO">
+        select t1.*,
+        t1.budgetId as lineNumber,
+        ifnull(sum(t2.amount), 0) as amount,
+        u.unit_name as unitName
+        from (
+        select b.id as budgetId,
+        bi.item_name as budgetItemName,
+        concat(b.project_item) as projectItemName,
+        bd.balance as budgetBalance,
+        b.remark as remark
     from budget b
     left join budget_data bd on b.id = bd.budget_id
     left join budget_item bi on bi.id = b.budget_item_id
@@ -609,17 +611,18 @@
     group by t1.budgetId
   </select>
 
-  <select id="selectBudgetProgressByBudgetData" parameterType="map" resultType="com.hbhb.cw.web.vo.BudgetProgressResVO">
-    select t1.budgetId as budgetId,
-    t1.budgetItemName as budgetItemName,
-    t1.projectItemName as projectItemName,
-    t1.budgetNum      as budgetNum,
-    t1.budgetBalance  as budgetBalance,
-    t1.unitName       as unitName,
-    ifnull(sum(t2.amount), 0) + ifnull(sum(t3.amount), 0) as amount
-    from (
-    select b.id                                      as budgetId,
-    bi.item_name                              as budgetItemName,
+    <select id="selectBudgetProgressByBudgetData" parameterType="map"
+            resultType="com.hbhb.cw.budget.web.vo.BudgetProgressResVO">
+        select t1.budgetId as budgetId,
+        t1.budgetItemName as budgetItemName,
+        t1.projectItemName as projectItemName,
+        t1.budgetNum as budgetNum,
+        t1.budgetBalance as budgetBalance,
+        t1.unitName as unitName,
+        ifnull(sum(t2.amount), 0) + ifnull(sum(t3.amount), 0) as amount
+        from (
+        select b.id as budgetId,
+        bi.item_name as budgetItemName,
     concat(b.budget_num, '_', b.project_item) as projectItemName,
     b.budget_num                              as budgetNum,
     bd.balance                                as budgetBalance,
@@ -683,17 +686,17 @@
     group by t1.budgetId
   </select>
 
-  <resultMap id="projectFile" type="com.hbhb.cw.web.vo.BudgetProjectDetailVO">
-    <id column="id" property="id"/>
-    <id column="budgetId" property="budgetId"/>
-    <id column="unitId" property="unitId"/>
-    <id column="num" property="projectNum"/>
-    <id column="projectName" property="projectName"/>
-    <id column="amount" property="amount"/>
-    <id column="avamount" property="availableAmount"/>
-    <id column="vatAmount" property="vatAmount"/>
-    <id column="tiamount" property="taxIncludeAmount"/>
-    <id column="cost" property="cost"/>
+    <resultMap id="projectFile" type="com.hbhb.cw.budget.web.vo.BudgetProjectDetailVO">
+        <id column="id" property="id"/>
+        <id column="budgetId" property="budgetId"/>
+        <id column="unitId" property="unitId"/>
+        <id column="num" property="projectNum"/>
+        <id column="projectName" property="projectName"/>
+        <id column="amount" property="amount"/>
+        <id column="avamount" property="availableAmount"/>
+        <id column="vatAmount" property="vatAmount"/>
+        <id column="tiamount" property="taxIncludeAmount"/>
+        <id column="cost" property="cost"/>
     <id column="vatrate" property="vatRate"/>
     <id column="director" property="director"/>
     <id column="enum" property="engineeringNum"/>
@@ -707,18 +710,19 @@
     <id column="createTime" property="createTime"/>
     <id column="remark" property="remark"/>
     <id column="state" property="state"/>
-    <collection property="files" ofType="com.hbhb.cw.web.vo.BudgetProjectFileVO" column="id">
-      <result column="fileId" property="fileId"/>
-      <result column="fileName" property="fileName"/>
-      <result column="fileSize" property="fileSize"/>
-      <result column="filePath" property="filePath"/>
-      <result column="required" property="required"/>
-      <result column="author" property="author"/>
-      <result   column="times" property="createTime"/>
-      <result column="isApproved" property="isApproved"/>
-    </collection>
+        <collection property="files" ofType="com.hbhb.cw.budget.web.vo.BudgetProjectFileVO" column="id">
+            <result column="fileId" property="fileId"/>
+            <result column="fileName" property="fileName"/>
+            <result column="fileSize" property="fileSize"/>
+            <result column="filePath" property="filePath"/>
+            <result column="required" property="required"/>
+            <result column="author" property="author"/>
+            <result column="times" property="createTime"/>
+            <result column="isApproved" property="isApproved"/>
+        </collection>
   </resultMap>
-  <select id="selectProjectById" parameterType="com.hbhb.cw.web.vo.BudgetProjectDetailVO" resultMap="projectFile">
+    <select id="selectProjectById" parameterType="com.hbhb.cw.budget.web.vo.BudgetProjectDetailVO"
+            resultMap="projectFile">
    select sf.id                                 as fileId,
        sf.file_name                             as fileName,
        sf.file_size                             as fileSize,
@@ -790,17 +794,18 @@
     and delete_flag = 1
   </select>
 
-  <select id="selectListByIds" parameterType="java.util.List" resultType="com.hbhb.cw.web.vo.BudgetProjectExportVO">
-    select bp.id           as id,
-    bp.project_num  as projectNum,
-    bp.project_name as projectName,
-    b.budget_num    as budgetNum,
-    b.project_item   as projectTypeName,
-    bp.amount       as amount,
-    bp.cost         as cost,
-    bp.vat_amount   as vatAmount,
-    u.unit_name     as unitName,
-    date_format(bp.create_time, '%Y-%m-%d %H:%i:%s') as createTime,
+    <select id="selectListByIds" parameterType="java.util.List"
+            resultType="com.hbhb.cw.budget.web.vo.BudgetProjectExportVO">
+        select bp.id as id,
+        bp.project_num as projectNum,
+        bp.project_name as projectName,
+        b.budget_num as budgetNum,
+        b.project_item as projectTypeName,
+        bp.amount as amount,
+        bp.cost as cost,
+        bp.vat_amount as vatAmount,
+        u.unit_name as unitName,
+        date_format(bp.create_time, '%Y-%m-%d %H:%i:%s') as createTime,
     bp.create_by    as createBy,
     bp.origin       as origin,
     bp.state        as state
@@ -818,7 +823,7 @@
   <select id="selectBudgetIdById" resultType="java.lang.Long">
     select budget_id from budget_project where id =#{projectId}
   </select>
-  <select id="selectBudgetProjectById" resultType="com.hbhb.cw.model.BudgetProject">
+    <select id="selectBudgetProjectById" resultType="com.hbhb.cw.budget.model.BudgetProject">
     select start_time as startTime ,
     end_time as endTime,
     unit_id  as unitId,

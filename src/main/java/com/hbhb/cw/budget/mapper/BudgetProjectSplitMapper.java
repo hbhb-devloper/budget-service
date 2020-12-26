@@ -1,8 +1,8 @@
 package com.hbhb.cw.budget.mapper;
 
-import com.hbhb.cw.model.BudgetProjectSplit;
-import com.hbhb.cw.web.vo.BudgetProjectSplitVO;
 
+import com.hbhb.cw.budget.model.BudgetProjectSplit;
+import com.hbhb.cw.budget.web.vo.BudgetProjectSplitVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Mapper
-public interface BudgetProjectSplitMapper extends BaseMapper<BudgetProjectSplit,Integer>{
+public interface BudgetProjectSplitMapper extends BaseMapper<BudgetProjectSplit, Integer> {
 
 
     List<BudgetProjectSplitVO> selectSplitByProjectId(@Param("projectId") Integer projectId);

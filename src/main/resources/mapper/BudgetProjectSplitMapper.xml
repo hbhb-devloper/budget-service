@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hbhb.cw.mapper.BudgetProjectSplitMapper">
-    <resultMap id="BaseResultMap" type="com.hbhb.cw.model.BudgetProjectSplit">
+<mapper namespace="com.hbhb.cw.budget.mapper.BudgetProjectSplitMapper">
+    <resultMap id="BaseResultMap" type="com.hbhb.cw.budget.model.BudgetProjectSplit">
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="project_id" jdbcType="INTEGER" property="projectId"/>
         <result column="year" jdbcType="VARCHAR" property="years"/>
@@ -26,7 +26,7 @@
     delete from budget_project_split
     where id = #{id,jdbcType=INTEGER}
   </delete>
-    <insert id="insert" parameterType="com.hbhb.cw.model.BudgetProjectSplit">
+    <insert id="insert" parameterType="com.hbhb.cw.budget.model.BudgetProjectSplit">
     insert into budget_project_split (id, project_id,
       year, class_name, price, 
       amount, cost, explains,crete_time,create_by
@@ -37,7 +37,8 @@
        #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}
       )
   </insert>
-    <insert id="insertSelective" parameterType="com.hbhb.cw.model.BudgetProjectSplit" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertSelective" parameterType="com.hbhb.cw.budget.model.BudgetProjectSplit" useGeneratedKeys="true"
+            keyProperty="id">
         insert into budget_project_split
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -106,8 +107,7 @@
     </insert>
 
 
-
-    <update id="updateByPrimaryKeySelective" parameterType="com.hbhb.cw.model.BudgetProjectSplit">
+    <update id="updateByPrimaryKeySelective" parameterType="com.hbhb.cw.budget.model.BudgetProjectSplit">
         update budget_project_split
         <set>
             <if test="projectId != null">
@@ -140,7 +140,7 @@
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.hbhb.cw.model.BudgetProjectSplit">
+    <update id="updateByPrimaryKey" parameterType="com.hbhb.cw.budget.model.BudgetProjectSplit">
     update budget_project_split
     set project_id = #{projectId,jdbcType=INTEGER},
       year = #{years,jdbcType=TIME},
@@ -154,7 +154,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
-    <select id="selectSplitByProjectId" resultType="com.hbhb.cw.web.vo.BudgetProjectSplitVO">
+    <select id="selectSplitByProjectId" resultType="com.hbhb.cw.budget.web.vo.BudgetProjectSplitVO">
          select bpc.id        as id ,
                bpc.year       as years,
                bpc.class_name as className,
@@ -170,7 +170,7 @@
         where project_id = #{projectId}
   </select>
 
-    <select id="selectSplitAllByProjectId" parameterType="int" resultType="com.hbhb.cw.model.BudgetProjectSplit">
+    <select id="selectSplitAllByProjectId" parameterType="int" resultType="com.hbhb.cw.budget.model.BudgetProjectSplit">
         select
         bpc.id as id,
         bpc.project_id as projectId,
@@ -188,7 +188,7 @@
 
 
     <select id="selectBudgetProjectSplitById" parameterType="integer"
-            resultType="com.hbhb.cw.web.vo.BudgetProjectSplitVO">
+            resultType="com.hbhb.cw.budget.web.vo.BudgetProjectSplitVO">
        select bpc.id  as id,
        b.id           as budgetId,
        bpc.year       as years,
