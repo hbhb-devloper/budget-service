@@ -10,24 +10,40 @@ import com.hbhb.cw.budget.exception.BudgetException;
 import com.hbhb.cw.budget.rpc.UserApiExp;
 import com.hbhb.cw.budget.service.BudgetService;
 import com.hbhb.cw.budget.service.listener.BudgetListener;
-import com.hbhb.cw.budget.web.vo.*;
+import com.hbhb.cw.budget.web.vo.BudgetAdjustVO;
+import com.hbhb.cw.budget.web.vo.BudgetExportVO;
+import com.hbhb.cw.budget.web.vo.BudgetImportVO;
+import com.hbhb.cw.budget.web.vo.BudgetInfoVO;
+import com.hbhb.cw.budget.web.vo.BudgetReqVO;
+import com.hbhb.cw.budget.web.vo.BudgetVO;
 import com.hbhb.cw.systemcenter.vo.TreeSelectParentVO;
 import com.hbhb.cw.systemcenter.vo.UserInfo;
 import com.hbhb.web.annotation.UserId;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
 
 
 /**
@@ -128,7 +144,7 @@ public class BudgetController {
     @PostMapping("/export")
     public void export(HttpServletRequest request, HttpServletResponse response,
                        @RequestBody BudgetReqVO cond,
-                       @UserId Integer userId) {
+                       @Parameter(hidden = true) @UserId Integer userId) {
 
         UserInfo user = userApi.getUserInfoById(userId);
         if (cond.getUnitId() == null) {
