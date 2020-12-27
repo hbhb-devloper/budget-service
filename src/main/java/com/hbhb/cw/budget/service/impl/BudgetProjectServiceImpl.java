@@ -624,8 +624,8 @@ public class BudgetProjectServiceImpl implements BudgetProjectService {
         result.setSplits(exportSplits);
 
         String path = fileApi.getPath() + File.separator + result.getProjectName() + ".doc";
-        System.out.println(result.toString());
-        System.out.println(JsonUtil.convert2Str(result));
+        log.info(result.toString());
+        log.info(JsonUtil.convert2Str(result));
         // 生成填充文件
         fileApi.fillTemplate(result, "项目签报导出模板.ftl", path);
         // 下载文件
