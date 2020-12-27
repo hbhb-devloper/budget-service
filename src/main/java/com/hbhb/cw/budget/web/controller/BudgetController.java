@@ -81,9 +81,9 @@ public class BudgetController {
     @Operation(summary = "按条件获取预算列表 树形结构、KV")
     @GetMapping("/tree")
     public List<TreeSelectParentVO> getTreeListByUnit(
-            @Parameter(description = "单位id") @RequestParam(required = false) Integer unitId,
             @Parameter(description = "导入日期") @RequestParam(required = false) String importDate,
-            @Parameter(description = "项目类别名称") @RequestParam(required = false) String projectItem) {
+            @Parameter(description = "项目类别名称") @RequestParam(required = false) String projectItem,
+            @Parameter(hidden = true) @UserId Integer userId) {
         if (StringUtils.isEmpty(importDate)) {
             importDate = DateUtil.getCurrentYear();
         }
@@ -91,7 +91,7 @@ public class BudgetController {
             throw new BudgetException(BudgetErrorCode.BUDGET_IMPORT_DATE_ERROR);
         }
         return budgetService.getTreeByCond(BudgetReqVO.builder()
-                .unitId(unitId)
+                .unitId(userApi.getUserInfoById(userId).getUnitId())
                 .importDate(importDate)
                 .projectItem(projectItem)
                 .build());
