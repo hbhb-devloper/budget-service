@@ -372,18 +372,18 @@
         b.budget_num as budgetNum,
         b.project_item as projectTypeName,
         bp.amount as amount,
-        bp.cost as cost,
-        bp.vat_amount as vatAmount,
-        bp.unit_id as unitId,
-        date_format(bp.create_time, '%Y-%m-%d %H:%i:%s') as createTime,
-    bp.create_by    as createBy,
-    bp.origin       as origin,
-    bp.state        as state
-    from budget_project bp
-    left join budget b on bp.budget_id = b.id
-    where bp.delete_flag = 1
-    and bd.unit_id in
-    <foreach collection="list" item="item" open="(" separator="," close=")">
+      bp.cost as cost,
+      bp.vat_amount as vatAmount,
+      bp.unit_id as unitId,
+      date_format(bp.create_time, '%Y-%m-%d %H:%i:%s') as createTime,
+      bp.create_by as createBy,
+      bp.origin as origin,
+      bp.state as state
+      from budget_project bp
+      left join budget b on bp.budget_id = b.id
+      where bp.delete_flag = 1
+      and bp.unit_id in
+      <foreach collection="list" item="item" open="(" separator="," close=")">
       #{item}
     </foreach>
     <if test="cond.budgetId != null">
@@ -392,51 +392,51 @@
     <if test="cond.projectYear != null and cond.projectYear != ''">
       and year(bp.create_time) = #{cond.projectYear}
     </if>
-    <if test="cond.createTime != null and cond.createTime != ''">
-      and bp.create_time like concat('%',#{cond.createTime},'%')
-    </if>
-    <if test="cond.projectName != null and cond.projectName != ''">
-      and bp.project_name like concat('%', #{cond.projectName}, '%')
-    </if>
-    <if test="cond.projectNum != null and projectNum != ''">
-      and bp.project_num = #{projectNum}
-    </if>
-    <if test="state != null">
-      and bp.state = #{state}
-    </if>
-    order by bp.create_time desc
-  </select>
+      <if test="cond.createTime != null and cond.createTime != ''">
+        and bp.create_time like concat('%',#{cond.createTime},'%')
+      </if>
+      <if test="cond.projectName != null and cond.projectName != ''">
+        and bp.project_name like concat('%', #{cond.projectName}, '%')
+      </if>
+      <if test="cond.projectNum != null and projectNum != ''">
+        and bp.project_num = #{cond.projectNum}
+      </if>
+      <if test="cond.state != null">
+        and bp.state = #{cond.state}
+      </if>
+      order by bp.create_time desc
+    </select>
 
     <select id="countListByCond" parameterType="com.hbhb.cw.budget.web.vo.BudgetProjectReqVO"
             resultType="int">
-        select count(bp.id)
-        from budget_project bp
-        left join budget b on bp.budget_id = b.id
-        left join budget_item bi on b.budget_item_id = bi.id
-        where bp.delete_flag = 1
-        and bd.unit_id in
-        <foreach collection="list" item="item" open="(" separator="," close=")">
-            #{item}
-        </foreach>
-    <if test="budgetId != null">
-      and bp.budget_id = #{budgetId}
-    </if>
-    <if test="projectYear != null and projectYear != ''">
-      and year(bp.create_time) = #{projectYear}
-    </if>
-    <if test="createTime != null and createTime != ''">
-      and day(bp.create_time) = #{createTime}
-    </if>
-    <if test="projectName != null and projectName != ''">
-      and bp.project_name like concat('%', #{projectName}, '%')
-    </if>
-    <if test="projectNum != null and projectNum != ''">
-      and bp.project_num = #{projectNum}
-    </if>
-    <if test="state != null">
-      and bp.state = #{state}
-    </if>
-  </select>
+      select count(bp.id)
+      from budget_project bp
+      left join budget b on bp.budget_id = b.id
+      left join budget_item bi on b.budget_item_id = bi.id
+      where bp.delete_flag = 1
+      and bp.unit_id in
+      <foreach collection="list" item="item" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+      <if test="cond.budgetId != null">
+        and bp.budget_id = #{cond.budgetId}
+      </if>
+      <if test="cond.projectYear != null and cond.projectYear != ''">
+        and year(bp.create_time) = #{cond.projectYear}
+      </if>
+      <if test="cond.createTime != null and cond.createTime != ''">
+        and day(bp.create_time) = #{cond.createTime}
+      </if>
+      <if test="cond.projectName != null and cond.projectName != ''">
+        and bp.project_name like concat('%', #{cond.projectName}, '%')
+      </if>
+      <if test="cond.projectNum != null and cond.projectNum != ''">
+        and bp.project_num = #{cond.projectNum}
+      </if>
+      <if test="cond.state != null">
+        and bp.state = #{cond.state}
+      </if>
+    </select>
 
     <select id="selectProgress" parameterType="map" resultType="com.hbhb.cw.budget.web.vo.BudgetProgressResVO">
         select t1.*,

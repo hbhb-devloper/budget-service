@@ -14,7 +14,7 @@ public interface BudgetProjectMapper extends BaseMapper<BudgetProject, Integer> 
     List<BudgetProjectResVO> selectListByCond(@Param("cond") BudgetProjectReqVO cond,
                                               @Param("list") List<Integer> unitIds);
 
-    int countListByCond(@Param("list") BudgetProjectReqVO cond);
+    int countListByCond(@Param("cond") BudgetProjectReqVO cond, @Param("list") List<Integer> unitIds);
 
     List<BudgetProgressResVO> selectProgress(@Param("cond") BudgetProgressReqVO cond,
                                              @Param("list") List<Integer> unitIds);

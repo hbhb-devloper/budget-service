@@ -7,6 +7,6 @@ import org.springframework.cloud.openfeign.FeignClient;
  * @author yzc
  * @since 2020-11-27
  */
-@FeignClient(value = "system-center-prd", contextId = "DictApi", path = "dict")
+@FeignClient(value = "${provider.system-center}", contextId = "DictApi", path = "dict")
 public interface DictApiExp extends DictApi {
 }

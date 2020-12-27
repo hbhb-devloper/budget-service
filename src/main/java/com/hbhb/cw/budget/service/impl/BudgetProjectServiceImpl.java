@@ -111,7 +111,7 @@ public class BudgetProjectServiceImpl implements BudgetProjectService {
             PageHelper.startPage(pageNum, pageSize);
         }
         List<BudgetProjectResVO> list = budgetProjectMapper.selectListByCond(cond, unitIds);
-        int count = budgetProjectMapper.countListByCond(cond);
+        int count = budgetProjectMapper.countListByCond(cond, unitIds);
 
         // 组装数据
         list.forEach(item -> {

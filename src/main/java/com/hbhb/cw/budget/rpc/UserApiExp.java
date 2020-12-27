@@ -7,6 +7,6 @@ import org.springframework.cloud.openfeign.FeignClient;
  * @author yzc
  * @since 2020-11-27
  */
-@FeignClient(value = "system-center-prd", contextId = "UserApi", path = "user")
+@FeignClient(value = "${provider.system-center}", contextId = "UserApi", path = "user")
 public interface UserApiExp extends UserApi {
 }
