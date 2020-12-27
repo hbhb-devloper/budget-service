@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import com.github.pagehelper.PageHelper;
 import com.hbhb.core.bean.BeanConverter;
 import com.hbhb.core.utils.DateUtil;
+import com.hbhb.core.utils.JsonUtil;
 import com.hbhb.cw.budget.enums.BudgetErrorCode;
 import com.hbhb.cw.budget.enums.EnableCond;
 import com.hbhb.cw.budget.enums.OperationType;
@@ -623,6 +624,8 @@ public class BudgetProjectServiceImpl implements BudgetProjectService {
         result.setSplits(exportSplits);
 
         String path = fileApi.getPath() + File.separator + result.getProjectName() + ".doc";
+        System.out.println(result.toString());
+        System.out.println(JsonUtil.convert2Str(result));
         // 生成填充文件
         fileApi.fillTemplate(result, "项目签报导出模板.ftl", path);
         // 下载文件

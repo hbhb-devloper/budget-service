@@ -17,21 +17,6 @@ spring:
 feign:
   okhttp:
     enabled: true
-#  client:
-#    config:
-#      default:
-#        # 指定Feign客户端连接提供者的超时时限（取决于网络环境）
-#        connectTimeout: 5000
-#        # 指定Feign客户端从请求到获取到提供者给出的响应的超时时限（取决于业务逻辑运算时间）
-#        readTimeout: 5000
-#  # 启用压缩（从该实例到接口提供方）
-#  compression:
-#    request:
-#      enabled: true
-#      min-request-size: 512
-#    response:
-#      enabled: true
-#      useGzipDecoder: true
 
 # 开启健康检查
 management:
