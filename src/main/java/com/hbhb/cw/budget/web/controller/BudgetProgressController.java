@@ -5,20 +5,35 @@ import com.hbhb.core.utils.DateUtil;
 import com.hbhb.core.utils.ExcelUtil;
 import com.hbhb.cw.budget.rpc.UserApiExp;
 import com.hbhb.cw.budget.service.BudgetProgressService;
-import com.hbhb.cw.budget.web.vo.*;
+import com.hbhb.cw.budget.web.vo.BudgetFlowStateVO;
+import com.hbhb.cw.budget.web.vo.BudgetProgressDeclareVO;
+import com.hbhb.cw.budget.web.vo.BudgetProgressExportVO;
+import com.hbhb.cw.budget.web.vo.BudgetProgressReqVO;
+import com.hbhb.cw.budget.web.vo.BudgetProgressVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectAllVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectAmountVO;
 import com.hbhb.cw.systemcenter.vo.UserInfo;
 import com.hbhb.web.annotation.UserId;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.List;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 
 @Tag(name = "预算执行-预算目标与进度")
@@ -63,7 +78,7 @@ public class BudgetProgressController {
             @Parameter(description = "项目id", required = true) @RequestParam Long budgetId,
             @Parameter(description = "单位id") @RequestParam(required = false) Integer unitId,
             @Parameter(description = "时间") @RequestParam(required = false) String importDate,
-            @UserId Integer userId) {
+            @Parameter(hidden = true) @UserId Integer userId) {
         UserInfo user = userApi.getUserInfoById(userId);
         if (unitId == null) {
             unitId = user.getUnitId();
@@ -88,7 +103,7 @@ public class BudgetProgressController {
     @PostMapping("/export")
     public void export(HttpServletRequest request, HttpServletResponse response,
                        @Parameter(description = "按条件查询") @RequestBody BudgetProgressReqVO cond,
-                       @UserId Integer userId) {
+                       @Parameter(hidden = true) @UserId Integer userId) {
         UserInfo user = userApi.getUserInfoById(userId);
         if (cond.getUnitId() == null) {
             cond.setUnitId(user.getUnitId());

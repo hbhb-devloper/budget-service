@@ -7,15 +7,17 @@ import com.hbhb.cw.budget.rpc.UserApiExp;
 import com.hbhb.cw.budget.service.BudgetProjectFileService;
 import com.hbhb.cw.systemcenter.vo.UserInfo;
 import com.hbhb.web.annotation.UserId;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 
 @Tag(name = "预算执行-项目签报附件相关")
@@ -31,7 +33,7 @@ public class BudgetProjectFileController {
     @DeleteMapping("/delete/{fileId}")
     public void deleteProjectFile(@Parameter(description = "fileId", required = true)
                                   @PathVariable Long fileId,
-                                  @UserId Integer userId) {
+                                  @Parameter(hidden = true) @UserId Integer userId) {
         if (fileId == null) {
             throw new BudgetException(BudgetErrorCode.BUDGET_PROJECT_FILE_DELETE_SUCCESSFUL);
         }

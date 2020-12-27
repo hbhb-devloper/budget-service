@@ -9,20 +9,34 @@ import com.hbhb.cw.budget.model.Page;
 import com.hbhb.cw.budget.rpc.FileApiExp;
 import com.hbhb.cw.budget.rpc.UserApiExp;
 import com.hbhb.cw.budget.service.BudgetProjectAgileService;
-import com.hbhb.cw.budget.web.vo.*;
+import com.hbhb.cw.budget.web.vo.BudgetAgileAddVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectAgileExportVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectAgileInfoVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectAgileReqVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectAgileVO;
 import com.hbhb.cw.systemcenter.vo.UserInfo;
 import com.hbhb.web.annotation.UserId;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.*;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 
 /**
@@ -65,7 +79,7 @@ public class BudgetProjectAgileController {
     @Operation(summary = "新增常用性签报")
     @PostMapping("")
     public void addBudgetProject(@RequestBody BudgetAgileAddVO cond,
-                                 @UserId Integer userId) {
+                                 @Parameter(hidden = true) @UserId Integer userId) {
         cond.setImportDate(DateUtil.getCurrentYear());
         UserInfo user = userApi.getUserInfoById(userId);
         budgetProjectAgileService.addSaveBudgetAgile(cond, user);
@@ -76,7 +90,7 @@ public class BudgetProjectAgileController {
     @PostMapping("/export/subsidy")
     public void exportSubsidy(HttpServletRequest request, HttpServletResponse response,
                               @RequestBody BudgetProjectAgileReqVO cond,
-                              @UserId Integer userId) {
+                              @Parameter(hidden = true) @UserId Integer userId) {
         UserInfo user = userApi.getUserInfoById(userId);
         if (cond.getUnitId() == null) {
             cond.setUnitId(user.getUnitId());
@@ -91,7 +105,7 @@ public class BudgetProjectAgileController {
     @Operation(summary = "删除常用性签报")
     @DeleteMapping("/delete/{id}")
     public void deleteBudgetProject(@PathVariable Long id,
-                                    @UserId Integer userId) {
+                                    @Parameter(hidden = true) @UserId Integer userId) {
         UserInfo user = userApi.getUserInfoById(userId);
         budgetProjectAgileService.deleteBudgetProject(id, user);
     }
@@ -100,7 +114,7 @@ public class BudgetProjectAgileController {
     @DeleteMapping("/delete/file/{fileId}")
     public void deleteAgileFile(@Parameter(description = "fileId", required = true)
                                 @PathVariable Long fileId,
-                                @UserId Integer userId) {
+                                @Parameter(hidden = true) @UserId Integer userId) {
         if (fileId == null) {
             throw new BudgetException(BudgetErrorCode.BUDGET_PROJECT_FILE_DELETE_SUCCESSFUL);
         }

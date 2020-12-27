@@ -6,13 +6,23 @@ import com.hbhb.cw.budget.service.BudgetProjectSplitService;
 import com.hbhb.cw.budget.web.vo.BudgetProjectSplitVO;
 import com.hbhb.cw.systemcenter.vo.UserInfo;
 import com.hbhb.web.annotation.UserId;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.*;
-
-import javax.annotation.Resource;
-import java.util.List;
 
 
 @Tag(name = "预算执行-项目签报分类预算")
@@ -35,7 +45,7 @@ public class BudgetProjectSplitController {
     @Operation(summary = "新增分类预算签报")
     @PostMapping("")
     public void addProjectSplit(@RequestBody BudgetProjectSplitVO bpClassVo,
-                                @UserId Integer userId) {
+                                @Parameter(hidden = true) @UserId Integer userId) {
         UserInfo user = userApi.getUserInfoById(userId);
         bpcService.andSaveBudgetProjectSplit(bpClassVo, user);
     }
@@ -44,7 +54,7 @@ public class BudgetProjectSplitController {
     @DeleteMapping("/delete/{id}")
     public void deleteBudgetProjectSplit(
             @Parameter(description = "id", required = true) @PathVariable Integer id,
-            @UserId Integer userId) {
+            @Parameter(hidden = true) @UserId Integer userId) {
         UserInfo user = userApi.getUserInfoById(userId);
         bpcService.deleteBudgetProjectSplit(id, user);
     }
@@ -52,7 +62,7 @@ public class BudgetProjectSplitController {
     @Operation(summary = "修改分类预算")
     @PutMapping("/update")
     private void updateProjectClass(@RequestBody BudgetProjectSplitVO bpClassVo,
-                                    @UserId Integer userId) {
+                                    @Parameter(hidden = true) @UserId Integer userId) {
         UserInfo user = userApi.getUserInfoById(userId);
         bpcService.updateProjectSplit(bpClassVo, user);
     }
