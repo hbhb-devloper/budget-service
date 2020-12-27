@@ -372,18 +372,18 @@
         b.budget_num as budgetNum,
         b.project_item as projectTypeName,
         bp.amount as amount,
-      bp.cost as cost,
-      bp.vat_amount as vatAmount,
-      bp.unit_id as unitId,
-      date_format(bp.create_time, '%Y-%m-%d %H:%i:%s') as createTime,
-      bp.create_by as createBy,
-      bp.origin as origin,
-      bp.state as state
-      from budget_project bp
-      left join budget b on bp.budget_id = b.id
-      where bp.delete_flag = 1
-      and bp.unit_id in
-      <foreach collection="list" item="item" open="(" separator="," close=")">
+        bp.cost as cost,
+        bp.vat_amount as vatAmount,
+        bp.unit_id as unitId,
+        date_format(bp.create_time, '%Y-%m-%d %H:%i:%s') as createTime,
+    bp.create_by    as createBy,
+    bp.origin       as origin,
+    bp.state        as state
+    from budget_project bp
+    left join budget b on bp.budget_id = b.id
+    where bp.delete_flag = 1
+    and bp.unit_id in
+    <foreach collection="list" item="item" open="(" separator="," close=")">
       #{item}
     </foreach>
     <if test="cond.budgetId != null">
