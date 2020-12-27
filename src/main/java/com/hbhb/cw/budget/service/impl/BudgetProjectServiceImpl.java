@@ -565,7 +565,10 @@ public class BudgetProjectServiceImpl implements BudgetProjectService {
             flows.forEach(flow -> {
                 BudgetProjectFlowExportVO exportFlow = new BudgetProjectFlowExportVO();
                 BeanConverter.copyProp(flow, exportFlow);
-                exportFlow.setSuggestion(flow.getSuggestion().getValue());
+                exportFlow.setApproverRole(Optional.ofNullable(flow.getApproverRole()).orElse(""));
+                exportFlow.setNickName(Optional.ofNullable(flow.getNickName()).orElse(""));
+                exportFlow.setUpdateTime(Optional.ofNullable(flow.getUpdateTime()).orElse(""));
+                exportFlow.setSuggestion(Optional.ofNullable(flow.getSuggestion().getValue()).orElse(""));
                 exportFlows.add(exportFlow);
             });
         }
