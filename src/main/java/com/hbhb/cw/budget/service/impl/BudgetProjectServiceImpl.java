@@ -624,9 +624,9 @@ public class BudgetProjectServiceImpl implements BudgetProjectService {
 
         String path = fileApi.getPath() + File.separator + result.getProjectName() + ".doc";
         // 生成填充文件
-//        fileApi.fillTemplate(result, "项目签报导出模板.ftl", path);
+        fileApi.fillTemplate(result, "项目签报导出模板.ftl", path);
         // 下载文件
-        fileApi.download(response, "/app/file/11222221.doc", false);
+        fileApi.download(response, path, true);
     }
 
     /**
