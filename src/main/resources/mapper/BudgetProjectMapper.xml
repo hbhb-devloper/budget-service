@@ -619,13 +619,13 @@
         t1.budgetNum as budgetNum,
         t1.budgetBalance as budgetBalance,
         t1.unitName as unitName,
-        ifnull(sum(t2.amount), 0) + ifnull(sum(t3.amount), 0) as amount
+        ifnull(sum(t2.amount), 0) + ifnull(sum(t3.amount), 0) * 2 as amount
         from (
         select b.id as budgetId,
         bi.item_name as budgetItemName,
     concat(b.budget_num, '_', b.project_item) as projectItemName,
     b.budget_num                              as budgetNum,
-    bd.balance                                as budgetBalance,
+    ifnull(sum(bd.balance), 0)                               as budgetBalance,
     u.unit_name                               as unitName
     from budget b
     left join budget_data bd on b.id = bd.budget_id

@@ -144,7 +144,7 @@ public class BudgetProjectController {
     @Operation(summary = "导出word 导出项目签报详情至word格式")
     @PostMapping("/info/export")
     public String export(HttpServletResponse response, @RequestBody BudgetProjectDetailExportReqVO vo) {
-       return budgetProjectService.export2Word(response, vo);
+        return budgetProjectService.export2Word(response, vo);
     }
 }
 
