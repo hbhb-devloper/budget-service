@@ -74,12 +74,18 @@ import com.hbhb.cw.systemcenter.vo.DictVO;
 import com.hbhb.cw.systemcenter.vo.UserInfo;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -626,7 +632,40 @@ public class BudgetProjectServiceImpl implements BudgetProjectService {
         // 生成填充文件
         fileApi.fillTemplate(result, "项目签报导出模板.ftl", path);
         // 下载文件
-        fileApi.download(response, path, true);
+//        fileApi.download(response, path, true);
+
+        File file = new File(path);
+        try {
+            InputStream in = new FileInputStream(file);
+            response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+            response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+            response.setHeader("Content-disposition", "attachment;filename=" + result.getProjectName() + ".doc");
+            BufferedOutputStream out = new BufferedOutputStream(response.getOutputStream());
+            // 读取文件流
+            int len;
+            byte[] buffer = new byte[1024 * 10];
+            while ((len = in.read(buffer)) != -1) {
+                out.write(buffer, 0, len);
+            }
+            out.flush();
+            out.close();
+            in.close();
+            deleteFile(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void deleteFile(File file) {
+        if (file.isDirectory()) {
+            File[] files = file.listFiles();
+            if (files != null) {
+                for (File f : files) {
+                    f.delete();
+                }
+            }
+        }
+        file.delete();
     }
 
     /**
