@@ -168,7 +168,7 @@ public class BudgetProjectServiceImpl implements BudgetProjectService {
             PageHelper.startPage(pageNum, pageSize);
         }
         List<BudgetProjectResVO> list = budgetProjectMapper.selectListByCond(cond, unitIds);
-        int count = budgetProjectMapper.countListByCond(cond,unitIds);
+        int count = budgetProjectMapper.countListByCond(cond, unitIds);
 
         // 组装数据
         list.forEach(item -> {
@@ -628,18 +628,6 @@ public class BudgetProjectServiceImpl implements BudgetProjectService {
         fileApi.fillTemplate(result, "项目签报导出模板.ftl", path);
         // 下载文件
         FileUtil.download(response, path, true);
-    }
-
-    private static void deleteFile(File file) {
-        if (file.isDirectory()) {
-            File[] files = file.listFiles();
-            if (files != null) {
-                for (File f : files) {
-                    f.delete();
-                }
-            }
-        }
-        file.delete();
     }
 
     /**
