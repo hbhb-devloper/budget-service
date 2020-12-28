@@ -4,6 +4,7 @@ package com.hbhb.cw.budget.service.impl;
 import com.hbhb.cw.budget.rpc.MailApiExp;
 import com.hbhb.cw.budget.service.MailService;
 import com.hbhb.cw.messagehub.vo.MailVO;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 

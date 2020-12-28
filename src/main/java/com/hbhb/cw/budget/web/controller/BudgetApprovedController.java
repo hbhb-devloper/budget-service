@@ -64,5 +64,4 @@ public class BudgetApprovedController {
     public boolean getBudgetApprovedState(@PathVariable Integer id) {
         return budgetProjectService.getBudgetApprovedState(id);
     }
-
 }

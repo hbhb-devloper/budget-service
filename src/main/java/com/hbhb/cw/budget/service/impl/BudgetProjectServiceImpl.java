@@ -1,18 +1,66 @@
 package com.hbhb.cw.budget.service.impl;
 
-import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
+
+import com.github.pagehelper.PageHelper;
 import com.hbhb.core.bean.BeanConverter;
 import com.hbhb.core.utils.DateUtil;
 import com.hbhb.cw.budget.enums.BudgetErrorCode;
 import com.hbhb.cw.budget.enums.EnableCond;
 import com.hbhb.cw.budget.enums.OperationType;
 import com.hbhb.cw.budget.exception.BudgetException;
-import com.hbhb.cw.budget.mapper.*;
-import com.hbhb.cw.budget.model.*;
-import com.hbhb.cw.budget.rpc.*;
-import com.hbhb.cw.budget.service.*;
-import com.hbhb.cw.budget.web.vo.*;
+import com.hbhb.cw.budget.mapper.BudgetBelongMapper;
+import com.hbhb.cw.budget.mapper.BudgetProjectApprovedMapper;
+import com.hbhb.cw.budget.mapper.BudgetProjectFileMapper;
+import com.hbhb.cw.budget.mapper.BudgetProjectFlowApprovedMapper;
+import com.hbhb.cw.budget.mapper.BudgetProjectMapper;
+import com.hbhb.cw.budget.mapper.BudgetProjectSplitApprovedMapper;
+import com.hbhb.cw.budget.mapper.BudgetProjectSplitMapper;
+import com.hbhb.cw.budget.model.Budget;
+import com.hbhb.cw.budget.model.BudgetData;
+import com.hbhb.cw.budget.model.BudgetProject;
+import com.hbhb.cw.budget.model.BudgetProjectApproved;
+import com.hbhb.cw.budget.model.BudgetProjectFile;
+import com.hbhb.cw.budget.model.BudgetProjectFlow;
+import com.hbhb.cw.budget.model.BudgetProjectFlowApproved;
+import com.hbhb.cw.budget.model.BudgetProjectFlowHistory;
+import com.hbhb.cw.budget.model.BudgetProjectSplit;
+import com.hbhb.cw.budget.model.BudgetProjectSplitApproved;
+import com.hbhb.cw.budget.model.Page;
+import com.hbhb.cw.budget.rpc.DictApiExp;
+import com.hbhb.cw.budget.rpc.FileApiExp;
+import com.hbhb.cw.budget.rpc.FlowApiExp;
+import com.hbhb.cw.budget.rpc.FlowNodeApiExp;
+import com.hbhb.cw.budget.rpc.FlowNodePropApiExp;
+import com.hbhb.cw.budget.rpc.FlowRoleUserApiExp;
+import com.hbhb.cw.budget.rpc.UnitApiExp;
+import com.hbhb.cw.budget.rpc.UserApiExp;
+import com.hbhb.cw.budget.service.BudgetDataService;
+import com.hbhb.cw.budget.service.BudgetProgressService;
+import com.hbhb.cw.budget.service.BudgetProjectFlowHistoryService;
+import com.hbhb.cw.budget.service.BudgetProjectFlowService;
+import com.hbhb.cw.budget.service.BudgetProjectNoticeService;
+import com.hbhb.cw.budget.service.BudgetProjectService;
+import com.hbhb.cw.budget.service.BudgetProjectSplitService;
+import com.hbhb.cw.budget.service.BudgetService;
+import com.hbhb.cw.budget.web.vo.BudgetProgressDeclareVO;
+import com.hbhb.cw.budget.web.vo.BudgetProgressReqVO;
+import com.hbhb.cw.budget.web.vo.BudgetProgressResVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectDetailExportReqVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectDetailExportVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectDetailVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectExportVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectFileExportVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectFileVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectFlowExportVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectFlowInfoVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectInitVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectNoticeReqVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectReqVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectResVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectSplitExportVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectSplitVO;
+import com.hbhb.cw.budget.web.vo.BudgetReqVO;
 import com.hbhb.cw.flowcenter.enums.FlowNodeNoticeState;
 import com.hbhb.cw.flowcenter.enums.FlowNodeNoticeTemp;
 import com.hbhb.cw.flowcenter.enums.FlowState;
@@ -24,19 +72,28 @@ import com.hbhb.cw.systemcenter.enums.UnitEnum;
 import com.hbhb.cw.systemcenter.model.Unit;
 import com.hbhb.cw.systemcenter.vo.DictVO;
 import com.hbhb.cw.systemcenter.vo.UserInfo;
-import lombok.extern.slf4j.Slf4j;
+import com.hbhb.web.util.FileUtil;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
@@ -111,7 +168,7 @@ public class BudgetProjectServiceImpl implements BudgetProjectService {
             PageHelper.startPage(pageNum, pageSize);
         }
         List<BudgetProjectResVO> list = budgetProjectMapper.selectListByCond(cond, unitIds);
-        int count = budgetProjectMapper.countListByCond(cond,unitIds);
+        int count = budgetProjectMapper.countListByCond(cond, unitIds);
 
         // 组装数据
         list.forEach(item -> {
@@ -499,7 +556,7 @@ public class BudgetProjectServiceImpl implements BudgetProjectService {
     }
 
     @Override
-    public String export2Word(HttpServletResponse response, BudgetProjectDetailExportReqVO vo) {
+    public void export2Word(HttpServletResponse response, BudgetProjectDetailExportReqVO vo) {
         BudgetProjectDetailExportVO result = new BudgetProjectDetailExportVO();
 
         // 流程节点
@@ -570,10 +627,7 @@ public class BudgetProjectServiceImpl implements BudgetProjectService {
         // 生成填充文件
         fileApi.fillTemplate(result, "项目签报导出模板.ftl", path);
         // 下载文件
-        // TODO  暂时文件下载接口有问题用文件路径直接代替
-//        fileApi.fillTemplate(result, "项目签报导出模板.ftl", path);
-
-        return "https://file.yeexun.com.cn/"+result.getProjectName() + ".doc";
+        FileUtil.download(response, path, true);
     }
 
     /**

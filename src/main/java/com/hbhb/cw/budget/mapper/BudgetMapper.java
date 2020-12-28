@@ -4,6 +4,7 @@ package com.hbhb.cw.budget.mapper;
 import com.hbhb.cw.budget.model.Budget;
 import com.hbhb.cw.budget.web.vo.BudgetReqVO;
 import com.hbhb.cw.budget.web.vo.BudgetVO;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -19,6 +20,8 @@ public interface BudgetMapper extends BaseMapper<Budget, Long> {
 
     List<BudgetVO> selectTreeListByCond(@Param("cond") BudgetReqVO cond,
                                         @Param("list") List<Integer> unitIds);
+
+    List<BudgetVO> selectTreeByCond(BudgetReqVO cond);
 
     int upBudgetByBudgetId(@Param("budgetId") Long budgetId, @Param("balance") BigDecimal balance);
 

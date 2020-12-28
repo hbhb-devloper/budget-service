@@ -138,10 +138,8 @@ public class BudgetServiceImpl implements BudgetService {
     }
 
     @Override
-    public List<TreeSelectParentVO> getTreeByCond(BudgetReqVO cond) {
-        // 获取所有下属单位
-        List<Integer> unitIds = unitApi.getSubUnit(cond.getUnitId());
-        List<BudgetVO> list = budgetMapper.selectTreeListByCond(cond, unitIds);
+    public List<TreeSelectParentVO>  getTreeByCond(BudgetReqVO cond) {
+        List<BudgetVO> list = budgetMapper.selectTreeByCond(cond);
         if (CollectionUtils.isEmpty(list)) {
             return new ArrayList<>();
         }
