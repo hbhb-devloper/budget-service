@@ -12,29 +12,51 @@ import com.hbhb.cw.budget.mapper.BudgetBelongMapper;
 import com.hbhb.cw.budget.mapper.BudgetDataMapper;
 import com.hbhb.cw.budget.mapper.BudgetItemMapper;
 import com.hbhb.cw.budget.mapper.BudgetMapper;
-import com.hbhb.cw.budget.model.*;
+import com.hbhb.cw.budget.model.Budget;
+import com.hbhb.cw.budget.model.BudgetBelong;
+import com.hbhb.cw.budget.model.BudgetData;
+import com.hbhb.cw.budget.model.BudgetHistory;
+import com.hbhb.cw.budget.model.BudgetItem;
+import com.hbhb.cw.budget.model.BudgetProject;
 import com.hbhb.cw.budget.rpc.UnitApiExp;
 import com.hbhb.cw.budget.service.BudgetDataService;
 import com.hbhb.cw.budget.service.BudgetHistoryService;
 import com.hbhb.cw.budget.service.BudgetProjectService;
 import com.hbhb.cw.budget.service.BudgetService;
-import com.hbhb.cw.budget.web.vo.*;
+import com.hbhb.cw.budget.web.vo.BudgetAdjustVO;
+import com.hbhb.cw.budget.web.vo.BudgetExportVO;
+import com.hbhb.cw.budget.web.vo.BudgetHistoryInfoVO;
+import com.hbhb.cw.budget.web.vo.BudgetImportVO;
+import com.hbhb.cw.budget.web.vo.BudgetInfoVO;
+import com.hbhb.cw.budget.web.vo.BudgetProgressResVO;
+import com.hbhb.cw.budget.web.vo.BudgetReqVO;
+import com.hbhb.cw.budget.web.vo.BudgetVO;
 import com.hbhb.cw.systemcenter.vo.TreeSelectParentVO;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.Resource;
 import java.beans.PropertyDescriptor;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import javax.annotation.Resource;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
@@ -68,7 +90,7 @@ public class BudgetServiceImpl implements BudgetService {
             return new ArrayList<>();
         }
 
-        // todo 加注释
+        // 删除科目更新时间未在本年的
         Date year = DateUtil.formatString(DateUtil.getCurrentYear(), "yyyy");
         for (int i = list.size() - 1; i >= 0; i--) {
             if (list.get(i).getUpdateTime() == null || list.get(i).getUpdateTime().getTime() < year.getTime()) {
@@ -652,7 +674,7 @@ public class BudgetServiceImpl implements BudgetService {
         if (lastYearBalance != null) {
             budgetAddVO.setLastYearBalance(lastYearBalance);
         }
-        budgetAddVO.setBudgetItemId(budgetAddVO.getBudgetItemId() << 10);
+        budgetAddVO.setBudgetItemId(budgetAddVO.getBudgetItemId() >> 10);
         // 增加
         Budget budget = new Budget();
         budget.setBudgetItemId(budgetAddVO.getBudgetItemId());

@@ -555,7 +555,7 @@ public class BudgetProjectServiceImpl implements BudgetProjectService {
     }
 
     @Override
-    public void export2Word(HttpServletResponse response, BudgetProjectDetailExportReqVO vo) {
+    public String export2Word(HttpServletResponse response, BudgetProjectDetailExportReqVO vo) {
         BudgetProjectDetailExportVO result = new BudgetProjectDetailExportVO();
 
         // 流程节点
@@ -626,7 +626,8 @@ public class BudgetProjectServiceImpl implements BudgetProjectService {
         // 生成填充文件
         fileApi.fillTemplate(result, "项目签报导出模板.ftl", path);
         // 下载文件
-        fileApi.download(response, path, true);
+//        fileApi.fillTemplate(result, "项目签报导出模板.ftl", path);
+        return "https://file.yeexun.com.cn/"+result.getProjectName() + ".doc";
     }
 
     /**

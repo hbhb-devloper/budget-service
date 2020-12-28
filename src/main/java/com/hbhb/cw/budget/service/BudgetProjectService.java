@@ -3,11 +3,19 @@ package com.hbhb.cw.budget.service;
 
 import com.hbhb.cw.budget.model.BudgetProject;
 import com.hbhb.cw.budget.model.Page;
-import com.hbhb.cw.budget.web.vo.*;
+import com.hbhb.cw.budget.web.vo.BudgetProgressResVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectDetailExportReqVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectDetailVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectExportVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectInitVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectReqVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectResVO;
+import com.hbhb.cw.budget.web.vo.BudgetReqVO;
 import com.hbhb.cw.systemcenter.vo.UserInfo;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
 
 public interface BudgetProjectService {
 
@@ -80,7 +88,7 @@ public interface BudgetProjectService {
     /**
      * 签报详情导出至word格式
      */
-    void export2Word(HttpServletResponse response, BudgetProjectDetailExportReqVO vo);
+    String export2Word(HttpServletResponse response, BudgetProjectDetailExportReqVO vo);
 
     /**
      * 通过budgetId和unitIds查找是否有签报
