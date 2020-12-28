@@ -572,6 +572,7 @@ public class BudgetProjectServiceImpl implements BudgetProjectService {
         // 下载文件
         // TODO  暂时文件下载接口有问题用文件路径直接代替
 //        fileApi.fillTemplate(result, "项目签报导出模板.ftl", path);
+
         return "https://file.yeexun.com.cn/"+result.getProjectName() + ".doc";
     }
 
