@@ -88,7 +88,7 @@ public interface BudgetProjectService {
     /**
      * 签报详情导出至word格式
      */
-    String export2Word(HttpServletResponse response, BudgetProjectDetailExportReqVO vo);
+    void export2Word(HttpServletResponse response, BudgetProjectDetailExportReqVO vo);
 
     /**
      * 通过budgetId和unitIds查找是否有签报
