@@ -32,6 +32,7 @@ import com.hbhb.cw.budget.web.vo.BudgetProjectAmountVO;
 import com.hbhb.cw.systemcenter.enums.UnitEnum;
 import com.hbhb.cw.systemcenter.model.Unit;
 import com.hbhb.cw.systemcenter.vo.UserInfo;
+import com.hbhb.web.util.FileUtil;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -241,7 +242,7 @@ public class BudgetProjectAgileServiceImpl implements BudgetProjectAgileService 
         // 生成填充文件
         fileApi.fillTemplate(result, "日常性费用导出模板.ftl", path);
         // 下载文件
-        fileApi.download(response, path, true);
+        FileUtil.download(response, path, true);
     }
 }
 
