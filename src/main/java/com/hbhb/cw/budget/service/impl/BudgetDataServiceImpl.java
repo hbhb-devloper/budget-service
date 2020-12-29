@@ -58,7 +58,6 @@ public class BudgetDataServiceImpl implements BudgetDataService {
                 budgetData.setFlag(1);
             }
             return budgetDataRes;
-
         }
         // 该单位有归口单位，但是无预算值（标识归口于其他单位）
         else if (underUnitId != null && longs.size() == 0) {
