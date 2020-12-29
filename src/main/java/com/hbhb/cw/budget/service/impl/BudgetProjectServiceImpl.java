@@ -181,6 +181,10 @@ public class BudgetProjectServiceImpl implements BudgetProjectService {
 
     @Override
     public List<BudgetProgressResVO> getBudgetProgressByBudgetData(BudgetReqVO cond) {
+        BudgetReqVO budgetReqVO = BeanConverter.copyBean(cond, BudgetReqVO.class);
+        if (UnitEnum.HANGZHOU.value().equals(cond.getUnitId())){
+            budgetReqVO.setUnitId(null);
+        }
         return budgetProjectMapper.selectBudgetProgressByBudgetData(cond);
     }
 
