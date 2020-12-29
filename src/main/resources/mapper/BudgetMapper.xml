@@ -299,7 +299,7 @@
         </if>
         group by b.id, bi.id
         order by b.id,bi.id) t1 left join (
-        select      bd.balance           as sub_lastYearBalance,
+        select      select ifnull(sum(bd.balance), 0)           as sub_lastYearBalance,
         b.budget_num         as sub_budgetNum
         from budget_data bd
         left join budget b on b.id = bd.budget_id
@@ -311,7 +311,7 @@
         <if test="cond.lastYear != null and cond.lastYear != ''">
              and b.import_date = #{cond.lastYear}
         </if>
-        ) t2 on t1.sub_budgetNum = t2.sub_budgetNum
+        group by b.id, bi.id) t2 on t1.sub_budgetNum = t2.sub_budgetNum
         group by t1.sub_id,t1.id;
     </select>
 
