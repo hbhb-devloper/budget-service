@@ -635,6 +635,7 @@
     <if test="unitId != null and unitId != ''">
       and bd.unit_id = #{unitId}
     </if>
+    group by b.id
     order by b.id
     ) t1
     left join
