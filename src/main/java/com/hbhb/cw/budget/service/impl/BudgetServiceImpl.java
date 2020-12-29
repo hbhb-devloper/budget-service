@@ -82,8 +82,6 @@ public class BudgetServiceImpl implements BudgetService {
     @Override
     public List<BudgetVO> getBudgetListByCond(BudgetReqVO cond) {
         Map<String, BigDecimal> budgetNumAmountMap = new HashMap<>();
-
-        // 获取所有下属单位
         List<Integer> unitIds = unitApi.getSubUnit(cond.getUnitId());
         List<BudgetVO> list = budgetMapper.selectTreeListByCond(cond, unitIds);
         if (CollectionUtils.isEmpty(list)) {
@@ -91,7 +89,8 @@ public class BudgetServiceImpl implements BudgetService {
         }
 
         // 删除科目更新时间未在本年的
-        Date year = DateUtil.formatString(DateUtil.getCurrentYear(), "yyyy");
+        String currentYear = DateUtil.getCurrentYear();
+        Date year = DateUtil.stringToDate(currentYear + "-01-01 00:00:00");
         for (int i = list.size() - 1; i >= 0; i--) {
             if (list.get(i).getUpdateTime() == null || list.get(i).getUpdateTime().getTime() < year.getTime()) {
                 if (list.get(i).getChildren().get(0).getId() == null) {
@@ -138,12 +137,13 @@ public class BudgetServiceImpl implements BudgetService {
     }
 
     @Override
-    public List<TreeSelectParentVO>  getTreeByCond(BudgetReqVO cond) {
+    public List<TreeSelectParentVO> getTreeByCond(BudgetReqVO cond) {
         List<BudgetVO> list = budgetMapper.selectTreeByCond(cond);
         if (CollectionUtils.isEmpty(list)) {
             return new ArrayList<>();
         }
-        Date year = DateUtil.formatString(DateUtil.getCurrentYear(), "yyyy");
+        String currentYear = DateUtil.getCurrentYear();
+        Date year = DateUtil.stringToDate(currentYear + "-01-01 00:00:00");
         for (int i = list.size() - 1; i >= 0; i--) {
             if (list.get(i).getUpdateTime() == null || list.get(i).getUpdateTime().getTime() < year.getTime()) {
                 if (list.get(i).getChildren().get(0).getId() == null) {
@@ -727,13 +727,17 @@ public class BudgetServiceImpl implements BudgetService {
         if (!CollectionUtils.isEmpty(budgetVO.getChildren())) {
             List<TreeSelectParentVO> children = new ArrayList<>();
             // 组装预算科目子类children-项目类别名称
-            budgetVO.getChildren().forEach(child -> {
+            for (BudgetVO child : budgetVO.getChildren()) {
+                if (child.getId() == null) {
+                    continue;
+                }
                 TreeSelectParentVO treeSelectParentVO = new TreeSelectParentVO();
                 treeSelectParentVO.setId(Math.toIntExact(child.getId()));
                 treeSelectParentVO.setLabel(child.getItemName());
                 treeSelectParentVO.setIsParent(false);
                 children.add(treeSelectParentVO);
-            });
+
+            }
             vo.setChildren(children);
         }
         return vo;

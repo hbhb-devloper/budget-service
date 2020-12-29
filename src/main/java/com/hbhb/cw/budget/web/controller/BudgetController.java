@@ -82,8 +82,7 @@ public class BudgetController {
     @GetMapping("/tree")
     public List<TreeSelectParentVO> getTreeListByUnit(
             @Parameter(description = "导入日期") @RequestParam(required = false) String importDate,
-            @Parameter(description = "项目类别名称") @RequestParam(required = false) String projectItem,
-            @Parameter(description = "单位id") @RequestParam(required = false) Integer unitId) {
+            @Parameter(description = "项目类别名称") @RequestParam(required = false) String projectItem) {
         if (StringUtils.isEmpty(importDate)) {
             importDate = DateUtil.getCurrentYear();
         }
@@ -91,7 +90,6 @@ public class BudgetController {
             throw new BudgetException(BudgetErrorCode.BUDGET_IMPORT_DATE_ERROR);
         }
         return budgetService.getTreeByCond(BudgetReqVO.builder()
-                .unitId(unitId)
                 .importDate(importDate)
                 .projectItem(projectItem)
                 .build());
