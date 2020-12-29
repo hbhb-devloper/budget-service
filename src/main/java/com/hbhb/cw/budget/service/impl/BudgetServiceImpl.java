@@ -31,6 +31,7 @@ import com.hbhb.cw.budget.web.vo.BudgetInfoVO;
 import com.hbhb.cw.budget.web.vo.BudgetProgressResVO;
 import com.hbhb.cw.budget.web.vo.BudgetReqVO;
 import com.hbhb.cw.budget.web.vo.BudgetVO;
+import com.hbhb.cw.systemcenter.enums.UnitEnum;
 import com.hbhb.cw.systemcenter.vo.TreeSelectParentVO;
 
 import org.springframework.beans.BeanUtils;
@@ -82,16 +83,20 @@ public class BudgetServiceImpl implements BudgetService {
     @Override
     public List<BudgetVO> getBudgetListByCond(BudgetReqVO cond) {
         Map<String, BigDecimal> budgetNumAmountMap = new HashMap<>();
-
-        // 获取所有下属单位
-        List<Integer> unitIds = unitApi.getSubUnit(cond.getUnitId());
-        List<BudgetVO> list = budgetMapper.selectTreeListByCond(cond, unitIds);
+        List<BudgetVO> list = new ArrayList<>();
+        if (UnitEnum.HANGZHOU.value().equals(cond.getUnitId())){
+             list = budgetMapper.selectTreeByCond(cond);
+        }else {
+            List<Integer> unitIds = unitApi.getSubUnit(cond.getUnitId());
+            list = budgetMapper.selectTreeListByCond(cond, unitIds);
+        }
         if (CollectionUtils.isEmpty(list)) {
             return new ArrayList<>();
         }
 
         // 删除科目更新时间未在本年的
-        Date year = DateUtil.formatString(DateUtil.getCurrentYear(), "yyyy");
+        String currentYear = DateUtil.getCurrentYear();
+        Date year = DateUtil.stringToDate(currentYear+"-01-01 00:00:00");
         for (int i = list.size() - 1; i >= 0; i--) {
             if (list.get(i).getUpdateTime() == null || list.get(i).getUpdateTime().getTime() < year.getTime()) {
                 if (list.get(i).getChildren().get(0).getId() == null) {

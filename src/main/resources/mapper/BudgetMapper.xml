@@ -338,9 +338,6 @@
             <if test="projectItem != null and projectItem != ''">
                 and concat(b.budget_num, '_', b.project_item,bi.item_name) like concat ('%', #{projectItem}, '%')
             </if>
-            <if test="unitId != null and unitId != ''">
-                and bd.unit_id = #{unitId}
-            </if>
         </where>
         group by b.id,bi.id
         order by b.id,bi.id) t1 left join (
@@ -352,9 +349,6 @@
         <where>
             <if test="lastYear != null and lastYear != ''">
                 and b.import_date = #{lastYear}
-            </if>
-            <if test="unitId != null and unitId != ''">
-                and bd.unit_id = #{unitId}
             </if>
         </where>
         ) t2 on t1.sub_budgetNum = t2.sub_budgetNum
