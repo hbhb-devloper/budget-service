@@ -20,6 +20,7 @@ import com.hbhb.cw.systemcenter.vo.TreeSelectParentVO;
 import com.hbhb.cw.systemcenter.vo.UserInfo;
 import com.hbhb.web.annotation.UserId;
 
+import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -116,7 +117,7 @@ public class BudgetController {
     }
 
     @Operation(summary = "预算模板导入")
-    @PostMapping("/import")
+    @PostMapping(value = "/import", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public void importBudgetBreak(MultipartFile file,
                                   String importDate) {
         long begin = System.currentTimeMillis();
