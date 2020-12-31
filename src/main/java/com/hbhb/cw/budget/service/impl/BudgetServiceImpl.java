@@ -534,6 +534,9 @@ public class BudgetServiceImpl implements BudgetService {
                 adjust.addAll(budgetHistories);
                 vos.clear();
             } else {
+                if (budgetBelongList.get(i).getBudgetId()==null){
+                    throw new BudgetException(BudgetErrorCode.BUDGET_DATA_NOT_NEGATIVE);
+                }
                 if (!budgetBelongList.get(i).getBudgetId().equals(budgetBelongList.get(l).getBudgetId())) {
                     List<BudgetHistory> budgetHistories = adjustBudget(vos);
                     adjust.addAll(budgetHistories);

@@ -398,7 +398,7 @@
       <if test="cond.projectName != null and cond.projectName != ''">
         and bp.project_name like concat('%', #{cond.projectName}, '%')
       </if>
-      <if test="cond.projectNum != null and projectNum != ''">
+      <if test="cond.projectNum != null and cond.projectNum != ''">
         and bp.project_num = #{cond.projectNum}
       </if>
       <if test="cond.state != null">
