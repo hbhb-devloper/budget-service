@@ -30,12 +30,13 @@
     <result column="flow_id" jdbcType="BIGINT" property="flowId" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
+    <result column="budget_num" jdbcType="VARCHAR" property="budgetNum" />
   </resultMap>
   <sql id="Base_Column_List">
     id, budget_id, unit_id, project_name, amount, available_amount, tax_include_amount,
     cost, vat_rate, vat_amount, director, project_num, start_time, end_time, supplier,
     origin, introduction, detail, target, engineering_num, delete_flag, remark, state,
-    create_time, create_by, flow_id, update_time, update_by
+    create_time, create_by, flow_id, update_time, update_by, budget_num
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select
@@ -380,7 +381,7 @@
     bp.origin       as origin,
     bp.state        as state
     from budget_project bp
-    left join budget b on bp.budget_id = b.id
+    left join budget b on concat(b.budget_num,b.import_date)= bp.budget_num
     where bp.delete_flag = 1
     and bp.unit_id in
     <foreach collection="list" item="item" open="(" separator="," close=")">
@@ -411,7 +412,7 @@
             resultType="int">
       select count(bp.id)
       from budget_project bp
-      left join budget b on bp.budget_id = b.id
+      left join budget b on concat(b.budget_num,b.import_date)= bp.budget_num
       left join budget_item bi on b.budget_item_id = bi.id
       where bp.delete_flag = 1
       and bp.unit_id in
@@ -475,7 +476,8 @@
       #{item}
     </foreach>
     ) s1
-    left join budget_project bp on s1.bdId = bp.budget_id
+      left join budget b2 on b2.id = s1.bdId
+      left join budget_project bp on concat(b2.budget_num,b2.import_date)= bp.budget_num
     where bp.unit_id in (s1.bbId)
     and bp.state  in (31,32)
     and bp.delete_flag = 1
@@ -551,7 +553,8 @@
     where bb.budget_id = #{budgetId}
     and bb.under_unit_id = #{unitId}
     ) s1
-    left join budget_project bp on s1.bdId = bp.budget_id
+      left join budget b2 on b2.id = s1.bdId
+      left join budget_project bp on concat(b2.budget_num,b2.import_date)= bp.budget_num
     where bp.unit_id in (s1.bbId)
     and bp.state in
     <foreach collection="list" item="item" open="(" separator="," close=")">
@@ -599,7 +602,8 @@
     where bb.budget_id = #{budgetId}
     and bb.under_unit_id = #{unitId}
     ) s1
-    left join budget_project bp on s1.bdId = bp.budget_id
+      left join budget b2 on b2.id = s1.bdId
+      left join budget_project bp on concat(b2.budget_num,b2.import_date)= bp.budget_num
     left join budget_project_approved bpa on bpa.project_id = bp.id
     where bp.unit_id in (s1.bbId)
     and bp.state = #{state}
@@ -654,7 +658,8 @@
       </if>
     </where>
     ) s1
-    left join budget_project bp on s1.bdId = bp.budget_id
+      left join budget b2 on b2.id = s1.bdId
+      left join budget_project bp on concat(b2.budget_num,b2.import_date)= bp.budget_num
     where bp.unit_id in (s1.bbId)
     and bp.state  in (31,32)
     and bp.delete_flag = 1
@@ -1064,6 +1069,13 @@
         <foreach collection="list" item="i" index="index">
           <if test="i.updateBy!=null">
             when id=#{i.id} then #{i.updateBy}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="budget_num=case" suffix="end,">
+        <foreach collection="list" item="i" index="index">
+          <if test="i.budgetNum!=null">
+            when id=#{i.id} then #{i.budgetNum}
           </if>
         </foreach>
       </trim>

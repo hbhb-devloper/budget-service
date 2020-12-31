@@ -12,6 +12,7 @@ import com.hbhb.cw.budget.mapper.BudgetBelongMapper;
 import com.hbhb.cw.budget.mapper.BudgetDataMapper;
 import com.hbhb.cw.budget.mapper.BudgetItemMapper;
 import com.hbhb.cw.budget.mapper.BudgetMapper;
+import com.hbhb.cw.budget.mapper.BudgetProjectMapper;
 import com.hbhb.cw.budget.model.Budget;
 import com.hbhb.cw.budget.model.BudgetBelong;
 import com.hbhb.cw.budget.model.BudgetData;
@@ -78,6 +79,8 @@ public class BudgetServiceImpl implements BudgetService {
     private BudgetProjectService budgetProjectService;
     @Resource
     private UnitApiExp unitApi;
+    @Resource
+    private BudgetProjectMapper budgetProjectMapper;
 
     @Override
     public List<BudgetVO> getBudgetListByCond(BudgetReqVO cond) {
@@ -534,9 +537,6 @@ public class BudgetServiceImpl implements BudgetService {
                 adjust.addAll(budgetHistories);
                 vos.clear();
             } else {
-                if (budgetBelongList.get(i).getBudgetId()==null){
-                    throw new BudgetException(BudgetErrorCode.BUDGET_DATA_NOT_NEGATIVE);
-                }
                 if (!budgetBelongList.get(i).getBudgetId().equals(budgetBelongList.get(l).getBudgetId())) {
                     List<BudgetHistory> budgetHistories = adjustBudget(vos);
                     adjust.addAll(budgetHistories);
