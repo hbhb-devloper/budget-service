@@ -779,10 +779,6 @@ public class BudgetServiceImpl implements BudgetService {
             vo.setItemName(budget.getItemName());
             vo.setMeasurement("万元");
             vo.setRemark(budget.getRemark());
-            // 预算合计值
-            BigDecimal lastYearBalanceTotal = new BigDecimal(0);
-            BigDecimal thisYearBalanceTotal = new BigDecimal(0);
-
             // 判断是否有子类
             if (!CollectionUtils.isEmpty(budget.getChildren())) {
                 for (BudgetVO child : budget.getChildren()) {
@@ -791,21 +787,15 @@ public class BudgetServiceImpl implements BudgetService {
                             .itemName("----" + child.getItemName())
                             .measurement("万元")
                             .lastYearBalance(child.getLastYearBalance())
+                            .lastYearFinishedBalance(child.getLastYearFinishedBalance())
                             .thisYearBalance(child.getBalance())
                             .remark(child.getRemark())
                             .build());
-
-                    // 统计子类去年/今年预算值
-                    if (child.getLastYearBalance() != null) {
-                        lastYearBalanceTotal = lastYearBalanceTotal.add(child.getLastYearBalance());
-                    }
-                    if (child.getBalance() != null) {
-                        thisYearBalanceTotal = thisYearBalanceTotal.add(child.getBalance());
-                    }
                 }
             }
-            vo.setLastYearBalance(lastYearBalanceTotal);
-            vo.setThisYearBalance(thisYearBalanceTotal);
+            vo.setLastYearBalance(budget.getLastYearBalance());
+            vo.setThisYearBalance(budget.getBalance());
+            vo.setLastYearFinishedBalance(budget.getLastYearFinishedBalance());
             result.add(vo);
         }
         // 按lineNumber排序
