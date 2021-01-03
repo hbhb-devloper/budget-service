@@ -2,7 +2,15 @@ package com.hbhb.cw.budget.mapper;
 
 
 import com.hbhb.cw.budget.model.BudgetProject;
-import com.hbhb.cw.budget.web.vo.*;
+import com.hbhb.cw.budget.web.vo.BudgetProgressReqVO;
+import com.hbhb.cw.budget.web.vo.BudgetProgressResVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectAmountVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectDetailVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectExportVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectReqVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectResVO;
+import com.hbhb.cw.budget.web.vo.BudgetReqVO;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -58,4 +66,6 @@ public interface BudgetProjectMapper extends BaseMapper<BudgetProject, Integer> 
     List<BudgetProject> selectJieZhuan(@Param("year") String year);
 
     int updateBatchById(@Param("list") List<BudgetProject> list);
+
+    List<BudgetProject> selectAll();
 }

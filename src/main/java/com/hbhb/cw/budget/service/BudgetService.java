@@ -126,4 +126,6 @@ public interface BudgetService {
      * 通过预算编号和年份得到预算id
      */
     Long getIdByNum(String budgetNum, String importDate);
+
+    void check();
 }

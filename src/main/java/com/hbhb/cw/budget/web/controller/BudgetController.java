@@ -185,4 +185,10 @@ public class BudgetController {
             @Parameter(description = "预算id", required = true) @PathVariable Long id) {
         return budgetService.getBudgetThreshold(id);
     }
+
+    @Operation(summary = "修改项目签报预算编号")
+    @PostMapping("/check")
+    public void checkProject() {
+        budgetService.check();
+    }
 }
