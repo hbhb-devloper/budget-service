@@ -17,8 +17,6 @@ import com.hbhb.cw.budget.web.vo.BudgetInfoVO;
 import com.hbhb.cw.budget.web.vo.BudgetReqVO;
 import com.hbhb.cw.budget.web.vo.BudgetVO;
 import com.hbhb.cw.systemcenter.vo.TreeSelectParentVO;
-import com.hbhb.cw.systemcenter.vo.UserInfo;
-import com.hbhb.web.annotation.UserId;
 
 import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
@@ -142,16 +140,18 @@ public class BudgetController {
     @Operation(summary = "预算导出")
     @PostMapping("/export")
     public void export(HttpServletRequest request, HttpServletResponse response,
-                       @RequestBody BudgetReqVO cond,
-                       @Parameter(hidden = true) @UserId Integer userId) {
-
-        UserInfo user = userApi.getUserInfoById(userId);
+                       @RequestBody BudgetReqVO cond) {
         if (cond.getUnitId() == null) {
-            cond.setUnitId(user.getUnitId());
+            return;
         }
-        if (cond.getImportDate() == null) {
+        if (StringUtils.isEmpty(cond.getImportDate())) {
             cond.setImportDate(DateUtil.getCurrentYear());
         }
+        if (!RegexUtil.isYear(cond.getImportDate())) {
+            throw new BudgetException(BudgetErrorCode.BUDGET_IMPORT_DATE_ERROR);
+        }
+        int lastYear = Integer.parseInt(cond.getImportDate());
+        cond.setLastYear(String.valueOf(lastYear - 1));
         List<BudgetExportVO> list = budgetService.getExportList(cond);
         String fileName = ExcelUtil.encodingFileName(request, "预算分解");
         ExcelUtil.export2Web(response, fileName, fileName, BudgetExportVO.class, list);
