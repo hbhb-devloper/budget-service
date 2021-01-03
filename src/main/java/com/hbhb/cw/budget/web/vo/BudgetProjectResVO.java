@@ -46,6 +46,9 @@ public class BudgetProjectResVO implements Serializable {
     @Schema(description = "单位名字")
     private String unitName;
 
+    @Schema(description = "单位id")
+    private Integer unitId;
+
     @Schema(description = "创建人")
     private String createBy;
 
