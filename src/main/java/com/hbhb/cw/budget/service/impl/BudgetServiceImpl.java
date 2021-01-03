@@ -836,4 +836,20 @@ public class BudgetServiceImpl implements BudgetService {
     public Long getIdByNum(String budgetNum, String importDate) {
         return budgetMapper.selectIdByNum(budgetNum, importDate);
     }
+
+    @Override
+    public void check() {
+        // 得到所有签报
+        List<BudgetProject> budgetProjects = budgetProjectMapper.selectAll();
+        // 修改所有签报的签报编号编为预算编号并加上创建时间的年
+        for (BudgetProject budgetProject : budgetProjects) {
+            String projectNum = budgetProject.getProjectNum();
+            String substring = projectNum.substring(0, projectNum.length() - 8);
+            String year = DateUtil.dateToString(budgetProject.getCreateTime(), "yyyy");
+            String budgetNum = substring+year;
+            budgetProject.setBudgetNum(budgetNum);
+        }
+        // 修改
+        budgetProjectMapper.updateBatchById(budgetProjects);
+    }
 }

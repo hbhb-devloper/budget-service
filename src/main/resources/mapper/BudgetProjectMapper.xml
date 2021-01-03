@@ -1095,4 +1095,10 @@
       id=#{i.id}
     </foreach>
   </update>
+
+  <select id="selectAll"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from budget_project
+  </select>
 </mapper>
