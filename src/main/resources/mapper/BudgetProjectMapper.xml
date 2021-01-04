@@ -543,7 +543,6 @@
     left join budget_item bi on bi.id = b.budget_item_id
     where bd.unit_id = #{unitId}
     and b.id = #{budgetId}
-    and b.import_date = #{year}
     order by b.id
     ) t1
 
