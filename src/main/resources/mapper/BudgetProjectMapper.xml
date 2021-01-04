@@ -597,7 +597,6 @@
     <if test="projectItem != null">
       and concat(b.budget_num, '_',b.project_item) like concat ('%',#{projectItem},'%')
     </if>
-    and b.import_date = #{year}
     order by b.id
     ) t1
     left join
