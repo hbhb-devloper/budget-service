@@ -357,7 +357,6 @@
     left join budget_item bi on bi.id = b.budget_item_id
     where bd.unit_id = #{unitId}
     and b.id = #{budgetId}
-    and b.import_date = #{year}
     order by b.id
     ) t1
 
@@ -406,7 +405,6 @@
     <if test="projectItem != null">
       and concat(b.budget_num, '_',b.project_item) like concat ('%',#{projectItem},'%')
     </if>
-    and b.import_date = #{year}
     order by b.id
     ) t1
     left join
