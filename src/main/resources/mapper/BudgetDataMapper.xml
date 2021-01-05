@@ -136,6 +136,15 @@
         where budget_id=#{budgetId} and unit_id=#{unitId}
     </select>
 
+    <select id="getDataByUnitIdByNum" parameterType="map" resultType="com.hbhb.cw.budget.model.BudgetData">
+        select
+        bd.*
+        from budget_data bd
+        left join budget b on b.id = bd.budget_id
+        where bd.unit_id = #{unitId}
+        and concat(b.budget_num,b.import_date) = #{budgetNum}
+    </select>
+
     <delete id="deleteByBudgetId" parameterType="list">
         delete from budget_data
         where budget_id = #{budgetId}

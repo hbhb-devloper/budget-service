@@ -40,4 +40,6 @@ public interface BudgetMapper extends BaseMapper<Budget, Long> {
     Integer selectBudgetByItemId(@Param("itemId") Long id);
 
     Long selectIdByNum(@Param("budgetNum") String budgetNum, @Param("importDate") String importDate);
+
+    List<Budget> selectAll();
 }

@@ -6,6 +6,7 @@ import com.hbhb.cw.budget.enums.BudgetErrorCode;
 import com.hbhb.cw.budget.exception.BudgetException;
 import com.hbhb.cw.budget.mapper.BudgetBelongMapper;
 import com.hbhb.cw.budget.mapper.BudgetDataMapper;
+import com.hbhb.cw.budget.model.Budget;
 import com.hbhb.cw.budget.model.BudgetBelong;
 import com.hbhb.cw.budget.model.BudgetData;
 import com.hbhb.cw.budget.model.BudgetHistory;
@@ -99,6 +100,7 @@ public class BudgetDataServiceImpl implements BudgetDataService {
         }
         // 得到预算id
         Long budgetId = list.get(0).getBudgetId();
+        Budget budget = budgetService.getBudgetById(budgetId);
         // 得到归口单位id
         Integer underUnitId = list.get(0).getDeptId();
         // 用来批量新增预算数据
@@ -127,6 +129,9 @@ public class BudgetDataServiceImpl implements BudgetDataService {
         }
         if (list.get(0).getUnitId() != null) {
             budgetDataMapper.insertBatch(budgetDataList);
+            for (BudgetBelong budgetBelong : belongList) {
+                budgetBelong.setBudgetNum(budget.getBudgetNum()+budget.getImportDate());
+            }
             budgetBelongMapper.insertBatch(belongList);
         }
 
@@ -146,6 +151,11 @@ public class BudgetDataServiceImpl implements BudgetDataService {
     @Override
     public BudgetData getDataByUnitIdAndBudgetId(Integer unitId, Long budgetId) {
         return budgetDataMapper.getDataByUnitIdAndBudgetId(unitId, budgetId);
+    }
+
+    @Override
+    public BudgetData getDataByUnitIdAndBudgetIdByNum(Integer unitId, String budgetNum) {
+        return budgetDataMapper.getDataByUnitIdByNum(unitId, budgetNum);
     }
 
 

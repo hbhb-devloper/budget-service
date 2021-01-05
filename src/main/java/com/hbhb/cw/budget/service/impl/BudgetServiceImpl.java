@@ -561,6 +561,15 @@ public class BudgetServiceImpl implements BudgetService {
         }
         if (!CollectionUtils.isEmpty(budgetBelongList)) {
             // 设置了UK(budgetId, unitId) 如果重复，则更新underUnitId
+            List<Budget> budgetList = budgetMapper.selectAllByYear(importDate);
+            // budgetId => budgetNum+importDate
+            Map<Long, String> budgetMap = new HashMap<>();
+            for (Budget budget : budgetList) {
+                budgetMap.put(budget.getId(),budget.getBudgetNum()+importDate);
+            }
+            for (BudgetBelong budgetBelong : budgetBelongList) {
+                budgetBelong.setBudgetNum(budgetMap.get(budgetBelong.getBudgetId()));
+            }
             budgetBelongMapper.insertBatch(budgetBelongList);
         }
         // 处理预算历史
@@ -851,5 +860,24 @@ public class BudgetServiceImpl implements BudgetService {
         }
         // 修改
         budgetProjectMapper.updateBatchById(budgetProjects);
+    }
+
+    @Override
+    public void checkBelong() {
+        // 得到所有归口关系
+        List<BudgetBelong> budgetBelongs = budgetBelongMapper.selectAll();
+        // 得到所有预算
+        List<Budget> budgets = budgetMapper.selectAll();
+        // id => budgetNum
+        Map<Long, String> budgetMap = new HashMap<>();
+        for (Budget budget : budgets) {
+            budgetMap.put(budget.getId(),budget.getBudgetNum()+budget.getImportDate());
+        }
+        // 修改所有归口的签报编号编为预算编号并加上创建时间的年
+        for (BudgetBelong budgetBelong : budgetBelongs) {
+            budgetBelong.setBudgetNum(budgetMap.get(budgetBelong.getBudgetId()));
+        }
+        // 修改
+        budgetBelongMapper.batchUpdate(budgetBelongs);
     }
 }

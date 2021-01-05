@@ -68,7 +68,6 @@ public class BudgetProgressController {
         if (cond.getImportDate() == null) {
             cond.setImportDate(DateUtil.getCurrentYear());
         }
-        // todo 此处有bug
         return budgetProgressService.getProgressByBudgetId(cond);
     }
 

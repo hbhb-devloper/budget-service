@@ -6,9 +6,10 @@
     <result column="budget_id" jdbcType="BIGINT" property="budgetId"/>
     <result column="unit_id" jdbcType="INTEGER" property="unitId"/>
     <result column="under_unit_id" jdbcType="INTEGER" property="underUnitId"/>
+    <result column="budget_num" jdbcType="VARCHAR" property="budgetNum"/>
   </resultMap>
   <sql id="Base_Column_List">
-    id, budget_id, unit_id, under_unit_id
+    id, budget_id, unit_id, under_unit_id, budget_num
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -22,9 +23,9 @@
   </delete>
   <insert id="insert" parameterType="com.hbhb.cw.budget.model.BudgetBelong">
     insert into budget_belong (id, budget_id, unit_id, 
-      under_unit_id)
+      under_unit_id, budget_num)
     values (#{id,jdbcType=BIGINT}, #{budgetId,jdbcType=BIGINT}, #{unitId,jdbcType=INTEGER}, 
-      #{underUnitId,jdbcType=INTEGER})
+      #{underUnitId,jdbcType=INTEGER}, #{budgetNum,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hbhb.cw.budget.model.BudgetBelong">
     insert into budget_belong
@@ -41,6 +42,9 @@
       <if test="underUnitId != null">
         under_unit_id,
       </if>
+      <if test="budgetNum != null">
+        budget_num,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -54,6 +58,9 @@
       </if>
       <if test="underUnitId != null">
         #{underUnitId,jdbcType=INTEGER},
+      </if>
+      <if test="budgetNum != null">
+        #{budgetNum,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -69,6 +76,9 @@
       <if test="underUnitId != null">
         under_unit_id = #{underUnitId,jdbcType=INTEGER},
       </if>
+      <if test="budgetNum != null">
+        budget_num = #{budgetNum,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -76,7 +86,8 @@
     update budget_belong
     set budget_id = #{budgetId,jdbcType=BIGINT},
       unit_id = #{unitId,jdbcType=INTEGER},
-      under_unit_id = #{underUnitId,jdbcType=INTEGER}
+      under_unit_id = #{underUnitId,jdbcType=INTEGER},
+      budget_num = #{budgetNum,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 
@@ -135,4 +146,60 @@
     </if>
     </where>
   </select>
+
+  <select id="selectUnderUnitIdByNum" resultType="java.lang.Integer">
+    select under_unit_id from budget_belong
+    <where>
+      <if test="budgetNum != null ">
+        and  budget_num=#{budgetNum}
+      </if>
+      <if test="unitId != null">
+        and  unit_id=#{unitId}
+      </if>
+    </where>
+  </select>
+
+  <select id="selectAll"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from budget_belong
+  </select>
+
+  <update id="batchUpdate" parameterType="list">
+    update budget_belong
+    <trim prefix="set" suffixOverrides=",">
+      <trim prefix="budget_id=case" suffix="end,">
+        <foreach collection="list" item="i" index="index">
+          <if test="i.budgetId!=null">
+            when id=#{i.id} then #{i.budgetId}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="unit_id=case" suffix="end,">
+        <foreach collection="list" item="i" index="index">
+          <if test="i.unitId!=null">
+            when id=#{i.id} then #{i.unitId}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="under_unit_id=case" suffix="end,">
+        <foreach collection="list" item="i" index="index">
+          <if test="i.underUnitId!=null">
+            when id=#{i.id} then #{i.underUnitId}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="budget_num=case" suffix="end,">
+        <foreach collection="list" item="i" index="index">
+          <if test="i.budgetNum!=null">
+            when id=#{i.id} then #{i.budgetNum}
+          </if>
+        </foreach>
+      </trim>
+    </trim>
+    where
+    <foreach collection="list" separator="or" item="i" index="index">
+      id=#{i.id}
+    </foreach>
+  </update>
 </mapper>

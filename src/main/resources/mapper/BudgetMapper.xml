@@ -401,4 +401,10 @@
     <select id="selectIdByNum" parameterType="map" resultType="long">
         select id from budget where budget_num = #{budgetNum} and import_date = #{importDate}
     </select>
+
+    <select id="selectAll"  resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from budget
+    </select>
 </mapper>
