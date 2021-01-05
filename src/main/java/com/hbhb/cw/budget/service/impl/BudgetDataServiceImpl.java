@@ -149,6 +149,11 @@ public class BudgetDataServiceImpl implements BudgetDataService {
         return budgetDataMapper.getDataByUnitIdAndBudgetId(unitId, budgetId);
     }
 
+    @Override
+    public BudgetData getDataByUnitIdAndBudgetIdByNum(Integer unitId, String budgetNum) {
+        return budgetDataMapper.getDataByUnitIdByNum(unitId, budgetNum);
+    }
+
 
     @Override
     public List<BudgetData> getListByUnitIds(Long budgetId, List<Integer> unitIds) {

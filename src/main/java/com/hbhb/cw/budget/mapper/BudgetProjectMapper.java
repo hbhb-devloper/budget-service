@@ -28,7 +28,7 @@ public interface BudgetProjectMapper extends BaseMapper<BudgetProject, Integer> 
                                              @Param("list") List<Integer> unitIds);
 
     List<BudgetProjectAmountVO> selectProgressByBudget(@Param("unitId") Integer unitId,
-                                                       @Param("budgetId") Long budgetId,
+                                                       @Param("budgetNum") String budgetNum,
                                                        @Param("year") String year,
                                                        @Param("list") List<Integer> states);
 

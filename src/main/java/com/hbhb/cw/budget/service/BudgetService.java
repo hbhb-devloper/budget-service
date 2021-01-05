@@ -128,4 +128,6 @@ public interface BudgetService {
     Long getIdByNum(String budgetNum, String importDate);
 
     void check();
+
+    void checkBelong();
 }

@@ -39,6 +39,11 @@ public interface BudgetDataService {
     BudgetData getDataByUnitIdAndBudgetId(Integer unitId, Long budgetId);
 
     /**
+     * 通过budgetNum+importDate和unitId得到预算值
+     */
+    BudgetData getDataByUnitIdAndBudgetIdByNum(Integer unitId, String budgetNum);
+
+    /**
      * 通过budgetId和unitIds得到budgetData列表
      */
     List<BudgetData> getListByUnitIds(Long budgetId, List<Integer> unitIds);

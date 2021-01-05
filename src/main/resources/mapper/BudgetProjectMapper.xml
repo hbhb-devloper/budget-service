@@ -496,7 +496,7 @@
       and bpa.create_time like concat ('%',#{cond.date},'%')
     </if>
     ) t2
-    on t1.budgetId = t2.budgetId
+      on concat(t1.budgetNum,t1.importDate) = t2.budgetNum
     left join (
     select distinct bpa.budget_id as budgetId,
     ifnull(sum(bpa.cost),0)   as amount,
@@ -520,7 +520,7 @@
     group by bpa.budget_id
     ) t3
     on t1.budgetId = t3.budgetId
-    group by t1.budgetId
+    group by t2.budgetNum
   </select>
 
     <select id="selectProgressByBudget" parameterType="map"
@@ -537,12 +537,16 @@
         select b.id as budgetId,
     bi.item_name                              as budgetItemName,
     concat(b.budget_num, '_', b.project_item) as projectItemName,
-    bd.balance                                as budgetBalance
+    bd.balance                                as budgetBalance,
+      b.budget_num           as budgetNum,
+      b.import_date          as importDate,
+      b.budget_num           as budgetNum,
+      b.import_date          as importDate
     from budget b
     left join budget_data bd on b.id = bd.budget_id
     left join budget_item bi on bi.id = b.budget_item_id
     where bd.unit_id = #{unitId}
-    and b.id = #{budgetId}
+    and concat(b.budget_num,b.import_date) =  #{budgetNum}
     order by b.id
     ) t1
 
@@ -554,12 +558,13 @@
     bp.project_name as projectName,
     bp.project_num  as projectNum,
     bp.create_by    as creatBy,
-    bp.create_time  as createTime
+    bp.create_time  as createTime,
+      bp.budget_num  as budgetNum
     from (select distinct bb.unit_id       as bbId,
     bb.under_unit_id as unId,
     bb.budget_id     as bdId
     from budget_belong bb
-    where bb.budget_id = #{budgetId}
+      where bb.budget_num = #{budgetNum}
     and bb.under_unit_id = #{unitId}
     ) s1
       left join budget b2 on b2.id = s1.bdId
@@ -572,9 +577,9 @@
     and bp.delete_flag = 1
     and bp.budget_num like concat ('%',#{year})
     ) t2
-    on t1.budgetId = t2.budgetId
-    left join unit u on u.id = #{unitId}
-    group by t2.id
+      on concat(t1.budgetNum,t1.importDate) = t2.budgetNum
+      left join unit u on u.id = #{unitId
+      group by t2.budgetNum
   </select>
 
     <select id="selectProgressByState" parameterType="map" resultType="com.hbhb.cw.budget.web.vo.BudgetProgressResVO">
@@ -587,12 +592,14 @@
         bi.item_name as budgetItemName,
         concat(b.project_item) as projectItemName,
         bd.balance as budgetBalance,
-        b.remark as remark
+        b.remark as remark,
+      b.budget_num           as budgetNum,
+      b.import_date          as importDate
     from budget b
     left join budget_data bd on b.id = bd.budget_id
     left join budget_item bi on bi.id = b.budget_item_id
     where bd.unit_id = #{unitId}
-    and b.id = #{budgetId}
+     and concat(b.budget_num,b.import_date) =  #{budgetNum}
     <if test="projectItem != null">
       and concat(b.budget_num, '_',b.project_item) like concat ('%',#{projectItem},'%')
     </if>
@@ -602,12 +609,13 @@
     (
     select distinct bp.budget_id as budgetId,
     bp.cost    as amount,
-    bp.id        as id
+    bp.id        as id,
+      bp.budget_num as budgetNum
     from
     (
     select distinct bb.unit_id as bbId, bb.under_unit_id as unId, bb.budget_id as bdId, bb.id  as id
     from budget_belong bb
-    where bb.budget_id = #{budgetId}
+    where bb.budget_num = #{budgetNum}
     and bb.under_unit_id = #{unitId}
     ) s1
       left join budget b2 on b2.id = s1.bdId
@@ -619,9 +627,9 @@
             and bp.budget_num like concat('%',#{year})
       </if>
     ) t2
-    on t1.budgetId = t2.budgetId
-    left join unit u on u.id = #{unitId}
-    group by t1.budgetId
+      on concat(t1.budgetNum,t1.importDate) = t2.budgetNum
+      left join unit u on u.id = #{unitId}
+      group by t2.budgetNum
   </select>
 
     <select id="selectBudgetProgressByBudgetData" parameterType="map"

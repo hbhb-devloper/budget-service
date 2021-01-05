@@ -3,6 +3,7 @@ package com.hbhb.cw.budget.mapper;
 
 import com.hbhb.cw.budget.model.BudgetData;
 import com.hbhb.cw.budget.web.vo.BudgetBelongVO;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -22,6 +23,9 @@ public interface BudgetDataMapper extends BaseMapper<BudgetData, Long> {
 
     BudgetData getDataByUnitIdAndBudgetId(@Param("unitId") Integer unitId,
                                           @Param("budgetId") Long budgetId);
+
+    BudgetData getDataByUnitIdByNum(@Param("unitId") Integer unitId,
+                                    @Param("budgetNum") String budgetNum);
 
     int deleteByBudgetId(@Param("budgetId") Long budgetId);
 
