@@ -561,6 +561,15 @@ public class BudgetServiceImpl implements BudgetService {
         }
         if (!CollectionUtils.isEmpty(budgetBelongList)) {
             // 设置了UK(budgetId, unitId) 如果重复，则更新underUnitId
+            List<Budget> budgetList = budgetMapper.selectAllByYear(importDate);
+            // budgetId => budgetNum+importDate
+            Map<Long, String> budgetMap = new HashMap<>();
+            for (Budget budget : budgetList) {
+                budgetMap.put(budget.getId(),budget.getBudgetNum()+importDate);
+            }
+            for (BudgetBelong budgetBelong : budgetBelongList) {
+                budgetBelong.setBudgetNum(budgetMap.get(budgetBelong.getBudgetId()));
+            }
             budgetBelongMapper.insertBatch(budgetBelongList);
         }
         // 处理预算历史
