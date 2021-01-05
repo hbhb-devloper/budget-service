@@ -539,8 +539,6 @@
     concat(b.budget_num, '_', b.project_item) as projectItemName,
     bd.balance                                as budgetBalance,
       b.budget_num           as budgetNum,
-      b.import_date          as importDate,
-      b.budget_num           as budgetNum,
       b.import_date          as importDate
     from budget b
     left join budget_data bd on b.id = bd.budget_id
@@ -578,7 +576,7 @@
     and bp.budget_num like concat ('%',#{year})
     ) t2
       on concat(t1.budgetNum,t1.importDate) = t2.budgetNum
-      left join unit u on u.id = #{unitId
+      left join unit u on u.id = #{unitId}
       group by t2.budgetNum
   </select>
 
