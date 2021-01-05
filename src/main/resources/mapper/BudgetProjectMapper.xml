@@ -487,11 +487,11 @@
     </foreach>
     ) s1
       left join budget b2 on b2.id = s1.bdId
-      left join budget_project bp on concat(b2.budget_num,b2.import_date)= bp.budget_num
+      left join budget_project bp on bp.budget_num like concat(b2.budget_num,'%')
     where bp.unit_id in (s1.bbId)
     and bp.state  in (31,32)
     and bp.delete_flag = 1
-    and bp.create_time like concat (#{cond.year},'%')
+    and bp.budget_num like concat ('%',#{cond.year})
     <if test="cond.date != null">
       and bpa.create_time like concat ('%',#{cond.date},'%')
     </if>
@@ -563,14 +563,14 @@
     and bb.under_unit_id = #{unitId}
     ) s1
       left join budget b2 on b2.id = s1.bdId
-      left join budget_project bp on concat(b2.budget_num,b2.import_date)= bp.budget_num
+      left join budget_project bp on bp.budget_num like concat(b2.budget_num,'%')
     where bp.unit_id in (s1.bbId)
     and bp.state in
     <foreach collection="list" item="item" open="(" separator="," close=")">
       #{item}
     </foreach>
     and bp.delete_flag = 1
-    and bp.create_time like concat (#{year},'%')
+    and bp.budget_num like concat ('%',#{year})
     ) t2
     on t1.budgetId = t2.budgetId
     left join unit u on u.id = #{unitId}
@@ -611,12 +611,13 @@
     and bb.under_unit_id = #{unitId}
     ) s1
       left join budget b2 on b2.id = s1.bdId
-      left join budget_project bp on concat(b2.budget_num,b2.import_date)= bp.budget_num
-    left join budget_project_approved bpa on bpa.project_id = bp.id
+      left join budget_project bp on bp.budget_num like concat(b2.budget_num,'%')
     where bp.unit_id in (s1.bbId)
     and bp.state = #{state}
     and bp.delete_flag = 1
-    and bp.create_time like concat(#{year}, '%')
+      <if test="year != null">
+            and bp.budget_num like concat('%',#{year})
+      </if>
     ) t2
     on t1.budgetId = t2.budgetId
     left join unit u on u.id = #{unitId}
@@ -667,11 +668,11 @@
     </where>
     ) s1
       left join budget b2 on b2.id = s1.bdId
-      left join budget_project bp on concat(b2.budget_num,b2.import_date)= bp.budget_num
+      left join budget_project bp on bp.budget_num like concat(b2.budget_num,'%')
     where bp.unit_id in (s1.bbId)
     and bp.state  in (31,32)
     and bp.delete_flag = 1
-    and bp.create_time like concat (#{lastYear},'%')
+    and bp.budget_num like concat ('%', #{lastYear})
     ) t2
     on t1.budgetId = t2.budgetId
 
