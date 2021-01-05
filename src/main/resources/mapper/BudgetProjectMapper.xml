@@ -577,7 +577,6 @@
     ) t2
       on concat(t1.budgetNum,t1.importDate) = t2.budgetNum
       left join unit u on u.id = #{unitId}
-      group by t2.budgetNum
   </select>
 
     <select id="selectProgressByState" parameterType="map" resultType="com.hbhb.cw.budget.web.vo.BudgetProgressResVO">
