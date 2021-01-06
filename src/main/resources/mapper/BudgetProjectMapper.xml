@@ -647,7 +647,7 @@
     u.unit_name                               as unitName,
     b.serial_num                              as serialNum
     from budget b
-    left join budget_data bd on b.id = bd.budget_id.
+    left join budget_data bd on b.id = bd.budget_id
     left join budget_item bi on bi.id = b.budget_item_id
     left join unit u on u.id = bd.unit_id
     where b.import_date = #{lastYear}
