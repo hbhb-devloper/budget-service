@@ -304,8 +304,8 @@ public class BudgetProgressServiceImpl implements BudgetProgressService {
         BigDecimal bigDecimal7 = byState6.getAmount() == null ? new BigDecimal(0) : byState7.getAmount();
         declareVO.setDeclaration(bigDecimal5.add(bigDecimal6).add(bigDecimal7));
         // 结余
-        BigDecimal surplus = calculateSurplus(byState3.getAmount().add(byState2.getAmount())
-                .add(byState4.getAmount().add(byState5.getAmount()).add(byState8.getAmount())), underUnitData.getBalance());
+        BigDecimal surplus = calculateSurplus(bigDecimal2.add(bigDecimal3)
+                .add(bigDecimal1.add(bigDecimal4).add(bigDecimal)), underUnitData.getBalance());
         declareVO.setSurplus(surplus);
         // 审批通过百分比
         declareVO.setDeclaredPer(calculatePercentage(declareVO.getDeclared(), underUnitData.getBalance()));
