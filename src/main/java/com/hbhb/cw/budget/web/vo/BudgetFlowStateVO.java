@@ -27,5 +27,5 @@ public class BudgetFlowStateVO implements Serializable {
     @Schema(description = "导入时间")
     private String importDate;
     @Schema(description = "预算编号+年份")
-    private String budgetNum;
+    private String serialNum;
 }

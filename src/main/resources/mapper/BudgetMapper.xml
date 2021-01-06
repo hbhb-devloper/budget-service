@@ -7,6 +7,7 @@
         <result column="budget_item_id" jdbcType="BIGINT" property="budgetItemId"/>
         <result column="project_item" jdbcType="VARCHAR" property="projectItem"/>
         <result column="budget_num" jdbcType="VARCHAR" property="budgetNum"/>
+        <result column="serial_num" jdbcType="VARCHAR" property="serialNum"/>
         <result column="balance" jdbcType="DECIMAL" property="balance"/>
         <result column="last_year_balance" jdbcType="DECIMAL" property="lastYearBalance"/>
         <result column="last_year_finished_balance" jdbcType="DECIMAL" property="lastYearFinishedBalance"/>
@@ -19,7 +20,7 @@
         <result column="update_by" jdbcType="VARCHAR" property="updateBy"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, budget_item_id, project_item, budget_num, balance, last_year_balance,last_year_finished_balance,
+    id, budget_item_id, project_item, budget_num, serial_num, balance, last_year_balance,last_year_finished_balance,
     threshold, import_date, remark, create_time, create_by, update_time, update_by
   </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -34,12 +35,12 @@
   </delete>
     <insert id="insert" parameterType="com.hbhb.cw.budget.model.Budget">
     insert into budget (id, budget_item_id,
-      project_item, budget_num, balance,
+      project_item, budget_num, serial_num, balance,
       last_year_balance,last_year_finished_balance, threshold, import_date,
       remark, create_time, create_by,
       update_time, update_by)
     values (#{id,jdbcType=BIGINT}, #{budgetItemId,jdbcType=BIGINT},
-      #{projectItem,jdbcType=VARCHAR}, #{budgetNum,jdbcType=VARCHAR}, #{balance,jdbcType=DECIMAL},
+      #{projectItem,jdbcType=VARCHAR}, #{budgetNum,jdbcType=VARCHAR}, #{serialNum,jdbcType=VARCHAR}, #{balance,jdbcType=DECIMAL},
       #{lastYearBalance,jdbcType=DECIMAL}, #{lastYearFinishedBalance,jdbcType=DECIMAL},
       #{threshold,jdbcType=DECIMAL}, #{importDate,jdbcType=VARCHAR},
       #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR},
@@ -59,6 +60,9 @@
             </if>
             <if test="budgetNum != null">
                 budget_num,
+            </if>
+            <if test="serialNum != null">
+                serial_num,
             </if>
             <if test="balance != null">
                 balance,
@@ -104,6 +108,9 @@
             <if test="budgetNum != null">
                 #{budgetNum,jdbcType=VARCHAR},
             </if>
+            <if test="serialNum != null">
+                #{serialNum,jdbcType=VARCHAR},
+            </if>
             <if test="balance != null">
                 #{balance,jdbcType=DECIMAL},
             </if>
@@ -148,6 +155,9 @@
             <if test="budgetNum != null">
                 budget_num = #{budgetNum,jdbcType=VARCHAR},
             </if>
+            <if test="serialNum != null">
+                serial_num = #{serialNum,jdbcType=VARCHAR},
+            </if>
             <if test="balance != null">
                 balance = #{balance,jdbcType=DECIMAL},
             </if>
@@ -186,6 +196,7 @@
     set budget_item_id = #{budgetItemId,jdbcType=BIGINT},
       project_item = #{projectItem,jdbcType=VARCHAR},
       budget_num = #{budgetNum,jdbcType=VARCHAR},
+      serial_num = #{serialNum,jdbcType=VARCHAR},
       balance = #{balance,jdbcType=DECIMAL},
       last_year_balance = #{lastYearBalance,jdbcType=DECIMAL},
       last_year_finished_balance = #{lastYearFinishedBalance,jdbcType=DECIMAL},
@@ -205,6 +216,7 @@
         budget_item_id,
         project_item,
         budget_num,
+        serial_num,
         balance,
         last_year_balance,
         threshold,
@@ -213,6 +225,7 @@
             (#{item.budgetItemId},
             #{item.projectItem},
             #{item.budgetNum},
+            #{item.serialNum},
             #{item.balance},
             #{item.lastYearBalance},
             #{item.threshold},
@@ -237,6 +250,13 @@
                </if>
              </foreach>
            </trim>
+            <trim prefix="serial_num=case" suffix="end,">
+                <foreach collection="list" item="i" index="index">
+                    <if test="i.serialNum!=null">
+                        when id=#{i.id} then #{i.serialNum}
+                    </if>
+                </foreach>
+            </trim>
             <trim prefix="balance=case" suffix="end,">
                 <foreach collection="list" item="i" index="index">
                     <if test="i.balance!=null">

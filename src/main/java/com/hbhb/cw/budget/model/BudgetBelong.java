@@ -26,5 +26,5 @@ public class BudgetBelong implements Serializable {
 
     private Integer underUnitId;
 
-    private String budgetNum;
+    private String serialNum;
 }
