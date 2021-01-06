@@ -197,4 +197,11 @@ public class BudgetController {
     public void checkBelong() {
         budgetService.checkBelong();
     }
+
+
+    @Operation(summary = "修改预算序列号")
+    @PostMapping("/checkBudget")
+    public void checkBudget() {
+        budgetService.checkBudget();
+    }
 }

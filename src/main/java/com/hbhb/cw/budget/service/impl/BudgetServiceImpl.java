@@ -887,4 +887,15 @@ public class BudgetServiceImpl implements BudgetService {
         // 修改
         budgetBelongMapper.batchUpdate(budgetBelongs);
     }
+
+    @Override
+    public void checkBudget() {
+        // 得到所有预算
+        List<Budget> budgets = budgetMapper.selectAll();
+        for (Budget budget : budgets) {
+           budget.setSerialNum(budget.getBudgetNum()+budget.getImportDate());
+        }
+        // 修改
+        budgetMapper.updateBatch(budgets);
+    }
 }

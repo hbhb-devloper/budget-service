@@ -130,4 +130,6 @@ public interface BudgetService {
     void check();
 
     void checkBelong();
+
+    void checkBudget();
 }

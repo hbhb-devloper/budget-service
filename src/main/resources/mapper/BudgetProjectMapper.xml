@@ -607,7 +607,7 @@
     select distinct bp.budget_id as budgetId,
     bp.cost    as amount,
     bp.id        as id,
-      bp.budget_num as budgetNum
+    bp.serial_num as serialNum
     from
     (
     select distinct bb.unit_id as bbId, bb.under_unit_id as unId, bb.budget_id as bdId, bb.id  as id
@@ -616,17 +616,17 @@
     and bb.under_unit_id = #{unitId}
     ) s1
       left join budget b2 on b2.id = s1.bdId
-      left join budget_project bp on bp.budget_num like concat(b2.budget_num,'%')
+      left join budget_project bp on bp.serial_num  like concat(b2.budget_num,'%')
     where bp.unit_id in (s1.bbId)
     and bp.state = #{state}
     and bp.delete_flag = 1
       <if test="year != null">
-            and bp.budget_num like concat('%',#{year})
+            and bp.serial_num like concat('%',#{year})
       </if>
     ) t2
-      on t1.serialNum = t2.budgetNum
+      on t1.serialNum = t2.serialNum
       left join unit u on u.id = #{unitId}
-      group by t2.budgetNum
+      group by t2.serialNum
   </select>
 
     <select id="selectBudgetProgressByBudgetData" parameterType="map"
