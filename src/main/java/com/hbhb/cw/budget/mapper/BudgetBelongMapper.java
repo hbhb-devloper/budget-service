@@ -32,7 +32,7 @@ public interface BudgetBelongMapper extends BaseMapper<BudgetBelong, Long> {
     Integer selectUnderUnitId(@Param("budgetId") Long budgetId,
                               @Param("unitId") Integer unitId);
 
-    Integer selectUnderUnitIdByNum(@Param("budgetNum") String budgetNum,
+    Integer selectUnderUnitIdByNum(@Param("serialNum") String serialNum,
                               @Param("unitId") Integer unitId);
 
     List<BudgetBelong> selectAll();
