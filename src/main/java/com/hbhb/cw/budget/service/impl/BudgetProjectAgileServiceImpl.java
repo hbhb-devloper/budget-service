@@ -79,6 +79,9 @@ public class BudgetProjectAgileServiceImpl implements BudgetProjectAgileService 
         if (UnitEnum.isHangzhou(cond.getUnitId())) {
             cond.setUnitId(null);
         }
+        if (cond.getDate()==null){
+            cond.setDate(cond.getImportDate());
+        }
         if (UnitEnum.isBenbu(cond.getUnitId())) {
             List<Integer> unitIdByParentId = unitApi.getSubUnit(UnitEnum.BENBU.value());
             PageHelper.startPage(pageNum, pageSize);

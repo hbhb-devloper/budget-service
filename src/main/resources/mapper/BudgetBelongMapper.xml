@@ -6,10 +6,10 @@
     <result column="budget_id" jdbcType="BIGINT" property="budgetId"/>
     <result column="unit_id" jdbcType="INTEGER" property="unitId"/>
     <result column="under_unit_id" jdbcType="INTEGER" property="underUnitId"/>
-    <result column="budget_num" jdbcType="VARCHAR" property="budgetNum"/>
+    <result column="serial_num" jdbcType="VARCHAR" property="serialNum"/>
   </resultMap>
   <sql id="Base_Column_List">
-    id, budget_id, unit_id, under_unit_id, budget_num
+    id, budget_id, unit_id, under_unit_id, serial_num
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -23,9 +23,9 @@
   </delete>
   <insert id="insert" parameterType="com.hbhb.cw.budget.model.BudgetBelong">
     insert into budget_belong (id, budget_id, unit_id, 
-      under_unit_id, budget_num)
+      under_unit_id, serial_num)
     values (#{id,jdbcType=BIGINT}, #{budgetId,jdbcType=BIGINT}, #{unitId,jdbcType=INTEGER}, 
-      #{underUnitId,jdbcType=INTEGER}, #{budgetNum,jdbcType=VARCHAR})
+      #{underUnitId,jdbcType=INTEGER}, #{serialNum,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hbhb.cw.budget.model.BudgetBelong">
     insert into budget_belong
@@ -42,8 +42,8 @@
       <if test="underUnitId != null">
         under_unit_id,
       </if>
-      <if test="budgetNum != null">
-        budget_num,
+      <if test="serialNum != null">
+        serial_num,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -59,8 +59,8 @@
       <if test="underUnitId != null">
         #{underUnitId,jdbcType=INTEGER},
       </if>
-      <if test="budgetNum != null">
-        #{budgetNum,jdbcType=VARCHAR},
+      <if test="serialNum != null">
+        #{serialNum,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -76,8 +76,8 @@
       <if test="underUnitId != null">
         under_unit_id = #{underUnitId,jdbcType=INTEGER},
       </if>
-      <if test="budgetNum != null">
-        budget_num = #{budgetNum,jdbcType=VARCHAR},
+      <if test="serialNum != null">
+        serial_num = #{serialNum,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -87,7 +87,7 @@
     set budget_id = #{budgetId,jdbcType=BIGINT},
       unit_id = #{unitId,jdbcType=INTEGER},
       under_unit_id = #{underUnitId,jdbcType=INTEGER},
-      budget_num = #{budgetNum,jdbcType=VARCHAR}
+      serial_num = #{serialNum,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 
@@ -114,10 +114,10 @@
   </select>
 
   <insert id="insertBatch" parameterType="java.util.List">
-    insert into budget_belong (budget_id,unit_id,under_unit_id)
+    insert into budget_belong (budget_id,unit_id,under_unit_id,serial_num)
     values
     <foreach item="item" index="index" collection="list" separator=",">
-      (#{item.budgetId},#{item.unitId},#{item.underUnitId})
+      (#{item.budgetId},#{item.unitId},#{item.underUnitId},#{item.serialNum})
     </foreach>
     ON DUPLICATE KEY UPDATE under_unit_id = VALUES(under_unit_id)
   </insert>
@@ -150,8 +150,8 @@
   <select id="selectUnderUnitIdByNum" resultType="java.lang.Integer">
     select under_unit_id from budget_belong
     <where>
-      <if test="budgetNum != null ">
-        and  budget_num=#{budgetNum}
+      <if test="serialNum != null ">
+        and  serial_num=#{serialNum}
       </if>
       <if test="unitId != null">
         and  unit_id=#{unitId}
@@ -189,10 +189,10 @@
           </if>
         </foreach>
       </trim>
-      <trim prefix="budget_num=case" suffix="end,">
+      <trim prefix="serial_num=case" suffix="end,">
         <foreach collection="list" item="i" index="index">
-          <if test="i.budgetNum!=null">
-            when id=#{i.id} then #{i.budgetNum}
+          <if test="i.serialNum!=null">
+            when id=#{i.id} then #{i.serialNum}
           </if>
         </foreach>
       </trim>

@@ -166,8 +166,7 @@
     from budget_project_agile bpa
     left join unit u on bpa.unit_id = u.id
     left join budget b on bpa.budget_id = b.id
-      where b.import_date = #{cond.importDate}
-     and delete_flag = 1
+      where  delete_flag = 1
       <if test="cond.unitId != null  and cond.unitId != ''">
        and bpa.unit_id = #{cond.unitId}
       </if>
@@ -191,8 +190,7 @@
     from budget_project_agile bpa
     left join unit u on bpa.unit_id = u.id
     left join budget b on bpa.budget_id = b.id
-    where b.import_date = #{cond.importDate}
-    and delete_flag = 1
+    where  delete_flag = 1
     <if test="cond.unitId != null  and cond.unitId != ''">
       and bpa.unit_id = #{cond.unitId}
     </if>

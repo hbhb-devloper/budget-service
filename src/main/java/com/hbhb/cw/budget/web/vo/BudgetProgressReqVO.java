@@ -35,5 +35,5 @@ public class BudgetProgressReqVO implements Serializable {
     private Long budgetId;
 
     @Schema(description = "预算编号")
-    private String budgetNum;
+    private String serialNum;
 }

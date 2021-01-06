@@ -39,6 +39,11 @@ public class Budget implements Serializable {
     private String budgetNum;
 
     /**
+     * 预算编号
+     */
+    private String serialNum;
+
+    /**
      * 今年预算值
      */
     private BigDecimal balance;

@@ -130,7 +130,7 @@ public class BudgetDataServiceImpl implements BudgetDataService {
         if (list.get(0).getUnitId() != null) {
             budgetDataMapper.insertBatch(budgetDataList);
             for (BudgetBelong budgetBelong : belongList) {
-                budgetBelong.setBudgetNum(budget.getBudgetNum()+budget.getImportDate());
+                budgetBelong.setSerialNum(budget.getSerialNum());
             }
             budgetBelongMapper.insertBatch(belongList);
         }

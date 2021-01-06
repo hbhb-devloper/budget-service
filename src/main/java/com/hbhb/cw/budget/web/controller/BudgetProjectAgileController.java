@@ -66,7 +66,6 @@ public class BudgetProjectAgileController {
         if (cond.getUnitId() == null) {
             return new Page<>(new ArrayList<>(), 0L);
         }
-        cond.setImportDate(DateUtil.getCurrentYear());
         return budgetProjectAgileService.getBudgetAgileList(pageNum, pageSize, cond);
     }
 
