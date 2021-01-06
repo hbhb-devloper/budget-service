@@ -30,7 +30,7 @@
     <result column="flow_id" jdbcType="BIGINT" property="flowId" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
-    <result column="serial_num" jdbcType="VARCHAR" property="budgetNum" />
+    <result column="serial_num" jdbcType="VARCHAR" property="serialNum" />
   </resultMap>
   <sql id="Base_Column_List">
     id, budget_id, unit_id, project_name, amount, available_amount, tax_include_amount,
@@ -68,7 +68,7 @@
       #{target,jdbcType=VARCHAR}, #{engineeringNum,jdbcType=VARCHAR}, #{deleteFlag,jdbcType=INTEGER},
       #{remark,jdbcType=VARCHAR}, #{state,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP},
       #{createBy,jdbcType=VARCHAR}, #{flowId,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP},
-      #{updateBy,jdbcType=VARCHAR},#{budgetNum,jdbcType=VARCHAR})
+      #{updateBy,jdbcType=VARCHAR},#{serialNum,jdbcType=VARCHAR})
   </insert>
     <insert id="insertSelective" parameterType="com.hbhb.cw.budget.model.BudgetProject" useGeneratedKeys="true"
             keyProperty="id">
@@ -158,7 +158,7 @@
         <if test="updateBy != null">
           update_by,
         </if>
-        <if test="budgetNum != null">
+        <if test="serialNum != null">
           serial_num,
         </if>
       </trim>
@@ -247,8 +247,8 @@
       <if test="updateBy != null">
         #{updateBy,jdbcType=VARCHAR},
       </if>
-      <if test="budgetNum != null">
-        #{budgetNum,jdbcType=VARCHAR},
+      <if test="serialNum != null">
+        #{serialNum,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -336,8 +336,8 @@
           <if test="updateBy != null">
             update_by = #{updateBy,jdbcType=VARCHAR},
           </if>
-          <if test="budgetNum != null">
-            serial_num = #{budgetNum,jdbcType=VARCHAR},
+          <if test="serialNum != null">
+            serial_num = #{serialNum,jdbcType=VARCHAR},
           </if>
         </set>
     where id = #{id,jdbcType=INTEGER}
@@ -371,7 +371,7 @@
       flow_id = #{flowId,jdbcType=BIGINT},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       update_by = #{updateBy,jdbcType=VARCHAR},
-      serial_num = #{budgetNum,jdbcType=VARCHAR}
+      serial_num = #{serialNum,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 
