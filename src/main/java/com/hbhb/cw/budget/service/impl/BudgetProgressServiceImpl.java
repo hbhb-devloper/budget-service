@@ -230,7 +230,7 @@ public class BudgetProgressServiceImpl implements BudgetProgressService {
         // 校验是否可以发起该项目类型下签报
         BudgetData budgetData = budgetDataService.getDataByUnitIdAndBudgetIdByNum(cond.getUnitId(), cond.getSerialNum());
         if (budgetData == null) {
-            return declareVO;
+            throw new BudgetException(BudgetErrorCode.BUDGET_NO_DATA);
         }
         // 如果归口于其他单位则已归口单位统计
         Integer underUnitId = budgetBelongMapper.selectUnderUnitIdByNum(cond.getSerialNum(), cond.getUnitId());
