@@ -115,7 +115,10 @@ public class BudgetProgressServiceImpl implements BudgetProgressService {
     @Override
     public List<BudgetProjectAmountVO> getProgressByBudgetId(BudgetFlowStateVO cond) {
         Budget budget = budgetService.getBudgetById(cond.getBudgetId());
-        String serialNum = budget.getBudgetNum()+cond.getImportDate();
+        if (cond.getYear()==null){
+            cond.setYear(cond.getImportDate());
+        }
+        String serialNum = budget.getBudgetNum()+cond.getYear();
         cond.setSerialNum(serialNum);
         List<Integer> states = new ArrayList<>();
         // 如果无state或state = 31则state = 31，32
@@ -137,7 +140,7 @@ public class BudgetProgressServiceImpl implements BudgetProgressService {
         // 判断是否有归口关系
         Integer unitId = cond.getUnitId();
         Long budgetId = cond.getBudgetId();
-        String year = cond.getImportDate();
+        String year = cond.getYear();
         Integer underUnitId = budgetBelongMapper.selectUnderUnitIdByNum(serialNum, unitId);
         if (underUnitId == null) {
             throw new BudgetException(BudgetErrorCode.BUDGET_NO_DATA);
