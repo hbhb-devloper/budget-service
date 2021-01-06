@@ -72,5 +72,5 @@ public class BudgetProject implements Serializable {
 
     private String updateBy;
 
-    private String budgetNum;
+    private String serialNum;
 }

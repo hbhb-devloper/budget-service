@@ -864,7 +864,7 @@ public class BudgetServiceImpl implements BudgetService {
             String substring = projectNum.substring(0, projectNum.length() - 8);
             String year = DateUtil.dateToString(budgetProject.getCreateTime(), "yyyy");
             String budgetNum = substring+year;
-            budgetProject.setBudgetNum(budgetNum);
+            budgetProject.setSerialNum(budgetNum);
         }
         // 修改
         budgetProjectMapper.updateBatchById(budgetProjects);
