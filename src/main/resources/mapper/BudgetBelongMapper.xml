@@ -114,10 +114,10 @@
   </select>
 
   <insert id="insertBatch" parameterType="java.util.List">
-    insert into budget_belong (budget_id,unit_id,under_unit_id)
+    insert into budget_belong (budget_id,unit_id,under_unit_id,serial_num)
     values
     <foreach item="item" index="index" collection="list" separator=",">
-      (#{item.budgetId},#{item.unitId},#{item.underUnitId})
+      (#{item.budgetId},#{item.unitId},#{item.underUnitId},#{item.serialNum})
     </foreach>
     ON DUPLICATE KEY UPDATE under_unit_id = VALUES(under_unit_id)
   </insert>

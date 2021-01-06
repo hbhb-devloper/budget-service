@@ -30,13 +30,13 @@
     <result column="flow_id" jdbcType="BIGINT" property="flowId" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
-    <result column="budget_num" jdbcType="VARCHAR" property="budgetNum" />
+    <result column="serial_num" jdbcType="VARCHAR" property="budgetNum" />
   </resultMap>
   <sql id="Base_Column_List">
     id, budget_id, unit_id, project_name, amount, available_amount, tax_include_amount,
     cost, vat_rate, vat_amount, director, project_num, start_time, end_time, supplier,
     origin, introduction, detail, target, engineering_num, delete_flag, remark, state,
-    create_time, create_by, flow_id, update_time, update_by, budget_num
+    create_time, create_by, flow_id, update_time, update_by, serial_num
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select
@@ -58,7 +58,7 @@
       target, engineering_num, delete_flag,
       remark, state, create_time,
       create_by, flow_id, update_time,
-      update_by,budget_num)
+      update_by,serial_num)
     values (#{id,jdbcType=INTEGER}, #{budgetId,jdbcType=BIGINT}, #{unitId,jdbcType=BIGINT},
       #{projectName,jdbcType=VARCHAR}, #{amount,jdbcType=DECIMAL}, #{availableAmount,jdbcType=DECIMAL},
       #{taxIncludeAmount,jdbcType=DECIMAL}, #{cost,jdbcType=DECIMAL}, #{vatRate,jdbcType=DECIMAL},
@@ -159,7 +159,7 @@
           update_by,
         </if>
         <if test="budgetNum != null">
-          budget_num,
+          serial_num,
         </if>
       </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -337,7 +337,7 @@
             update_by = #{updateBy,jdbcType=VARCHAR},
           </if>
           <if test="budgetNum != null">
-            budget_num = #{budgetNum,jdbcType=VARCHAR},
+            serial_num = #{budgetNum,jdbcType=VARCHAR},
           </if>
         </set>
     where id = #{id,jdbcType=INTEGER}
@@ -371,7 +371,7 @@
       flow_id = #{flowId,jdbcType=BIGINT},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       update_by = #{updateBy,jdbcType=VARCHAR},
-      budget_num = #{budgetNum,jdbcType=VARCHAR}
+      serial_num = #{budgetNum,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 
@@ -489,11 +489,11 @@
     </foreach>
     ) s1
       left join budget b2 on b2.id = s1.bdId
-      left join budget_project bp on bp.budget_num like concat(b2.budget_num,'%')
+      left join budget_project bp on bp.serial_num like concat(b2.budget_num,'%')
     where bp.unit_id in (s1.bbId)
     and bp.state  in (31,32)
     and bp.delete_flag = 1
-    and bp.budget_num like concat ('%',#{cond.year})
+    and bp.serial_num like concat ('%',#{cond.year})
     <if test="cond.date != null">
       and bpa.create_time like concat ('%',#{cond.date},'%')
     </if>
@@ -522,7 +522,7 @@
     group by bpa.budget_id
     ) t3
     on t1.budgetId = t3.budgetId
-    group by t2.budgetNum
+    group by t2.bpSerialNum
   </select>
 
     <select id="selectProgressByBudget" parameterType="map"
@@ -675,11 +675,11 @@
     </where>
     ) s1
       left join budget b2 on b2.id = s1.bdId
-      left join budget_project bp on bp.budget_num like concat(b2.budget_num,'%')
+      left join budget_project bp on bp.serial_num like concat(b2.budget_num,'%')
     where bp.unit_id in (s1.bbId)
     and bp.state  in (31,32)
     and bp.delete_flag = 1
-    and bp.budget_num like concat ('%', #{lastYear})
+    and bp.serial_num like concat ('%', #{lastYear})
     ) t2
       on t1.serialNum = t2.bpSerialNum
 
@@ -1088,10 +1088,10 @@
           </if>
         </foreach>
       </trim>
-      <trim prefix="budget_num=case" suffix="end,">
+      <trim prefix="serial_num=case" suffix="end,">
         <foreach collection="list" item="i" index="index">
-          <if test="i.budgetNum!=null">
-            when id=#{i.id} then #{i.budgetNum}
+          <if test="i.serialNum!=null">
+            when id=#{i.id} then #{i.serialNum}
           </if>
         </foreach>
       </trim>

@@ -288,6 +288,7 @@ public class BudgetServiceImpl implements BudgetService {
                         .budgetItemId(budgetItemMap.get(budgetItem))
                         .projectItem(budgetImportVO.getProjectItem())
                         .balance(budgetImportVO.getBalance())
+                        .budgetNum(budgetImportVO.getBudgetNum())
                         .importDate(importDate)
                         .updateTime(now)
                         .build());
@@ -568,10 +569,10 @@ public class BudgetServiceImpl implements BudgetService {
         }
         if (!CollectionUtils.isEmpty(budgetBelongList)) {
             // 设置了UK(budgetId, unitId) 如果重复，则更新underUnitId
-            List<Budget> budgetList = budgetMapper.selectAllByYear(importDate);
+            updateBudgetList.addAll(insertBudgetList);
             // budgetId => budgetNum+importDate
             Map<Long, String> budgetMap = new HashMap<>();
-            for (Budget budget : budgetList) {
+            for (Budget budget : updateBudgetList) {
                 budgetMap.put(budget.getId(),budget.getBudgetNum()+importDate);
             }
             for (BudgetBelong budgetBelong : budgetBelongList) {
