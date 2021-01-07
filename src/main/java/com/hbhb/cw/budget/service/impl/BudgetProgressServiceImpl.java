@@ -218,6 +218,7 @@ public class BudgetProgressServiceImpl implements BudgetProgressService {
 
     @Override
     public BudgetProgressDeclareVO getProgressByState(BudgetProgressReqVO cond) {
+        cond.setUnitId(109);
         Budget budget = budgetService.getBudgetById(cond.getBudgetId());
         String serialNum = budget.getBudgetNum()+cond.getYear();
         cond.setSerialNum(serialNum);
