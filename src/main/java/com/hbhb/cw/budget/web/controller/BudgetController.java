@@ -96,8 +96,8 @@ public class BudgetController {
 
     @Operation(summary = "获取所有项目类型列表")
     @GetMapping("/project-type/list")
-    public List<SelectVO> getProjectTypeList() {
-        return budgetService.getProjectTypeList();
+    public List<SelectVO> getProjectTypeList(String year) {
+        return budgetService.getProjectTypeList(year);
     }
 
     @Operation(summary = "获取预算详情")
