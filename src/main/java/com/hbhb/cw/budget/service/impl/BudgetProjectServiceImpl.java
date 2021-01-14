@@ -1,7 +1,8 @@
 package com.hbhb.cw.budget.service.impl;
 
-import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
+
+import com.github.pagehelper.PageHelper;
 import com.hbhb.core.bean.BeanConverter;
 import com.hbhb.core.utils.DateUtil;
 import com.hbhb.cw.budget.enums.BudgetErrorCode;
@@ -15,7 +16,17 @@ import com.hbhb.cw.budget.mapper.BudgetProjectFlowApprovedMapper;
 import com.hbhb.cw.budget.mapper.BudgetProjectMapper;
 import com.hbhb.cw.budget.mapper.BudgetProjectSplitApprovedMapper;
 import com.hbhb.cw.budget.mapper.BudgetProjectSplitMapper;
-import com.hbhb.cw.budget.model.*;
+import com.hbhb.cw.budget.model.Budget;
+import com.hbhb.cw.budget.model.BudgetData;
+import com.hbhb.cw.budget.model.BudgetProject;
+import com.hbhb.cw.budget.model.BudgetProjectApproved;
+import com.hbhb.cw.budget.model.BudgetProjectFile;
+import com.hbhb.cw.budget.model.BudgetProjectFlow;
+import com.hbhb.cw.budget.model.BudgetProjectFlowApproved;
+import com.hbhb.cw.budget.model.BudgetProjectFlowHistory;
+import com.hbhb.cw.budget.model.BudgetProjectSplit;
+import com.hbhb.cw.budget.model.BudgetProjectSplitApproved;
+import com.hbhb.cw.budget.model.Page;
 import com.hbhb.cw.budget.rpc.DictApiExp;
 import com.hbhb.cw.budget.rpc.FileApiExp;
 import com.hbhb.cw.budget.rpc.FlowApiExp;
@@ -32,7 +43,24 @@ import com.hbhb.cw.budget.service.BudgetProjectNoticeService;
 import com.hbhb.cw.budget.service.BudgetProjectService;
 import com.hbhb.cw.budget.service.BudgetProjectSplitService;
 import com.hbhb.cw.budget.service.BudgetService;
-import com.hbhb.cw.budget.web.vo.*;
+import com.hbhb.cw.budget.web.vo.BudgetProgressDeclareVO;
+import com.hbhb.cw.budget.web.vo.BudgetProgressReqVO;
+import com.hbhb.cw.budget.web.vo.BudgetProgressResVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectDetailExportReqVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectDetailExportVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectDetailVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectExportVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectFileExportVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectFileVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectFlowExportVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectFlowInfoVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectInitVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectNoticeReqVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectReqVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectResVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectSplitExportVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectSplitVO;
+import com.hbhb.cw.budget.web.vo.BudgetReqVO;
 import com.hbhb.cw.flowcenter.enums.FlowNodeNoticeState;
 import com.hbhb.cw.flowcenter.enums.FlowNodeNoticeTemp;
 import com.hbhb.cw.flowcenter.enums.FlowState;
@@ -45,14 +73,12 @@ import com.hbhb.cw.systemcenter.model.Unit;
 import com.hbhb.cw.systemcenter.vo.DictVO;
 import com.hbhb.cw.systemcenter.vo.UserInfo;
 import com.hbhb.web.util.FileUtil;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -63,6 +89,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
@@ -200,7 +231,7 @@ public class BudgetProjectServiceImpl implements BudgetProjectService {
         }
         // 处理 项目预算总额.amount，可供分配预算.availableAmount、本年价税合计.taxIncludeAmount、本年项目成本.cost、
         // 增值税率.vatRate、本年增值税金.vatAmount,格式(String-->BigDecimal)
-        budgetProject.setBudgetNum(budgetNum + DateUtil.dateToStringY(new Date()));
+        budgetProject.setSerialNum(budgetNum + DateUtil.dateToStringY(new Date()));
         budgetProject.setAmount(new BigDecimal(vo.getAmount()));
         budgetProject.setAvailableAmount(new BigDecimal(vo.getAvailableAmount()));
         budgetProject.setTaxIncludeAmount(new BigDecimal(vo.getTaxIncludeAmount()));
@@ -671,7 +702,7 @@ public class BudgetProjectServiceImpl implements BudgetProjectService {
                     String counts = String.format("%0" + 4 + "d", (count + 1));
                     budgetProject.setProjectNum(budgetNum + abbr + date + counts);
                 }
-                budgetProject.setBudgetNum(budgetNum + list.getYears());
+                budgetProject.setSerialNum(budgetNum + list.getYears());
                 // 设置项目来源
                 budgetProject.setOrigin("结转");
                 // 签报id置空

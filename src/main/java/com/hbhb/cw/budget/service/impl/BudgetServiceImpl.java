@@ -168,9 +168,12 @@ public class BudgetServiceImpl implements BudgetService {
     }
 
     @Override
-    public List<SelectVO> getProjectTypeList() {
+    public List<SelectVO> getProjectTypeList(String year) {
         List<SelectVO> list = new ArrayList<>();
-        List<Budget> budgets = budgetMapper.selectAllByYear(DateUtil.getCurrentYear());
+        if (year==null){
+            year = DateUtil.getCurrentYear();
+        }
+        List<Budget> budgets = budgetMapper.selectAllByYear(year);
         budgets.forEach(budget -> list.add(SelectVO.builder()
                 .id(budget.getId())
                 .label(budget.getBudgetNum() + "_" + budget.getProjectItem())
@@ -288,6 +291,7 @@ public class BudgetServiceImpl implements BudgetService {
                         .budgetItemId(budgetItemMap.get(budgetItem))
                         .projectItem(budgetImportVO.getProjectItem())
                         .balance(budgetImportVO.getBalance())
+                        .budgetNum(budgetImportVO.getBudgetNum())
                         .importDate(importDate)
                         .updateTime(now)
                         .build());
@@ -457,6 +461,9 @@ public class BudgetServiceImpl implements BudgetService {
 
         // 处理预算
         if (!CollectionUtils.isEmpty(updateBudgetList)) {
+            for (Budget budget : updateBudgetList) {
+                budget.setSerialNum(budget.getBudgetNum()+importDate);
+            }
             budgetMapper.updateBatch(updateBudgetList);
         }
         for (Budget budget : updateBudgetList) {
@@ -464,8 +471,12 @@ public class BudgetServiceImpl implements BudgetService {
         }
 
         if (!CollectionUtils.isEmpty(insertBudgetList)) {
+            for (Budget budget : insertBudgetList) {
+                budget.setSerialNum(budget.getBudgetNum()+importDate);
+            }
             budgetMapper.insertBatch(insertBudgetList);
         }
+
         for (Budget budget : insertBudgetList) {
             budgetIds.add(budget.getId());
         }
@@ -561,6 +572,15 @@ public class BudgetServiceImpl implements BudgetService {
         }
         if (!CollectionUtils.isEmpty(budgetBelongList)) {
             // 设置了UK(budgetId, unitId) 如果重复，则更新underUnitId
+            updateBudgetList.addAll(insertBudgetList);
+            // budgetId => budgetNum+importDate
+            Map<Long, String> budgetMap = new HashMap<>();
+            for (Budget budget : updateBudgetList) {
+                budgetMap.put(budget.getId(),budget.getBudgetNum()+importDate);
+            }
+            for (BudgetBelong budgetBelong : budgetBelongList) {
+                budgetBelong.setSerialNum(budgetMap.get(budgetBelong.getBudgetId()));
+            }
             budgetBelongMapper.insertBatch(budgetBelongList);
         }
         // 处理预算历史
@@ -847,9 +867,39 @@ public class BudgetServiceImpl implements BudgetService {
             String substring = projectNum.substring(0, projectNum.length() - 8);
             String year = DateUtil.dateToString(budgetProject.getCreateTime(), "yyyy");
             String budgetNum = substring+year;
-            budgetProject.setBudgetNum(budgetNum);
+            budgetProject.setSerialNum(budgetNum);
         }
         // 修改
         budgetProjectMapper.updateBatchById(budgetProjects);
+    }
+
+    @Override
+    public void checkBelong() {
+        // 得到所有归口关系
+        List<BudgetBelong> budgetBelongs = budgetBelongMapper.selectAll();
+        // 得到所有预算
+        List<Budget> budgets = budgetMapper.selectAll();
+        // id => budgetNum
+        Map<Long, String> budgetMap = new HashMap<>();
+        for (Budget budget : budgets) {
+            budgetMap.put(budget.getId(),budget.getBudgetNum()+budget.getImportDate());
+        }
+        // 修改所有归口的签报编号编为预算编号并加上创建时间的年
+        for (BudgetBelong budgetBelong : budgetBelongs) {
+            budgetBelong.setSerialNum(budgetMap.get(budgetBelong.getBudgetId()));
+        }
+        // 修改
+        budgetBelongMapper.batchUpdate(budgetBelongs);
+    }
+
+    @Override
+    public void checkBudget() {
+        // 得到所有预算
+        List<Budget> budgets = budgetMapper.selectAll();
+        for (Budget budget : budgets) {
+           budget.setSerialNum(budget.getBudgetNum()+budget.getImportDate());
+        }
+        // 修改
+        budgetMapper.updateBatch(budgets);
     }
 }

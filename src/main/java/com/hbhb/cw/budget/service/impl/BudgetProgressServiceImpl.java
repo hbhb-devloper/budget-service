@@ -7,6 +7,7 @@ import com.hbhb.cw.budget.enums.BudgetErrorCode;
 import com.hbhb.cw.budget.exception.BudgetException;
 import com.hbhb.cw.budget.mapper.BudgetBelongMapper;
 import com.hbhb.cw.budget.mapper.BudgetProjectMapper;
+import com.hbhb.cw.budget.model.Budget;
 import com.hbhb.cw.budget.model.BudgetData;
 import com.hbhb.cw.budget.model.BudgetProject;
 import com.hbhb.cw.budget.model.BudgetProjectAgile;
@@ -14,6 +15,7 @@ import com.hbhb.cw.budget.rpc.UnitApiExp;
 import com.hbhb.cw.budget.service.BudgetDataService;
 import com.hbhb.cw.budget.service.BudgetProgressService;
 import com.hbhb.cw.budget.service.BudgetProjectAgileService;
+import com.hbhb.cw.budget.service.BudgetService;
 import com.hbhb.cw.budget.web.vo.BudgetFlowStateVO;
 import com.hbhb.cw.budget.web.vo.BudgetProgressDeclareVO;
 import com.hbhb.cw.budget.web.vo.BudgetProgressExportVO;
@@ -50,6 +52,8 @@ public class BudgetProgressServiceImpl implements BudgetProgressService {
     private BudgetProjectAgileService budgetProjectAgileService;
     @Resource
     private UnitApiExp unitApi;
+    @Resource
+    private BudgetService budgetService;
 
     @Override
     public List<BudgetProgressVO> getBudgetProgressList(BudgetProgressReqVO cond) {
@@ -110,6 +114,12 @@ public class BudgetProgressServiceImpl implements BudgetProgressService {
 
     @Override
     public List<BudgetProjectAmountVO> getProgressByBudgetId(BudgetFlowStateVO cond) {
+        Budget budget = budgetService.getBudgetById(cond.getBudgetId());
+        if (cond.getYear()==null){
+            cond.setYear(cond.getImportDate());
+        }
+        String serialNum = budget.getBudgetNum()+cond.getYear();
+        cond.setSerialNum(serialNum);
         List<Integer> states = new ArrayList<>();
         // 如果无state或state = 31则state = 31，32
         if (cond.getState() == null || cond.getState().equals(FlowState.APPROVED.value())) {
@@ -130,14 +140,14 @@ public class BudgetProgressServiceImpl implements BudgetProgressService {
         // 判断是否有归口关系
         Integer unitId = cond.getUnitId();
         Long budgetId = cond.getBudgetId();
-        String year = cond.getImportDate();
-        Integer underUnitId = budgetBelongMapper.selectUnderUnitId(budgetId, unitId);
+        String year = cond.getYear();
+        Integer underUnitId = budgetBelongMapper.selectUnderUnitIdByNum(serialNum, unitId);
         if (underUnitId == null) {
             throw new BudgetException(BudgetErrorCode.BUDGET_NO_DATA);
         }
         cond.setUnitId(underUnitId);
         List<BudgetProjectAmountVO> progress = budgetProjectMapper.selectProgressByBudget(
-                unitId, budgetId, year, states);
+                unitId, serialNum, year, states);
         // 如果无state或state = 31则state = 31，32
         // 判断state 是否为 31或者32
         if (cond.getState() == null || cond.getState().equals(FlowState.APPROVED.value())) {
@@ -208,6 +218,9 @@ public class BudgetProgressServiceImpl implements BudgetProgressService {
 
     @Override
     public BudgetProgressDeclareVO getProgressByState(BudgetProgressReqVO cond) {
+        Budget budget = budgetService.getBudgetById(cond.getBudgetId());
+        String serialNum = budget.getBudgetNum()+cond.getYear();
+        cond.setSerialNum(serialNum);
         if (cond.getBudgetId() == null) {
             throw new BudgetException(BudgetErrorCode.BUDGET_NO_DATA);
         }
@@ -215,17 +228,14 @@ public class BudgetProgressServiceImpl implements BudgetProgressService {
         // 用来存储不同状态的进度
         List<BudgetProgressResVO> list = new ArrayList<>();
         // 校验是否可以发起该项目类型下签报
-        BudgetData budgetData = budgetDataService.getDataByUnitIdAndBudgetId(cond.getUnitId(), cond.getBudgetId());
+        BudgetData budgetData = budgetDataService.getDataByUnitIdAndBudgetIdByNum(cond.getUnitId(), cond.getSerialNum());
         if (budgetData == null) {
-            return declareVO;
-        }
-        // 如果归口于其他单位则已归口单位统计
-        Integer underUnitId = budgetBelongMapper.selectUnderUnitId(cond.getBudgetId(), cond.getUnitId());
-        if (underUnitId == null) {
             throw new BudgetException(BudgetErrorCode.BUDGET_NO_DATA);
         }
+        // 如果归口于其他单位则已归口单位统计
+        Integer underUnitId = budgetBelongMapper.selectUnderUnitIdByNum(cond.getSerialNum(), cond.getUnitId());
         cond.setUnitId(underUnitId);
-        BudgetData underUnitData = budgetDataService.getDataByUnitIdAndBudgetId(cond.getUnitId(), cond.getBudgetId());
+        BudgetData underUnitData = budgetDataService.getDataByUnitIdAndBudgetIdByNum(cond.getUnitId(), cond.getSerialNum());
         // 未审批的balance
         cond.setState(FlowState.NOT_APPROVED.value());
         BudgetProgressResVO byState1 = budgetProjectMapper.selectProgressByState(cond);
@@ -256,6 +266,9 @@ public class BudgetProgressServiceImpl implements BudgetProgressService {
         // 日常性费用签报
         BudgetProgressResVO byState8 = budgetProjectAgileService.getProgressByState(cond);
         list.add(byState4);
+        if (underUnitData.getBalance()==null){
+            underUnitData.setBudgetId(0L);
+        }
         if (underUnitData.getBalance().compareTo(BigDecimal.ZERO) == 0) {
             byState1.setAmount(null);
             byState2.setAmount(null);
@@ -291,8 +304,8 @@ public class BudgetProgressServiceImpl implements BudgetProgressService {
         BigDecimal bigDecimal7 = byState6.getAmount() == null ? new BigDecimal(0) : byState7.getAmount();
         declareVO.setDeclaration(bigDecimal5.add(bigDecimal6).add(bigDecimal7));
         // 结余
-        BigDecimal surplus = calculateSurplus(byState3.getAmount().add(byState2.getAmount())
-                .add(byState4.getAmount().add(byState5.getAmount()).add(byState8.getAmount())), underUnitData.getBalance());
+        BigDecimal surplus = calculateSurplus(bigDecimal2.add(bigDecimal3)
+                .add(bigDecimal1.add(bigDecimal4).add(bigDecimal)), underUnitData.getBalance());
         declareVO.setSurplus(surplus);
         // 审批通过百分比
         declareVO.setDeclaredPer(calculatePercentage(declareVO.getDeclared(), underUnitData.getBalance()));

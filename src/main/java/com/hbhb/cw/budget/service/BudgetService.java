@@ -35,7 +35,7 @@ public interface BudgetService {
     /**
      * 获取所有项目类型列表
      */
-    List<SelectVO> getProjectTypeList();
+    List<SelectVO> getProjectTypeList(String year);
 
     /**
      * 获取预算详情
@@ -128,4 +128,8 @@ public interface BudgetService {
     Long getIdByNum(String budgetNum, String importDate);
 
     void check();
+
+    void checkBelong();
+
+    void checkBudget();
 }

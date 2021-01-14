@@ -96,8 +96,8 @@ public class BudgetController {
 
     @Operation(summary = "获取所有项目类型列表")
     @GetMapping("/project-type/list")
-    public List<SelectVO> getProjectTypeList() {
-        return budgetService.getProjectTypeList();
+    public List<SelectVO> getProjectTypeList(String year) {
+        return budgetService.getProjectTypeList(year);
     }
 
     @Operation(summary = "获取预算详情")
@@ -190,5 +190,18 @@ public class BudgetController {
     @PostMapping("/check")
     public void checkProject() {
         budgetService.check();
+    }
+
+    @Operation(summary = "修改归口单位预算编号")
+    @PostMapping("/checkBelong")
+    public void checkBelong() {
+        budgetService.checkBelong();
+    }
+
+
+    @Operation(summary = "修改预算序列号")
+    @PostMapping("/checkBudget")
+    public void checkBudget() {
+        budgetService.checkBudget();
     }
 }

@@ -1,12 +1,12 @@
 package com.hbhb.cw.budget.web.vo;
 
+import java.io.Serializable;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.io.Serializable;
 
 /**
  * @author yzc
@@ -26,4 +26,8 @@ public class BudgetFlowStateVO implements Serializable {
     private Integer state;
     @Schema(description = "导入时间")
     private String importDate;
+    @Schema(description = "时间")
+    private String year;
+    @Schema(description = "预算编号+年份")
+    private String serialNum;
 }

@@ -1,12 +1,12 @@
 package com.hbhb.cw.budget.web.vo;
 
+import java.io.Serializable;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.io.Serializable;
 
 @Data
 @Builder
@@ -33,4 +33,7 @@ public class BudgetProgressReqVO implements Serializable {
 
     @Schema(description = "预算id")
     private Long budgetId;
+
+    @Schema(description = "预算编号")
+    private String serialNum;
 }
