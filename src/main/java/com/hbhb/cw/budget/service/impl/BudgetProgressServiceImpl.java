@@ -234,9 +234,6 @@ public class BudgetProgressServiceImpl implements BudgetProgressService {
         }
         // 如果归口于其他单位则已归口单位统计
         Integer underUnitId = budgetBelongMapper.selectUnderUnitIdByNum(cond.getSerialNum(), cond.getUnitId());
-        if (underUnitId == null) {
-            throw new BudgetException(BudgetErrorCode.BUDGET_NO_DATA);
-        }
         cond.setUnitId(underUnitId);
         BudgetData underUnitData = budgetDataService.getDataByUnitIdAndBudgetIdByNum(cond.getUnitId(), cond.getSerialNum());
         // 未审批的balance
@@ -269,6 +266,9 @@ public class BudgetProgressServiceImpl implements BudgetProgressService {
         // 日常性费用签报
         BudgetProgressResVO byState8 = budgetProjectAgileService.getProgressByState(cond);
         list.add(byState4);
+        if (underUnitData.getBalance()==null){
+            underUnitData.setBudgetId(0L);
+        }
         if (underUnitData.getBalance().compareTo(BigDecimal.ZERO) == 0) {
             byState1.setAmount(null);
             byState2.setAmount(null);

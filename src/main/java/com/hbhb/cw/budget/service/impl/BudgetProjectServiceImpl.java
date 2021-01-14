@@ -301,6 +301,7 @@ public class BudgetProjectServiceImpl implements BudgetProjectService {
                 .setTaxIncludeAmount(new BigDecimal(budgetProjectDetailVO.getTaxIncludeAmount()));
         budgetProject.setCost(new BigDecimal(budgetProjectDetailVO.getCost()));
         budgetProject.setVatRate(new BigDecimal(budgetProjectDetailVO.getVatRate()));
+        budgetProject.setVatAmount(new BigDecimal(budgetProjectDetailVO.getVatAmount()));
         // 处理 项目开始时间、结束时间、创建时间格式<String-->Date>
         String startTime = budgetProjectDetailVO.getStartTime();
         String endTime = budgetProjectDetailVO.getEndTime();

@@ -168,9 +168,12 @@ public class BudgetServiceImpl implements BudgetService {
     }
 
     @Override
-    public List<SelectVO> getProjectTypeList() {
+    public List<SelectVO> getProjectTypeList(String year) {
         List<SelectVO> list = new ArrayList<>();
-        List<Budget> budgets = budgetMapper.selectAllByYear(DateUtil.getCurrentYear());
+        if (year==null){
+            year = DateUtil.getCurrentYear();
+        }
+        List<Budget> budgets = budgetMapper.selectAllByYear(year);
         budgets.forEach(budget -> list.add(SelectVO.builder()
                 .id(budget.getId())
                 .label(budget.getBudgetNum() + "_" + budget.getProjectItem())
