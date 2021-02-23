@@ -1107,4 +1107,40 @@
     <include refid="Base_Column_List" />
     from budget_project
   </select>
+
+  <select id="selectListByProjectNum" parameterType="string"
+          resultType="com.hbhb.cw.budget.web.vo.BudgetProjectResVO">
+    select bp.id as id,
+    bp.project_num as projectNum,
+    bp.project_name as projectName,
+    b.budget_num as budgetNum,
+    b.project_item as projectTypeName,
+    bp.amount as amount,
+    bp.cost as cost,
+    bp.vat_amount as vatAmount,
+    bp.unit_id as unitId,
+    date_format(bp.create_time, '%Y-%m-%d %H:%i:%s') as createTime,
+    bp.create_by    as createBy,
+    bp.origin       as origin,
+    bp.state        as state
+    from budget_project bp
+    left join budget b on b.serial_num = bp.serial_num
+    where bp.delete_flag = 1
+    <if test="projectNum != null and projectNum != ''">
+    and bp.project_num like concat ('%',#{projectNum},'%')
+    </if>
+    order by bp.create_time desc
+  </select>
+
+  <select id="countListByProjectNum" parameterType="string"
+          resultType="int">
+    select count(bp.id)
+    from budget_project bp
+    left join budget b on b.serial_num = bp.serial_num
+    where bp.delete_flag = 1
+      <if test="projectNum != null and projectNum != ''">
+        and bp.project_num like concat ('%',#{projectNum},'%')
+      </if>
+    order by bp.create_time desc
+  </select>
 </mapper>
