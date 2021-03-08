@@ -28,7 +28,7 @@ management:
 # 宿主机相关配置
 host:
   # docker0地址
-  docker0: 172.17.0.1
+  docker0: 192.168.0.39
   # 代理ip（解决docker容器内部无法访问宿主机ip的问题）
   proxy: 47.96.83.55
 
