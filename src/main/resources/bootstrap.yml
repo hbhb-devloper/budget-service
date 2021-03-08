@@ -38,7 +38,7 @@ port:
   dev-proxy: 10007
   test: 10028
   test-proxy: 10008
-  prd: 8500
+  prd: 10006
 
 # 指定服务提供方实例地址（为空则不指定）
 feign-url:
