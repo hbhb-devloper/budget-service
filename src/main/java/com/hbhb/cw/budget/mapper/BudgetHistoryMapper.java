@@ -1,10 +1,10 @@
 package com.hbhb.cw.budget.mapper;
 
-import com.hbhb.cw.model.BudgetHistory;
-import com.hbhb.cw.web.vo.BudgetHistoryInfoVO;
-import com.hbhb.cw.web.vo.BudgetHistoryVO;
-import com.hbhb.cw.web.vo.BudgetReqVO;
 
+import com.hbhb.cw.budget.model.BudgetHistory;
+import com.hbhb.cw.budget.web.vo.BudgetHistoryInfoVO;
+import com.hbhb.cw.budget.web.vo.BudgetHistoryVO;
+import com.hbhb.cw.budget.web.vo.BudgetReqVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

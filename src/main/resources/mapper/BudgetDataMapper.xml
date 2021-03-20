@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hbhb.cw.mapper.BudgetDataMapper">
-    <resultMap id="BaseResultMap" type="com.hbhb.cw.model.BudgetData">
+<mapper namespace="com.hbhb.cw.budget.mapper.BudgetDataMapper">
+    <resultMap id="BaseResultMap" type="com.hbhb.cw.budget.model.BudgetData">
         <id column="id" jdbcType="BIGINT" property="id"/>
         <result column="budget_id" jdbcType="BIGINT" property="budgetId"/>
         <result column="unit_id" jdbcType="INTEGER" property="unitId"/>
@@ -22,13 +22,13 @@
         delete from budget_data
         where id = #{id,jdbcType=BIGINT}
     </delete>
-    <insert id="insert" parameterType="com.hbhb.cw.model.BudgetData">
+    <insert id="insert" parameterType="com.hbhb.cw.budget.model.BudgetData">
         insert into budget_data (id, budget_id, unit_id,
         balance, create_time)
         values (#{id,jdbcType=BIGINT}, #{budgetId,jdbcType=BIGINT}, #{unitId,jdbcType=INTEGER},
         #{balance,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP})
     </insert>
-    <insert id="insertSelective" parameterType="com.hbhb.cw.model.BudgetData">
+    <insert id="insertSelective" parameterType="com.hbhb.cw.budget.model.BudgetData">
         insert into budget_data
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -65,7 +65,7 @@
             </if>
         </trim>
     </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="com.hbhb.cw.model.BudgetData">
+    <update id="updateByPrimaryKeySelective" parameterType="com.hbhb.cw.budget.model.BudgetData">
         update budget_data
         <set>
             <if test="budgetId != null">
@@ -83,7 +83,7 @@
         </set>
         where id = #{id,jdbcType=BIGINT}
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.hbhb.cw.model.BudgetData">
+    <update id="updateByPrimaryKey" parameterType="com.hbhb.cw.budget.model.BudgetData">
         update budget_data
         set budget_id = #{budgetId,jdbcType=BIGINT},
         unit_id = #{unitId,jdbcType=INTEGER},
@@ -134,6 +134,15 @@
         <include refid="Base_Column_List"/>
         from budget_data
         where budget_id=#{budgetId} and unit_id=#{unitId}
+    </select>
+
+    <select id="getDataByUnitIdByNum" parameterType="map" resultType="com.hbhb.cw.budget.model.BudgetData">
+        select
+        bd.*
+        from budget_data bd
+        left join budget b on b.id = bd.budget_id
+        where bd.unit_id = #{unitId}
+        and concat(b.budget_num,b.import_date) = #{budgetNum}
     </select>
 
     <delete id="deleteByBudgetId" parameterType="list">

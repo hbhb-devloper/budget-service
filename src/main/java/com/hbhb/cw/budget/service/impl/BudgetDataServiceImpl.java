@@ -1,21 +1,23 @@
 package com.hbhb.cw.budget.service.impl;
 
-import com.hbhb.cw.common.exception.BizException;
-import com.hbhb.cw.common.exception.BizStatus;
-import com.hbhb.cw.mapper.BudgetBelongMapper;
-import com.hbhb.cw.mapper.BudgetDataMapper;
-import com.hbhb.cw.model.BudgetBelong;
-import com.hbhb.cw.model.BudgetData;
-import com.hbhb.cw.model.BudgetHistory;
-import com.hbhb.cw.rpc.UnitApiExp;
-import com.hbhb.cw.service.BudgetDataService;
-import com.hbhb.cw.service.BudgetHistoryService;
-import com.hbhb.cw.service.BudgetService;
-import com.hbhb.cw.utils.BeanConverter;
-import com.hbhb.cw.web.vo.BudgetAdjustVO;
-import com.hbhb.cw.web.vo.BudgetBelongVO;
-import com.hbhb.cw.web.vo.BudgetDataResVO;
-import com.hbhb.cw.web.vo.BudgetDataVO;
+
+import com.hbhb.core.bean.BeanConverter;
+import com.hbhb.cw.budget.enums.BudgetErrorCode;
+import com.hbhb.cw.budget.exception.BudgetException;
+import com.hbhb.cw.budget.mapper.BudgetBelongMapper;
+import com.hbhb.cw.budget.mapper.BudgetDataMapper;
+import com.hbhb.cw.budget.model.Budget;
+import com.hbhb.cw.budget.model.BudgetBelong;
+import com.hbhb.cw.budget.model.BudgetData;
+import com.hbhb.cw.budget.model.BudgetHistory;
+import com.hbhb.cw.budget.rpc.UnitApiExp;
+import com.hbhb.cw.budget.service.BudgetDataService;
+import com.hbhb.cw.budget.service.BudgetHistoryService;
+import com.hbhb.cw.budget.service.BudgetService;
+import com.hbhb.cw.budget.web.vo.BudgetAdjustVO;
+import com.hbhb.cw.budget.web.vo.BudgetBelongVO;
+import com.hbhb.cw.budget.web.vo.BudgetDataResVO;
+import com.hbhb.cw.budget.web.vo.BudgetDataVO;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,7 +59,6 @@ public class BudgetDataServiceImpl implements BudgetDataService {
                 budgetData.setFlag(1);
             }
             return budgetDataRes;
-
         }
         // 该单位有归口单位，但是无预算值（标识归口于其他单位）
         else if (underUnitId != null && longs.size() == 0) {
@@ -83,7 +84,7 @@ public class BudgetDataServiceImpl implements BudgetDataService {
             }
             return budgetDataRes;
         }
-        throw new BizException(BizStatus.BUDGET_NO_DATA.getCode());
+        throw new BudgetException(BudgetErrorCode.BUDGET_NO_DATA);
     }
 
     /**
@@ -94,11 +95,12 @@ public class BudgetDataServiceImpl implements BudgetDataService {
     public void updateBudgetDate(List<BudgetDataVO> list) {
         for (BudgetDataVO budgetDataVO : list) {
             if (budgetDataVO.getBalance() != null && budgetDataVO.getBalance().intValue() < 0) {
-                throw new BizException(BizStatus.BUDGET_DATA_NOT_NEGATIVE.getCode());
+                throw new BudgetException(BudgetErrorCode.BUDGET_DATA_NOT_NEGATIVE);
             }
         }
         // 得到预算id
         Long budgetId = list.get(0).getBudgetId();
+        Budget budget = budgetService.getBudgetById(budgetId);
         // 得到归口单位id
         Integer underUnitId = list.get(0).getDeptId();
         // 用来批量新增预算数据
@@ -127,6 +129,9 @@ public class BudgetDataServiceImpl implements BudgetDataService {
         }
         if (list.get(0).getUnitId() != null) {
             budgetDataMapper.insertBatch(budgetDataList);
+            for (BudgetBelong budgetBelong : belongList) {
+                budgetBelong.setSerialNum(budget.getSerialNum());
+            }
             budgetBelongMapper.insertBatch(belongList);
         }
 
@@ -146,6 +151,11 @@ public class BudgetDataServiceImpl implements BudgetDataService {
     @Override
     public BudgetData getDataByUnitIdAndBudgetId(Integer unitId, Long budgetId) {
         return budgetDataMapper.getDataByUnitIdAndBudgetId(unitId, budgetId);
+    }
+
+    @Override
+    public BudgetData getDataByUnitIdAndBudgetIdByNum(Integer unitId, String budgetNum) {
+        return budgetDataMapper.getDataByUnitIdByNum(unitId, budgetNum);
     }
 
 

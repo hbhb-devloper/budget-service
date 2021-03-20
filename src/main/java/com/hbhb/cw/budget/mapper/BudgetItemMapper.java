@@ -1,8 +1,8 @@
 package com.hbhb.cw.budget.mapper;
 
-import com.hbhb.cw.model.BudgetItem;
-import com.hbhb.cw.web.vo.SelectVO;
 
+import com.hbhb.api.core.bean.SelectVO;
+import com.hbhb.cw.budget.model.BudgetItem;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

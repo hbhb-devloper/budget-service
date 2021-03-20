@@ -1,10 +1,10 @@
 package com.hbhb.cw.budget.mapper;
 
-import com.hbhb.cw.model.BudgetProjectFlow;
-import com.hbhb.cw.web.vo.BudgetProjectFlowNodeVO;
-import com.hbhb.cw.web.vo.BudgetProjectFlowVO;
-import com.hbhb.cw.web.vo.FlowRoleResVO;
 
+import com.hbhb.cw.budget.model.BudgetProjectFlow;
+import com.hbhb.cw.budget.web.vo.BudgetProjectFlowNodeVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectFlowVO;
+import com.hbhb.cw.flowcenter.vo.FlowRoleResVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -21,7 +21,7 @@ public interface BudgetProjectFlowMapper extends BaseMapper<BudgetProjectFlow, L
 
     List<Long> selectIdByProjectId(@Param("projectId") Integer projectId);
 
-    int updateBatchByNodeId(@Param("list") List<BudgetProjectFlowNodeVO> list,@Param("projectId") Long projectId);
+    int updateBatchByNodeId(@Param("list") List<BudgetProjectFlowNodeVO> list, @Param("projectId") Long projectId);
 
     List<FlowRoleResVO> selectNodeByNodeId(@Param("flowNodeId") String flowNodeId,
                                            @Param("projectId") Integer projectId);

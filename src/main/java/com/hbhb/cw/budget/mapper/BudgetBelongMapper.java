@@ -1,6 +1,7 @@
 package com.hbhb.cw.budget.mapper;
 
-import com.hbhb.cw.model.BudgetBelong;
+
+import com.hbhb.cw.budget.model.BudgetBelong;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -30,4 +31,11 @@ public interface BudgetBelongMapper extends BaseMapper<BudgetBelong, Long> {
 
     Integer selectUnderUnitId(@Param("budgetId") Long budgetId,
                               @Param("unitId") Integer unitId);
+
+    Integer selectUnderUnitIdByNum(@Param("serialNum") String serialNum,
+                              @Param("unitId") Integer unitId);
+
+    List<BudgetBelong> selectAll();
+
+    void batchUpdate(@Param("list") List<BudgetBelong> list);
 }

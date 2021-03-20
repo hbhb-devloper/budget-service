@@ -1,11 +1,12 @@
 package com.hbhb.cw.budget.service.impl;
 
-import com.hbhb.cw.common.exception.BizException;
-import com.hbhb.cw.common.exception.BizStatus;
-import com.hbhb.cw.mapper.BudgetProjectFileMapper;
-import com.hbhb.cw.model.BudgetProjectFile;
-import com.hbhb.cw.rpc.FileApiExp;
-import com.hbhb.cw.service.BudgetProjectFileService;
+
+import com.hbhb.cw.budget.enums.BudgetErrorCode;
+import com.hbhb.cw.budget.exception.BudgetException;
+import com.hbhb.cw.budget.mapper.BudgetProjectFileMapper;
+import com.hbhb.cw.budget.model.BudgetProjectFile;
+import com.hbhb.cw.budget.rpc.FileApiExp;
+import com.hbhb.cw.budget.service.BudgetProjectFileService;
 import com.hbhb.cw.systemcenter.vo.UserInfo;
 
 import org.springframework.stereotype.Service;
@@ -32,7 +33,7 @@ public class BudgetProjectFileServiceImpl implements BudgetProjectFileService {
             fileApi.deleteFile(fileId);
         }
         if (budgetProjectFile != null && !budgetProjectFile.getAuthor().equals(user.getNickName())) {
-            throw new BizException(BizStatus.BUDGET_PROJECT_INITIATOR_ERROR.getCode());
+            throw new BudgetException(BudgetErrorCode.BUDGET_PROJECT_INITIATOR_ERROR);
         }
         bpfMapper.deleteByFileId(fileId);
     }

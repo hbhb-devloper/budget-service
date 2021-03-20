@@ -1,7 +1,7 @@
 package com.hbhb.cw.budget.mapper;
 
-import com.hbhb.cw.model.BudgetProjectFlowHistory;
 
+import com.hbhb.cw.budget.model.BudgetProjectFlowHistory;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

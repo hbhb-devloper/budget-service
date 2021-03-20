@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hbhb.cw.mapper.BudgetProjectApprovedMapper">
-  <resultMap id="BaseResultMap" type="com.hbhb.cw.model.BudgetProjectApproved">
-    <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="project_num" jdbcType="VARCHAR" property="projectNum" />
-    <result column="project_name" jdbcType="VARCHAR" property="projectName" />
-    <result column="amount" jdbcType="DECIMAL" property="amount" />
-    <result column="available_amount" jdbcType="DECIMAL" property="availableAmount" />
-    <result column="taix_incloud_amount" jdbcType="DECIMAL" property="taixIncloudAmount" />
-    <result column="cost" jdbcType="DECIMAL" property="cost" />
-    <result column="vat_rate" jdbcType="DECIMAL" property="vatRate" />
-    <result column="vat_amount" jdbcType="DECIMAL" property="vatAmount" />
-    <result column="director" jdbcType="VARCHAR" property="director" />
+<mapper namespace="com.hbhb.cw.budget.mapper.BudgetProjectApprovedMapper">
+    <resultMap id="BaseResultMap" type="com.hbhb.cw.budget.model.BudgetProjectApproved">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="project_num" jdbcType="VARCHAR" property="projectNum"/>
+        <result column="project_name" jdbcType="VARCHAR" property="projectName"/>
+        <result column="amount" jdbcType="DECIMAL" property="amount"/>
+        <result column="available_amount" jdbcType="DECIMAL" property="availableAmount"/>
+        <result column="taix_incloud_amount" jdbcType="DECIMAL" property="taixIncloudAmount"/>
+        <result column="cost" jdbcType="DECIMAL" property="cost"/>
+        <result column="vat_rate" jdbcType="DECIMAL" property="vatRate"/>
+        <result column="vat_amount" jdbcType="DECIMAL" property="vatAmount"/>
+        <result column="director" jdbcType="VARCHAR" property="director"/>
     <result column="engineering_num" jdbcType="VARCHAR" property="engineeringNum" />
     <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
     <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
@@ -41,7 +41,7 @@
     delete from budget_project_approved
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.hbhb.cw.model.BudgetProjectApproved">
+    <insert id="insert" parameterType="com.hbhb.cw.budget.model.BudgetProjectApproved">
     insert into budget_project_approved (id, project_num, project_name, 
       amount, available_amount, taix_incloud_amount, 
       cost, vat_rate, vat_amount, 
@@ -59,17 +59,17 @@
       #{remarks,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{flowId,jdbcType=INTEGER}, #{projectId,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.hbhb.cw.model.BudgetProjectApproved">
-    insert into budget_project_approved
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="projectNum != null">
-        project_num,
-      </if>
-      <if test="projectName != null">
-        project_name,
+    <insert id="insertSelective" parameterType="com.hbhb.cw.budget.model.BudgetProjectApproved">
+        insert into budget_project_approved
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="projectNum != null">
+                project_num,
+            </if>
+            <if test="projectName != null">
+                project_name,
       </if>
       <if test="amount != null">
         amount,
@@ -204,17 +204,17 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hbhb.cw.model.BudgetProjectApproved">
-    update budget_project_approved
-    <set>
-      <if test="projectNum != null">
-        project_num = #{projectNum,jdbcType=VARCHAR},
-      </if>
-      <if test="projectName != null">
-        project_name = #{projectName,jdbcType=VARCHAR},
-      </if>
-      <if test="amount != null">
-        amount = #{amount,jdbcType=DECIMAL},
+    <update id="updateByPrimaryKeySelective" parameterType="com.hbhb.cw.budget.model.BudgetProjectApproved">
+        update budget_project_approved
+        <set>
+            <if test="projectNum != null">
+                project_num = #{projectNum,jdbcType=VARCHAR},
+            </if>
+            <if test="projectName != null">
+                project_name = #{projectName,jdbcType=VARCHAR},
+            </if>
+            <if test="amount != null">
+                amount = #{amount,jdbcType=DECIMAL},
       </if>
       <if test="availableAmount != null">
         available_amount = #{availableAmount,jdbcType=DECIMAL},
@@ -276,7 +276,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.hbhb.cw.model.BudgetProjectApproved">
+    <update id="updateByPrimaryKey" parameterType="com.hbhb.cw.budget.model.BudgetProjectApproved">
     update budget_project_approved
     set project_num = #{projectNum,jdbcType=VARCHAR},
       project_name = #{projectName,jdbcType=VARCHAR},
@@ -316,17 +316,17 @@
     where project_id = #{projectId}
   </select>
 
-  <resultMap id="projectFile" type="com.hbhb.cw.web.vo.BudgetProjectDetailVO">
-    <id column="id" property="id"/>
-    <id column="budgetId" property="budgetId"/>
-    <id column="unitId" property="unitId"/>
-    <id column="num" property="projectNum"/>
-    <id column="projectName" property="projectName"/>
-    <id column="amount" property="amount"/>
-    <id column="avamount" property="availableAmount"/>
-    <id column="vatAmount" property="vatAmount"/>
-    <id column="tiamount" property="taxIncludeAmount"/>
-    <id column="cost" property="cost"/>
+    <resultMap id="projectFile" type="com.hbhb.cw.budget.web.vo.BudgetProjectDetailVO">
+        <id column="id" property="id"/>
+        <id column="budgetId" property="budgetId"/>
+        <id column="unitId" property="unitId"/>
+        <id column="num" property="projectNum"/>
+        <id column="projectName" property="projectName"/>
+        <id column="amount" property="amount"/>
+        <id column="avamount" property="availableAmount"/>
+        <id column="vatAmount" property="vatAmount"/>
+        <id column="tiamount" property="taxIncludeAmount"/>
+        <id column="cost" property="cost"/>
     <id column="vatrate" property="vatRate"/>
     <id column="director" property="director"/>
     <id column="enum" property="engineeringNum"/>
@@ -340,18 +340,19 @@
     <id column="createTime" property="createTime"/>
     <id column="remark" property="remark"/>
     <id column="state" property="state"/>
-    <collection property="files" ofType="com.hbhb.cw.web.vo.BudgetProjectFileVO" column="id">
-      <result column="fileId" property="fileId"/>
-      <result column="fileName" property="fileName"/>
-      <result column="fileSize" property="fileSize"/>
-      <result column="filePath" property="filePath"/>
-      <result column="required" property="required"/>
-      <result column="author" property="author"/>
-      <result   column="times" property="createTime"/>
-      <result column="isApproved" property="isApproved"/>
-    </collection>
+        <collection property="files" ofType="com.hbhb.cw.budget.web.vo.BudgetProjectFileVO" column="id">
+            <result column="fileId" property="fileId"/>
+            <result column="fileName" property="fileName"/>
+            <result column="fileSize" property="fileSize"/>
+            <result column="filePath" property="filePath"/>
+            <result column="required" property="required"/>
+            <result column="author" property="author"/>
+            <result column="times" property="createTime"/>
+            <result column="isApproved" property="isApproved"/>
+        </collection>
   </resultMap>
-  <select id="selectProjectApprovedByProjectId" parameterType="com.hbhb.cw.web.vo.BudgetProjectDetailVO" resultMap="projectFile">
+    <select id="selectProjectApprovedByProjectId" parameterType="com.hbhb.cw.budget.web.vo.BudgetProjectDetailVO"
+            resultMap="projectFile">
     select sf.id                                 as fileId,
     sf.file_name                             as fileName,
     sf.file_size                             as fileSize,

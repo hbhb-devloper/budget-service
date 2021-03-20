@@ -1,37 +1,38 @@
 package com.hbhb.cw.budget.service.impl;
 
 import com.github.pagehelper.PageHelper;
-import com.hbhb.cw.common.exception.BizException;
-import com.hbhb.cw.common.exception.BizStatus;
-import com.hbhb.cw.mapper.BudgetBelongMapper;
-import com.hbhb.cw.mapper.BudgetProjectAgileFileMapper;
-import com.hbhb.cw.mapper.BudgetProjectAgileMapper;
-import com.hbhb.cw.model.BudgetData;
-import com.hbhb.cw.model.BudgetProjectAgile;
-import com.hbhb.cw.model.BudgetProjectAgileFile;
-import com.hbhb.cw.rpc.FileApiExp;
-import com.hbhb.cw.rpc.UnitApiExp;
-import com.hbhb.cw.service.BudgetDataService;
-import com.hbhb.cw.service.BudgetProgressService;
-import com.hbhb.cw.service.BudgetProjectAgileService;
-import com.hbhb.cw.service.BudgetService;
+import com.hbhb.core.bean.BeanConverter;
+import com.hbhb.core.utils.DateUtil;
+import com.hbhb.cw.budget.enums.BudgetErrorCode;
+import com.hbhb.cw.budget.exception.BudgetException;
+import com.hbhb.cw.budget.mapper.BudgetBelongMapper;
+import com.hbhb.cw.budget.mapper.BudgetProjectAgileFileMapper;
+import com.hbhb.cw.budget.mapper.BudgetProjectAgileMapper;
+import com.hbhb.cw.budget.model.BudgetData;
+import com.hbhb.cw.budget.model.BudgetProjectAgile;
+import com.hbhb.cw.budget.model.BudgetProjectAgileFile;
+import com.hbhb.cw.budget.model.Page;
+import com.hbhb.cw.budget.rpc.FileApiExp;
+import com.hbhb.cw.budget.rpc.UnitApiExp;
+import com.hbhb.cw.budget.service.BudgetDataService;
+import com.hbhb.cw.budget.service.BudgetProgressService;
+import com.hbhb.cw.budget.service.BudgetProjectAgileService;
+import com.hbhb.cw.budget.service.BudgetService;
+import com.hbhb.cw.budget.web.vo.BudgetAgileAddVO;
+import com.hbhb.cw.budget.web.vo.BudgetProgressDeclareVO;
+import com.hbhb.cw.budget.web.vo.BudgetProgressReqVO;
+import com.hbhb.cw.budget.web.vo.BudgetProgressResVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectAgileExportVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectAgileExportWordVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectAgileFileVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectAgileInfoVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectAgileReqVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectAgileVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectAmountVO;
 import com.hbhb.cw.systemcenter.enums.UnitEnum;
 import com.hbhb.cw.systemcenter.model.Unit;
 import com.hbhb.cw.systemcenter.vo.UserInfo;
-import com.hbhb.cw.utils.BeanConverter;
-import com.hbhb.cw.utils.DateUtil;
-import com.hbhb.cw.web.vo.BudgetAgileAddVO;
-import com.hbhb.cw.web.vo.BudgetProgressDeclareVO;
-import com.hbhb.cw.web.vo.BudgetProgressReqVO;
-import com.hbhb.cw.web.vo.BudgetProgressResVO;
-import com.hbhb.cw.web.vo.BudgetProjectAgileExportVO;
-import com.hbhb.cw.web.vo.BudgetProjectAgileExportWordVO;
-import com.hbhb.cw.web.vo.BudgetProjectAgileFileVO;
-import com.hbhb.cw.web.vo.BudgetProjectAgileInfoVO;
-import com.hbhb.cw.web.vo.BudgetProjectAgileReqVO;
-import com.hbhb.cw.web.vo.BudgetProjectAgileVO;
-import com.hbhb.cw.web.vo.BudgetProjectAmountVO;
-import com.hbhb.springboot.web.view.Page;
+import com.hbhb.web.util.FileUtil;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -78,6 +79,9 @@ public class BudgetProjectAgileServiceImpl implements BudgetProjectAgileService 
         if (UnitEnum.isHangzhou(cond.getUnitId())) {
             cond.setUnitId(null);
         }
+        if (cond.getDate()==null){
+            cond.setDate(cond.getImportDate());
+        }
         if (UnitEnum.isBenbu(cond.getUnitId())) {
             List<Integer> unitIdByParentId = unitApi.getSubUnit(UnitEnum.BENBU.value());
             PageHelper.startPage(pageNum, pageSize);
@@ -103,13 +107,13 @@ public class BudgetProjectAgileServiceImpl implements BudgetProjectAgileService 
         // 校验是否可以发起该项目类型下签报
         BudgetData budgetData = budgetDataService.getDataByUnitIdAndBudgetId(user.getUnitId(), budgetId);
         if (budgetData == null) {
-            throw new BizException(BizStatus.BUDGET_NOT_ADD_PROJECT.getCode());
+            throw new BudgetException(BudgetErrorCode.BUDGET_NOT_ADD_PROJECT);
         }
         // 查询当前单位所对应的归口单位id
         Integer underUnitId = budgetBelongMapper.selectUnderUnitId(budgetId, user.getUnitId());
         String newUnitId;
         if (underUnitId == null) {
-            throw new BizException(BizStatus.COST_EXCEED_SURPLUS.getCode());
+            throw new BudgetException(BudgetErrorCode.COST_EXCEED_SURPLUS);
         }
         // 判断是否归口与其他单位
         if (underUnitId != Math.toIntExact(user.getUnitId())) {
@@ -128,7 +132,7 @@ public class BudgetProjectAgileServiceImpl implements BudgetProjectAgileService 
         progressByState.setSurplus(progressByState.getSurplus() == null ? new BigDecimal("0.0") : progressByState.getSurplus());
         // 判断是否能发起审批
         if (cond.getCost().compareTo(progressByState.getSurplus()) > 0) {
-            throw new BizException(BizStatus.COST_EXCEED_SURPLUS.getCode());
+            throw new BudgetException(BudgetErrorCode.COST_EXCEED_SURPLUS);
         }
         // 项目编号=预算编号+单位简称+两位年份+4位增长编号
         String budgetNum = cond.getBudgetType();
@@ -198,7 +202,7 @@ public class BudgetProjectAgileServiceImpl implements BudgetProjectAgileService 
     public void deleteBudgetProject(Long id, UserInfo user) {
         BudgetProjectAgile budgetProjectAgile = budgetProjectAgileMapper.selectByPrimaryKey(id);
         if (!budgetProjectAgile.getCreateBy().equals(user.getNickName())) {
-            throw new BizException(BizStatus.BUDGET_PROJECT_INITIATOR_ERROR.getCode());
+            throw new BudgetException(BudgetErrorCode.BUDGET_PROJECT_INITIATOR_ERROR);
         }
         budgetProjectAgileMapper.updateDeleteById(id);
     }
@@ -211,7 +215,7 @@ public class BudgetProjectAgileServiceImpl implements BudgetProjectAgileService 
             fileApi.deleteFile(fileId);
         }
         if (budgetProjectAgileFile != null && !budgetProjectAgileFile.getAuthor().equals(user.getNickName())) {
-            throw new BizException(BizStatus.BUDGET_PROJECT_INITIATOR_ERROR.getCode());
+            throw new BudgetException(BudgetErrorCode.BUDGET_PROJECT_INITIATOR_ERROR);
         }
         budgetProjectAgileFileMapper.deleteByFileId(fileId);
     }
@@ -235,13 +239,13 @@ public class BudgetProjectAgileServiceImpl implements BudgetProjectAgileService 
     public void export2Word(HttpServletResponse response, BudgetProjectAgileInfoVO vo) {
         BudgetProjectAgileExportWordVO result = new BudgetProjectAgileExportWordVO();
         BeanUtils.copyProperties(vo, result);
-        result.setVatRate(result.getVatRate().multiply(new BigDecimal("100")));
+        result.setVatRate(String.valueOf(new BigDecimal(result.getVatRate()).multiply(new BigDecimal("100"))));
 
         String path = fileApi.getPath() + File.separator + result.getProjectName() + ".doc";
         // 生成填充文件
         fileApi.fillTemplate(result, "日常性费用导出模板.ftl", path);
         // 下载文件
-        fileApi.download(response, path, true);
+        FileUtil.download(response, path, true);
     }
 }
 

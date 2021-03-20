@@ -1,12 +1,12 @@
 package com.hbhb.cw.budget.web.controller;
 
 import com.alibaba.excel.EasyExcel;
-import com.hbhb.cw.common.exception.BizException;
-import com.hbhb.cw.common.exception.BizStatus;
-import com.hbhb.cw.model.BudgetMonthCheck;
-import com.hbhb.cw.service.BudgetMapService;
-import com.hbhb.cw.service.listener.BudgetMonthCheckListener;
-import com.hbhb.cw.utils.ExcelUtil;
+import com.hbhb.core.utils.ExcelUtil;
+import com.hbhb.cw.budget.enums.BudgetErrorCode;
+import com.hbhb.cw.budget.exception.BudgetException;
+import com.hbhb.cw.budget.model.BudgetMonthCheck;
+import com.hbhb.cw.budget.service.BudgetMapService;
+import com.hbhb.cw.budget.service.listener.BudgetMonthCheckListener;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,37 +21,37 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * @author yzcyzc
  */
-@Api(tags = "预算执行-月度考核情况")
+@Tag(name = "预算执行-月度考核情况")
 @RestController
-@RequestMapping("/month/check")
+@RequestMapping("/check")
 public class BudgetMonthCheckController {
     @Resource
     private BudgetMapService budgetMapService;
 
-    @ApiOperation("获取月度考核列表")
+    @Operation(summary = "获取月度考核列表")
     @GetMapping("/list")
     public List<BudgetMonthCheck> getBudget() {
         return budgetMapService.getMonthCheckList();
     }
 
-    @ApiOperation("月度考核导入")
+    @Operation(summary = "月度考核导入")
     @PostMapping("/import")
     public void importBudgetBreak(MultipartFile file) {
         try {
             EasyExcel.read(file.getInputStream(), BudgetMonthCheck.class,
                     new BudgetMonthCheckListener(budgetMapService)).sheet().doRead();
         } catch (IOException e) {
-            throw new BizException(BizStatus.BUDGET_MAP_DATA_IMPORT_ERROR.getCode());
+            throw new BudgetException(BudgetErrorCode.BUDGET_MAP_DATA_IMPORT_ERROR);
         }
     }
 
-    @ApiOperation("导出月度考核列表")
+    @Operation(summary = "导出月度考核列表")
     @PostMapping("/export")
     public void export(HttpServletRequest request, HttpServletResponse response) {
         List<BudgetMonthCheck> list = budgetMapService.getMonthCheckList();

@@ -1,18 +1,19 @@
 package com.hbhb.cw.budget.service.impl;
 
-import com.hbhb.cw.common.ProjectState;
-import com.hbhb.cw.common.exception.BizException;
-import com.hbhb.cw.common.exception.BizStatus;
-import com.hbhb.cw.mapper.BudgetProjectMapper;
-import com.hbhb.cw.mapper.BudgetProjectSplitApprovedMapper;
-import com.hbhb.cw.mapper.BudgetProjectSplitMapper;
-import com.hbhb.cw.model.BudgetProject;
-import com.hbhb.cw.model.BudgetProjectSplit;
-import com.hbhb.cw.model.BudgetProjectSplitApproved;
-import com.hbhb.cw.service.BudgetProjectSplitService;
+
+import com.hbhb.core.utils.DateUtil;
+import com.hbhb.cw.budget.enums.BudgetErrorCode;
+import com.hbhb.cw.budget.exception.BudgetException;
+import com.hbhb.cw.budget.mapper.BudgetProjectMapper;
+import com.hbhb.cw.budget.mapper.BudgetProjectSplitApprovedMapper;
+import com.hbhb.cw.budget.mapper.BudgetProjectSplitMapper;
+import com.hbhb.cw.budget.model.BudgetProject;
+import com.hbhb.cw.budget.model.BudgetProjectSplit;
+import com.hbhb.cw.budget.model.BudgetProjectSplitApproved;
+import com.hbhb.cw.budget.service.BudgetProjectSplitService;
+import com.hbhb.cw.budget.web.vo.BudgetProjectSplitVO;
+import com.hbhb.cw.flowcenter.enums.FlowState;
 import com.hbhb.cw.systemcenter.vo.UserInfo;
-import com.hbhb.cw.utils.DateUtil;
-import com.hbhb.cw.web.vo.BudgetProjectSplitVO;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -44,7 +45,7 @@ public class BudgetProjectSplitServiceImpl implements BudgetProjectSplitService 
 
         BudgetProject bp = budgetProjectMapper.selectByPrimaryKey(bpClassVo.getProjectId());
         if (!bp.getCreateBy().equals(user.getNickName())) {
-            throw new BizException(BizStatus.BUDGET_PROJECT_INITIATOR_ERROR.getCode());
+            throw new BudgetException(BudgetErrorCode.BUDGET_PROJECT_INITIATOR_ERROR);
         }
         BudgetProjectSplit bpClass = new BudgetProjectSplit();
         BeanUtils.copyProperties(bpClassVo, bpClass);
@@ -66,17 +67,17 @@ public class BudgetProjectSplitServiceImpl implements BudgetProjectSplitService 
         int count = budgetProjectSplitMapper.selectCondByProjectId(bpClassVo.getProjectId());
         // 若单个项目签报分类预算数量超过所跨年度则不允许添加
         if (count > (endTime - startTime)) {
-            throw new BizException(BizStatus.BUDGET_PROJECT_SPLIT_EXCESS.getCode());
+            throw new BudgetException(BudgetErrorCode.BUDGET_PROJECT_SPLIT_EXCESS);
         }
         // 若用户所选年份不不为空则判断是否在签报期间
         if (bpClassVo.getYears() != null) {
             int year = Integer.parseInt(bpClassVo.getYears());
             if (year < startTime || year > endTime) {
-                throw new BizException(BizStatus.BUDGET_PROJECT_NOT_AT_RISK.getCode());
+                throw new BudgetException(BudgetErrorCode.BUDGET_PROJECT_NOT_AT_RISK);
             }
             // 跨年项目用户未选择年份
         } else if (endTime - startTime != 0) {
-            throw new BizException(BizStatus.BUDGET_PROJECT_SPLIT_YEAR_NOT_NULL.getCode());
+            throw new BudgetException(BudgetErrorCode.BUDGET_PROJECT_SPLIT_YEAR_NOT_NULL);
         }
         // 判断填写金额是否超过签报项目预算总额
         BigDecimal amount = budgetProject.getAmount();
@@ -88,7 +89,7 @@ public class BudgetProjectSplitServiceImpl implements BudgetProjectSplitService 
         }
 
         if (cost.compareTo(amount) > 0) {
-            throw new BizException(BizStatus.BUDGET_PROJECT_SPLIT_COST_ERROR.getCode());
+            throw new BudgetException(BudgetErrorCode.BUDGET_PROJECT_SPLIT_COST_ERROR);
         }
         // 添加
         budgetProjectSplitMapper.insertSelective(bpClass);
@@ -103,7 +104,7 @@ public class BudgetProjectSplitServiceImpl implements BudgetProjectSplitService 
     public void deleteBudgetProjectSplit(Integer id, UserInfo user) {
         BudgetProjectSplit bpSplit = budgetProjectSplitMapper.selectByPrimaryKey(id);
         if (!bpSplit.getCreateBy().equals(user.getNickName())) {
-            throw new BizException(BizStatus.BUDGET_PROJECT_INITIATOR_ERROR.getCode());
+            throw new BudgetException(BudgetErrorCode.BUDGET_PROJECT_INITIATOR_ERROR);
         }
         budgetProjectSplitMapper.deleteByPrimaryKey(id);
     }
@@ -114,7 +115,7 @@ public class BudgetProjectSplitServiceImpl implements BudgetProjectSplitService 
         // 判断是否为项目签报人
         BudgetProjectSplit bpSplit = budgetProjectSplitMapper.selectByPrimaryKey(bpClassVo.getId());
         if (!bpSplit.getCreateBy().equals(user.getNickName())) {
-            throw new BizException(BizStatus.BUDGET_PROJECT_INITIATOR_ERROR.getCode());
+            throw new BudgetException(BudgetErrorCode.BUDGET_PROJECT_INITIATOR_ERROR);
         }
         BudgetProjectSplit bpClass = new BudgetProjectSplit();
         BeanUtils.copyProperties(bpClassVo, bpClass);
@@ -129,14 +130,14 @@ public class BudgetProjectSplitServiceImpl implements BudgetProjectSplitService 
         BigDecimal amount = budgetProject.getAmount();
         BigDecimal cost = new BigDecimal(bpClassVo.getCost());
         if (cost.compareTo(amount) > 0) {
-            throw new BizException(BizStatus.BUDGET_PROJECT_SPLIT_COST_ERROR.getCode());
+            throw new BudgetException(BudgetErrorCode.BUDGET_PROJECT_SPLIT_COST_ERROR);
         }
         //处理日期
         bpClass.setYears(bpClassVo.getYears());
         budgetProjectSplitMapper.updateByPrimaryKeySelective(bpClass);
         // 判断项目签报审批状态若为审批通过则修改状态为调整中
-        if (budgetProject.getState().equals(ProjectState.APPROVED.value())) {
-            budgetProjectMapper.updateStateById(projectId, ProjectState.IN_ADJUST.value());
+        if (budgetProject.getState().equals(FlowState.APPROVED.value())) {
+            budgetProjectMapper.updateStateById(projectId, FlowState.IN_ADJUST.value());
         }
     }
 

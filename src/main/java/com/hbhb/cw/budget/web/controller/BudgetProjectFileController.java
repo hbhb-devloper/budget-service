@@ -1,10 +1,12 @@
 package com.hbhb.cw.budget.web.controller;
 
-import com.hbhb.cw.common.exception.BizException;
-import com.hbhb.cw.common.exception.BizStatus;
-import com.hbhb.cw.security.CurrentUser;
-import com.hbhb.cw.security.LoginUser;
-import com.hbhb.cw.service.BudgetProjectFileService;
+
+import com.hbhb.cw.budget.enums.BudgetErrorCode;
+import com.hbhb.cw.budget.exception.BudgetException;
+import com.hbhb.cw.budget.rpc.UserApiExp;
+import com.hbhb.cw.budget.service.BudgetProjectFileService;
+import com.hbhb.cw.systemcenter.vo.UserInfo;
+import com.hbhb.web.annotation.UserId;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,27 +15,30 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import springfox.documentation.annotations.ApiIgnore;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
-@Api(tags = "预算执行-项目签报附件相关")
+
+@Tag(name = "预算执行-项目签报附件相关")
 @RestController
-@RequestMapping("/budget/project/file")
+@RequestMapping("/project/file")
 public class BudgetProjectFileController {
     @Resource
     private BudgetProjectFileService fileService;
+    @Resource
+    private UserApiExp userApi;
 
-    @ApiOperation("删除文件")
+    @Operation(summary = "删除文件")
     @DeleteMapping("/delete/{fileId}")
-    public void deleteProjectFile(@ApiParam(value = "fileId", required = true)
+    public void deleteProjectFile(@Parameter(description = "fileId", required = true)
                                   @PathVariable Long fileId,
-                                  @CurrentUser @ApiIgnore LoginUser loginUser) {
+                                  @Parameter(hidden = true) @UserId Integer userId) {
         if (fileId == null) {
-            throw new BizException(BizStatus.BUDGET_PROJECT_FILE_DELETE_SUCCESSFUL.getCode());
+            throw new BudgetException(BudgetErrorCode.BUDGET_PROJECT_FILE_DELETE_SUCCESSFUL);
         }
-        fileService.deleteProjectFile(fileId, loginUser.getUser());
+        UserInfo user = userApi.getUserInfoById(userId);
+        fileService.deleteProjectFile(fileId, user);
     }
 
 

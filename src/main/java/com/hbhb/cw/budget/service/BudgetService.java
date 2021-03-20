@@ -1,15 +1,16 @@
 package com.hbhb.cw.budget.service;
 
-import com.hbhb.cw.model.Budget;
-import com.hbhb.cw.model.BudgetHistory;
+
+import com.hbhb.api.core.bean.SelectVO;
+import com.hbhb.cw.budget.model.Budget;
+import com.hbhb.cw.budget.model.BudgetHistory;
+import com.hbhb.cw.budget.web.vo.BudgetAdjustVO;
+import com.hbhb.cw.budget.web.vo.BudgetExportVO;
+import com.hbhb.cw.budget.web.vo.BudgetImportVO;
+import com.hbhb.cw.budget.web.vo.BudgetInfoVO;
+import com.hbhb.cw.budget.web.vo.BudgetReqVO;
+import com.hbhb.cw.budget.web.vo.BudgetVO;
 import com.hbhb.cw.systemcenter.vo.TreeSelectParentVO;
-import com.hbhb.cw.web.vo.BudgetAdjustVO;
-import com.hbhb.cw.web.vo.BudgetExportVO;
-import com.hbhb.cw.web.vo.BudgetImportVO;
-import com.hbhb.cw.web.vo.BudgetInfoVO;
-import com.hbhb.cw.web.vo.BudgetReqVO;
-import com.hbhb.cw.web.vo.BudgetVO;
-import com.hbhb.cw.web.vo.SelectVO;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -34,7 +35,7 @@ public interface BudgetService {
     /**
      * 获取所有项目类型列表
      */
-    List<SelectVO> getProjectTypeList();
+    List<SelectVO> getProjectTypeList(String year);
 
     /**
      * 获取预算详情
@@ -125,4 +126,10 @@ public interface BudgetService {
      * 通过预算编号和年份得到预算id
      */
     Long getIdByNum(String budgetNum, String importDate);
+
+    void check();
+
+    void checkBelong();
+
+    void checkBudget();
 }

@@ -1,8 +1,8 @@
 package com.hbhb.cw.budget.service;
 
 
-import com.hbhb.cw.web.vo.BudgetItemVO;
-import com.hbhb.cw.web.vo.SelectVO;
+import com.hbhb.api.core.bean.SelectVO;
+import com.hbhb.cw.budget.web.vo.BudgetItemVO;
 
 import java.util.List;
 

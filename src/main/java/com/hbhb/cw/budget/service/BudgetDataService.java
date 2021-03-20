@@ -1,9 +1,10 @@
 package com.hbhb.cw.budget.service;
 
-import com.hbhb.cw.model.BudgetData;
-import com.hbhb.cw.web.vo.BudgetBelongVO;
-import com.hbhb.cw.web.vo.BudgetDataResVO;
-import com.hbhb.cw.web.vo.BudgetDataVO;
+
+import com.hbhb.cw.budget.model.BudgetData;
+import com.hbhb.cw.budget.web.vo.BudgetBelongVO;
+import com.hbhb.cw.budget.web.vo.BudgetDataResVO;
+import com.hbhb.cw.budget.web.vo.BudgetDataVO;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -36,6 +37,11 @@ public interface BudgetDataService {
      * @return
      */
     BudgetData getDataByUnitIdAndBudgetId(Integer unitId, Long budgetId);
+
+    /**
+     * 通过budgetNum+importDate和unitId得到预算值
+     */
+    BudgetData getDataByUnitIdAndBudgetIdByNum(Integer unitId, String budgetNum);
 
     /**
      * 通过budgetId和unitIds得到budgetData列表

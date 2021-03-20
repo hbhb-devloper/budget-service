@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hbhb.cw.mapper.BudgetProjectFlowApprovedMapper">
-  <resultMap id="BaseResultMap" type="com.hbhb.cw.model.BudgetProjectFlowApproved">
-    <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="budget_project_flow_id" jdbcType="BIGINT" property="budgetProjectFlowId" />
-    <result column="project_id" jdbcType="BIGINT" property="projectId" />
-    <result column="flow_node_id" jdbcType="VARCHAR" property="flowNodeId" />
-    <result column="under_unit_id" jdbcType="INTEGER" property="underUnitId" />
-    <result column="flow_role_id" jdbcType="BIGINT" property="flowRoleId" />
-    <result column="user_id" jdbcType="INTEGER" property="userId" />
-    <result column="role_desc" jdbcType="VARCHAR" property="roleDesc" />
-    <result column="assigner" jdbcType="BIGINT" property="assigner" />
-    <result column="control_access" jdbcType="TINYINT" property="controlAccess" />
+<mapper namespace="com.hbhb.cw.budget.mapper.BudgetProjectFlowApprovedMapper">
+    <resultMap id="BaseResultMap" type="com.hbhb.cw.budget.model.BudgetProjectFlowApproved">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="budget_project_flow_id" jdbcType="BIGINT" property="budgetProjectFlowId"/>
+        <result column="project_id" jdbcType="BIGINT" property="projectId"/>
+        <result column="flow_node_id" jdbcType="VARCHAR" property="flowNodeId"/>
+        <result column="under_unit_id" jdbcType="INTEGER" property="underUnitId"/>
+        <result column="flow_role_id" jdbcType="BIGINT" property="flowRoleId"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="role_desc" jdbcType="VARCHAR" property="roleDesc"/>
+        <result column="assigner" jdbcType="BIGINT" property="assigner"/>
+        <result column="control_access" jdbcType="TINYINT" property="controlAccess"/>
     <result column="is_join" jdbcType="TINYINT" property="isJoin" />
     <result column="operation" jdbcType="INTEGER" property="operation" />
     <result column="suggestion" jdbcType="VARCHAR" property="suggestion" />
@@ -36,7 +36,7 @@
     delete from budget_project_flow_approved
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.hbhb.cw.model.BudgetProjectFlowApproved">
+    <insert id="insert" parameterType="com.hbhb.cw.budget.model.BudgetProjectFlowApproved">
     insert into budget_project_flow_approved (id, budget_project_flow_id, project_id,
       flow_node_id, under_unit_id, flow_role_id, 
       user_id, role_desc, assigner, 
@@ -52,17 +52,17 @@
       #{createBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.hbhb.cw.model.BudgetProjectFlowApproved">
-    insert into budget_project_flow_approved
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="budgetProjectFlowId != null">
-        budget_project_flow_id,
-      </if>
-      <if test="projectId != null">
-        project_id,
+    <insert id="insertSelective" parameterType="com.hbhb.cw.budget.model.BudgetProjectFlowApproved">
+        insert into budget_project_flow_approved
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="budgetProjectFlowId != null">
+                budget_project_flow_id,
+            </if>
+            <if test="projectId != null">
+                project_id,
       </if>
       <if test="flowNodeId != null">
         flow_node_id,
@@ -167,17 +167,17 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hbhb.cw.model.BudgetProjectFlowApproved">
-    update budget_project_flow_approved
-    <set>
-      <if test="budgetProjectFlowId != null">
-        budget_project_flow_id = #{budgetProjectFlowId,jdbcType=BIGINT},
-      </if>
-      <if test="projectId != null">
-        project_id = #{projectId,jdbcType=BIGINT},
-      </if>
-      <if test="flowNodeId != null">
-        flow_node_id = #{flowNodeId,jdbcType=VARCHAR},
+    <update id="updateByPrimaryKeySelective" parameterType="com.hbhb.cw.budget.model.BudgetProjectFlowApproved">
+        update budget_project_flow_approved
+        <set>
+            <if test="budgetProjectFlowId != null">
+                budget_project_flow_id = #{budgetProjectFlowId,jdbcType=BIGINT},
+            </if>
+            <if test="projectId != null">
+                project_id = #{projectId,jdbcType=BIGINT},
+            </if>
+            <if test="flowNodeId != null">
+                flow_node_id = #{flowNodeId,jdbcType=VARCHAR},
       </if>
       <if test="underUnitId != null">
         under_unit_id = #{underUnitId,jdbcType=INTEGER},
@@ -224,7 +224,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.hbhb.cw.model.BudgetProjectFlowApproved">
+    <update id="updateByPrimaryKey" parameterType="com.hbhb.cw.budget.model.BudgetProjectFlowApproved">
     update budget_project_flow_approved
     set budget_project_flow_id = #{budgetProjectFlowId,jdbcType=BIGINT},
       project_id = #{projectId,jdbcType=BIGINT},
@@ -293,7 +293,8 @@
     where project_id = #{projectId}
   </select>
 
-  <select id="selectApprovedByProjectId" parameterType="long" resultType="com.hbhb.cw.web.vo.BudgetProjectFlowVO">
+    <select id="selectApprovedByProjectId" parameterType="long"
+            resultType="com.hbhb.cw.budget.web.vo.BudgetProjectFlowVO">
     select bpf.budget_project_flow_id             as id,
     bpf.project_id     as projectId,
     bpf.flow_node_id   as flowNodeId,

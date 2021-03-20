@@ -1,7 +1,8 @@
 package com.hbhb.cw.budget.service;
 
-import com.hbhb.cw.model.BudgetProjectFlowHistory;
-import com.hbhb.cw.web.vo.BudgetProjectFlowHistoryVO;
+
+import com.hbhb.cw.budget.model.BudgetProjectFlowHistory;
+import com.hbhb.cw.budget.web.vo.BudgetProjectFlowHistoryVO;
 
 import java.util.List;
 

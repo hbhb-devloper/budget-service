@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hbhb.cw.mapper.BudgetProjectNoticeMapper">
-  <resultMap id="BaseResultMap" type="com.hbhb.cw.model.BudgetProjectNotice">
+<mapper namespace="com.hbhb.cw.budget.mapper.BudgetProjectNoticeMapper">
+  <resultMap id="BaseResultMap" type="com.hbhb.cw.budget.model.BudgetProjectNotice">
     <id column="id" jdbcType="BIGINT" property="id"/>
     <result column="project_id" jdbcType="INTEGER" property="projectId"/>
     <result column="receiver" jdbcType="INTEGER" property="receiver"/>
@@ -26,7 +26,7 @@
     delete from budget_project_notice
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.hbhb.cw.model.BudgetProjectNotice">
+  <insert id="insert" parameterType="com.hbhb.cw.budget.model.BudgetProjectNotice">
     insert into budget_project_notice (id, project_id, receiver, 
       promoter, content, state, 
       priority, create_time,flow_type_id)
@@ -34,7 +34,7 @@
       #{promoter,jdbcType=INTEGER}, #{content,jdbcType=VARCHAR}, #{state,jdbcType=INTEGER}, 
       #{priority,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP},#{flowTypeId,jdbcType=BIGINT})
   </insert>
-  <insert id="insertSelective" parameterType="com.hbhb.cw.model.BudgetProjectNotice">
+  <insert id="insertSelective" parameterType="com.hbhb.cw.budget.model.BudgetProjectNotice">
     insert into budget_project_notice
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -95,7 +95,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hbhb.cw.model.BudgetProjectNotice">
+  <update id="updateByPrimaryKeySelective" parameterType="com.hbhb.cw.budget.model.BudgetProjectNotice">
     update budget_project_notice
     <set>
       <if test="projectId != null">
@@ -125,7 +125,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.hbhb.cw.model.BudgetProjectNotice">
+  <update id="updateByPrimaryKey" parameterType="com.hbhb.cw.budget.model.BudgetProjectNotice">
     update budget_project_notice
     set project_id = #{projectId,jdbcType=INTEGER},
       receiver = #{receiver,jdbcType=INTEGER},
@@ -147,24 +147,24 @@
     where project_id = #{projectId}
   </update>
 
-  <select id="selectNoticeListByUserId" resultType="com.hbhb.cw.web.vo.BudgetProjectNoticeResVO">
+  <select id="selectNoticeListByUserId" resultType="com.hbhb.cw.budget.web.vo.BudgetProjectNoticeResVO">
     select priority,content,n.create_time as createTime,su.user_name as userName
     from budget_project_notice n
     left join sys_user su on su.id = n.promoter
     where receiver =#{userId}
   </select>
   <select id="selectNoticeListByCond"
-    resultType="com.hbhb.cw.web.vo.BudgetProjectNoticeResVO"
-    parameterType="com.hbhb.cw.web.vo.BudgetProjectNoticeVO">
-    select bpn.id       as id ,
-    bpn.project_id  as projectId,
-    content         as content,
+          resultType="com.hbhb.cw.budget.web.vo.BudgetProjectNoticeResVO"
+          parameterType="com.hbhb.cw.budget.web.vo.BudgetProjectNoticeVO">
+    select bpn.id as id ,
+    bpn.project_id as projectId,
+    content as content,
     ROUND(amount,2) as amount,
-    flow_type_name  as flowType,
-    bp.director     as userName,
-    unit_name       as unitName,
+    flow_type_name as flowType,
+    bp.director as userName,
+    unit_name as unitName,
     date_format(bpn.create_time, '%Y-%m-%d %H:%i:%s') as createTime,
-    bp.state        as state
+    bp.state as state
     from budget_project_notice bpn
     left join budget_project bp on bpn.project_id = bp.id
     left join unit u on bp.unit_id = u.id
@@ -211,12 +211,12 @@
     </where>
     order by bpn.create_time , bpn.state
   </select>
-    <select id="selectCountByUserId" resultType="java.lang.Integer">
+  <select id="selectCountByUserId" resultType="java.lang.Long">
       select count(id) from budget_project_notice
       where receiver =#{userId}
       and state = 0
     </select>
-    <select id="selectNoticeByUserId" resultType="com.hbhb.cw.web.vo.WorkBenchAgendaVO">
+  <select id="selectNoticeByUserId" resultType="com.hbhb.cw.budget.web.vo.WorkBenchAgendaVO">
     select n.id as id  ,
             n.project_id  as projectId,
             content,

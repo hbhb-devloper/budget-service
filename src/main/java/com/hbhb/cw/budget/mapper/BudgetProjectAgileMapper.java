@@ -1,13 +1,8 @@
 package com.hbhb.cw.budget.mapper;
 
-import com.hbhb.cw.model.BudgetProjectAgile;
-import com.hbhb.cw.web.vo.BudgetProgressReqVO;
-import com.hbhb.cw.web.vo.BudgetProgressResVO;
-import com.hbhb.cw.web.vo.BudgetProjectAgileInfoVO;
-import com.hbhb.cw.web.vo.BudgetProjectAgileReqVO;
-import com.hbhb.cw.web.vo.BudgetProjectAgileVO;
-import com.hbhb.cw.web.vo.BudgetProjectAmountVO;
 
+import com.hbhb.cw.budget.model.BudgetProjectAgile;
+import com.hbhb.cw.budget.web.vo.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -33,8 +28,8 @@ public interface BudgetProjectAgileMapper extends BaseMapper<BudgetProjectAgile,
     int updateDeleteById(@Param("id") Long id);
 
     List<BudgetProjectAmountVO> selectProgressByBudget(@Param("unitId") Integer unitId,
-                                                       @Param(value = "budgetId") Long budgetId,
-                                                       @Param(value = "year") String year);
+                                                       @Param("budgetId") Long budgetId,
+                                                       @Param("year") String year);
 
     BudgetProgressResVO selectProgressByState(BudgetProgressReqVO cond);
 

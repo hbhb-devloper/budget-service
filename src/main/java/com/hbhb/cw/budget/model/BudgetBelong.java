@@ -1,6 +1,7 @@
 package com.hbhb.cw.budget.model;
 
 import java.io.Serializable;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,4 +25,6 @@ public class BudgetBelong implements Serializable {
     private Integer unitId;
 
     private Integer underUnitId;
+
+    private String serialNum;
 }

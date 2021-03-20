@@ -1,17 +1,19 @@
 package com.hbhb.cw.budget.web.controller;
 
-import com.hbhb.cw.security.CurrentUser;
-import com.hbhb.cw.security.LoginUser;
-import com.hbhb.cw.service.BudgetProgressService;
-import com.hbhb.cw.utils.DateUtil;
-import com.hbhb.cw.utils.ExcelUtil;
-import com.hbhb.cw.web.vo.BudgetProgressDeclareVO;
-import com.hbhb.cw.web.vo.BudgetProgressExportVO;
-import com.hbhb.cw.web.vo.BudgetProgressReqVO;
-import com.hbhb.cw.web.vo.BudgetProgressVO;
-import com.hbhb.cw.web.vo.BudgetProjectAllVO;
-import com.hbhb.cw.web.vo.BudgetProjectAmountVO;
-import com.hbhb.cw.web.vo.BudgetProjectStateVO;
+
+import com.hbhb.core.utils.DateUtil;
+import com.hbhb.core.utils.ExcelUtil;
+import com.hbhb.cw.budget.rpc.UserApiExp;
+import com.hbhb.cw.budget.service.BudgetProgressService;
+import com.hbhb.cw.budget.web.vo.BudgetFlowStateVO;
+import com.hbhb.cw.budget.web.vo.BudgetProgressDeclareVO;
+import com.hbhb.cw.budget.web.vo.BudgetProgressExportVO;
+import com.hbhb.cw.budget.web.vo.BudgetProgressReqVO;
+import com.hbhb.cw.budget.web.vo.BudgetProgressVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectAllVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectAmountVO;
+import com.hbhb.cw.systemcenter.vo.UserInfo;
+import com.hbhb.web.annotation.UserId;
 
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,20 +31,23 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import springfox.documentation.annotations.ApiIgnore;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
-@Api(tags = "预算执行-预算目标与进度")
+
+@Tag(name = "预算执行-预算目标与进度")
 @RestController
-@RequestMapping("/budget/progress")
+@RequestMapping("/progress")
 public class BudgetProgressController {
 
     @Resource
     private BudgetProgressService budgetProgressService;
 
-    @ApiOperation("按条件查询项目类别列表")
+    @Resource
+    private UserApiExp userApi;
+
+    @Operation(summary = "按条件查询项目类别列表")
     @GetMapping("/list")
     public List<BudgetProgressVO> getBudgetProgressList(BudgetProgressReqVO cond) {
         if (cond.getUnitId() == null) {
@@ -54,28 +59,28 @@ public class BudgetProgressController {
         return budgetProgressService.getBudgetProgressList(cond);
     }
 
-    @ApiOperation("按立项值查询项目签报列表")
+    @Operation(summary = "按立项值查询项目签报列表")
     @GetMapping("/project/list")
-    public List<BudgetProjectAmountVO> getProjectAmount(BudgetProjectStateVO cond) {
+    public List<BudgetProjectAmountVO> getProjectAmount(BudgetFlowStateVO cond) {
         if (cond.getUnitId() == null) {
             return new ArrayList<>();
         }
         if (cond.getImportDate() == null) {
             cond.setImportDate(DateUtil.getCurrentYear());
         }
-        // todo 此处有bug
         return budgetProgressService.getProgressByBudgetId(cond);
     }
 
-    @ApiOperation("按预算id查询项目统计")
+    @Operation(summary = "按预算id查询项目统计")
     @GetMapping("/project/statistics")
     public BudgetProgressDeclareVO getProgressByBudgetId(
-            @ApiParam(value = "项目id", required = true) @RequestParam Long budgetId,
-            @ApiParam(value = "单位id") @RequestParam(required = false) Integer unitId,
-            @ApiParam(value = "时间") @RequestParam(required = false) String importDate,
-            @ApiIgnore @CurrentUser LoginUser loginUser) {
+            @Parameter(description = "项目id", required = true) @RequestParam Long budgetId,
+            @Parameter(description = "单位id") @RequestParam(required = false) Integer unitId,
+            @Parameter(description = "时间") @RequestParam(required = false) String importDate,
+            @Parameter(hidden = true) @UserId Integer userId) {
+        UserInfo user = userApi.getUserInfoById(userId);
         if (unitId == null) {
-            unitId = loginUser.getUser().getUnitId();
+            unitId = user.getUnitId();
         }
         if (importDate == null) {
             importDate = DateUtil.getCurrentYear();
@@ -86,20 +91,21 @@ public class BudgetProgressController {
 
     }
 
-    @ApiOperation("按签报编号查询签报")
+    @Operation(summary = "按签报编号查询签报")
     @GetMapping("/project/{number}")
     public BudgetProjectAllVO getProgressByBudgetId(
-            @ApiParam(value = "签报编号", required = true) @PathVariable String number) {
+            @Parameter(description = "签报编号", required = true) @PathVariable String number) {
         return budgetProgressService.getProjectInfo(number);
     }
 
-    @ApiOperation("导出进度表")
+    @Operation(summary = "导出进度表")
     @PostMapping("/export")
     public void export(HttpServletRequest request, HttpServletResponse response,
-                       @ApiParam(value = "按条件查询") @RequestBody BudgetProgressReqVO cond,
-                       @ApiIgnore @CurrentUser LoginUser loginUser) {
+                       @Parameter(description = "按条件查询") @RequestBody BudgetProgressReqVO cond,
+                       @Parameter(hidden = true) @UserId Integer userId) {
+        UserInfo user = userApi.getUserInfoById(userId);
         if (cond.getUnitId() == null) {
-            cond.setUnitId(loginUser.getUser().getUnitId());
+            cond.setUnitId(user.getUnitId());
         }
         if (StringUtils.isEmpty(cond.getYear())) {
             cond.setYear(DateUtil.getCurrentYear());

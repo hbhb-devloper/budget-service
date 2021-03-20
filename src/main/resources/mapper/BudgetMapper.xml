@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hbhb.cw.mapper.BudgetMapper">
-    <resultMap id="BaseResultMap" type="com.hbhb.cw.model.Budget">
+<mapper namespace="com.hbhb.cw.budget.mapper.BudgetMapper">
+    <resultMap id="BaseResultMap" type="com.hbhb.cw.budget.model.Budget">
         <id column="id" jdbcType="BIGINT" property="id"/>
         <result column="budget_item_id" jdbcType="BIGINT" property="budgetItemId"/>
         <result column="project_item" jdbcType="VARCHAR" property="projectItem"/>
         <result column="budget_num" jdbcType="VARCHAR" property="budgetNum"/>
+        <result column="serial_num" jdbcType="VARCHAR" property="serialNum"/>
         <result column="balance" jdbcType="DECIMAL" property="balance"/>
         <result column="last_year_balance" jdbcType="DECIMAL" property="lastYearBalance"/>
         <result column="last_year_finished_balance" jdbcType="DECIMAL" property="lastYearFinishedBalance"/>
@@ -19,7 +20,7 @@
         <result column="update_by" jdbcType="VARCHAR" property="updateBy"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, budget_item_id, project_item, budget_num, balance, last_year_balance,last_year_finished_balance,
+    id, budget_item_id, project_item, budget_num, serial_num, balance, last_year_balance,last_year_finished_balance,
     threshold, import_date, remark, create_time, create_by, update_time, update_by
   </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -32,20 +33,20 @@
     delete from budget
     where id = #{id,jdbcType=BIGINT}
   </delete>
-    <insert id="insert" parameterType="com.hbhb.cw.model.Budget">
+    <insert id="insert" parameterType="com.hbhb.cw.budget.model.Budget">
     insert into budget (id, budget_item_id,
-      project_item, budget_num, balance,
+      project_item, budget_num, serial_num, balance,
       last_year_balance,last_year_finished_balance, threshold, import_date,
       remark, create_time, create_by,
       update_time, update_by)
     values (#{id,jdbcType=BIGINT}, #{budgetItemId,jdbcType=BIGINT},
-      #{projectItem,jdbcType=VARCHAR}, #{budgetNum,jdbcType=VARCHAR}, #{balance,jdbcType=DECIMAL},
+      #{projectItem,jdbcType=VARCHAR}, #{budgetNum,jdbcType=VARCHAR}, #{serialNum,jdbcType=VARCHAR}, #{balance,jdbcType=DECIMAL},
       #{lastYearBalance,jdbcType=DECIMAL}, #{lastYearFinishedBalance,jdbcType=DECIMAL},
       #{threshold,jdbcType=DECIMAL}, #{importDate,jdbcType=VARCHAR},
       #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR},
       #{updateTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR})
   </insert>
-    <insert id="insertSelective" parameterType="com.hbhb.cw.model.Budget">
+    <insert id="insertSelective" parameterType="com.hbhb.cw.budget.model.Budget">
         insert into budget
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -59,6 +60,9 @@
             </if>
             <if test="budgetNum != null">
                 budget_num,
+            </if>
+            <if test="serialNum != null">
+                serial_num,
             </if>
             <if test="balance != null">
                 balance,
@@ -104,6 +108,9 @@
             <if test="budgetNum != null">
                 #{budgetNum,jdbcType=VARCHAR},
             </if>
+            <if test="serialNum != null">
+                #{serialNum,jdbcType=VARCHAR},
+            </if>
             <if test="balance != null">
                 #{balance,jdbcType=DECIMAL},
             </if>
@@ -136,7 +143,7 @@
             </if>
         </trim>
     </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="com.hbhb.cw.model.Budget">
+    <update id="updateByPrimaryKeySelective" parameterType="com.hbhb.cw.budget.model.Budget">
         update budget
         <set>
             <if test="budgetItemId != null">
@@ -147,6 +154,9 @@
             </if>
             <if test="budgetNum != null">
                 budget_num = #{budgetNum,jdbcType=VARCHAR},
+            </if>
+            <if test="serialNum != null">
+                serial_num = #{serialNum,jdbcType=VARCHAR},
             </if>
             <if test="balance != null">
                 balance = #{balance,jdbcType=DECIMAL},
@@ -181,11 +191,12 @@
         </set>
         where id = #{id,jdbcType=BIGINT}
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.hbhb.cw.model.Budget">
+    <update id="updateByPrimaryKey" parameterType="com.hbhb.cw.budget.model.Budget">
     update budget
     set budget_item_id = #{budgetItemId,jdbcType=BIGINT},
       project_item = #{projectItem,jdbcType=VARCHAR},
       budget_num = #{budgetNum,jdbcType=VARCHAR},
+      serial_num = #{serialNum,jdbcType=VARCHAR},
       balance = #{balance,jdbcType=DECIMAL},
       last_year_balance = #{lastYearBalance,jdbcType=DECIMAL},
       last_year_finished_balance = #{lastYearFinishedBalance,jdbcType=DECIMAL},
@@ -205,6 +216,7 @@
         budget_item_id,
         project_item,
         budget_num,
+        serial_num,
         balance,
         last_year_balance,
         threshold,
@@ -213,6 +225,7 @@
             (#{item.budgetItemId},
             #{item.projectItem},
             #{item.budgetNum},
+            #{item.serialNum},
             #{item.balance},
             #{item.lastYearBalance},
             #{item.threshold},
@@ -237,6 +250,13 @@
                </if>
              </foreach>
            </trim>
+            <trim prefix="serial_num=case" suffix="end,">
+                <foreach collection="list" item="i" index="index">
+                    <if test="i.serialNum!=null">
+                        when id=#{i.id} then #{i.serialNum}
+                    </if>
+                </foreach>
+            </trim>
             <trim prefix="balance=case" suffix="end,">
                 <foreach collection="list" item="i" index="index">
                     <if test="i.balance!=null">
@@ -265,11 +285,11 @@
         </foreach>
     </update>
 
-    <resultMap id="BudgetResult" type="com.hbhb.cw.web.vo.BudgetVO" autoMapping="true">
+    <resultMap id="BudgetResult" type="com.hbhb.cw.budget.web.vo.BudgetVO" autoMapping="true">
         <result property="id" column="id"/>
         <collection property="children" resultMap="SubBudgetResult" columnPrefix="sub_"/>
     </resultMap>
-    <resultMap id="SubBudgetResult" type="com.hbhb.cw.web.vo.BudgetVO" autoMapping="true">
+    <resultMap id="SubBudgetResult" type="com.hbhb.cw.budget.web.vo.BudgetVO" autoMapping="true">
         <result property="id" column="id"/>
     </resultMap>
     <select id="selectTreeListByCond" parameterType="map" resultMap="BudgetResult">
@@ -299,7 +319,7 @@
         </if>
         group by b.id, bi.id
         order by b.id,bi.id) t1 left join (
-        select      bd.balance           as sub_lastYearBalance,
+        select ifnull(sum(bd.balance), 0)           as sub_lastYearBalance,
         b.budget_num         as sub_budgetNum
         from budget_data bd
         left join budget b on b.id = bd.budget_id
@@ -311,6 +331,46 @@
         <if test="cond.lastYear != null and cond.lastYear != ''">
              and b.import_date = #{cond.lastYear}
         </if>
+        group by b.id, bi.id) t2 on t1.sub_budgetNum = t2.sub_budgetNum
+        group by t1.sub_id,t1.id;
+    </select>
+
+
+    <select id="selectTreeByCond" parameterType="map" resultMap="BudgetResult">
+        select t1.*,
+        t2.*
+        from (select     bi.id               as id,
+        bi.item_name        as itemName,
+        bi.update_time      as updateTime,
+        b.id                as sub_id,
+        concat(b.budget_num, '_', b.project_item)      as sub_itemName,
+        ifnull(sum(bd.balance), 0)           as sub_balance,
+        b.threshold         as sub_threshold,
+        b.budget_num        as sub_budgetNum,
+        b.remark            as sub_remark
+        from budget_item bi
+        left join budget b on bi.id = b.budget_item_id
+        <if test="importDate != null and importDate != ''">
+            and b.import_date = #{importDate}
+        </if>
+        left join budget_data bd on b.id = bd.budget_id
+        <where>
+            <if test="projectItem != null and projectItem != ''">
+                and concat(b.budget_num, '_', b.project_item,bi.item_name) like concat ('%', #{projectItem}, '%')
+            </if>
+        </where>
+        group by b.id,bi.id
+        order by b.id,bi.id) t1 left join (
+        select      bd.balance           as sub_lastYearBalance,
+        b.budget_num         as sub_budgetNum
+        from budget_data bd
+        left join budget b on b.id = bd.budget_id
+        left join budget_item bi on bi.id = b.budget_item_id
+        <where>
+            <if test="lastYear != null and lastYear != ''">
+                and b.import_date = #{lastYear}
+            </if>
+        </where>
         ) t2 on t1.sub_budgetNum = t2.sub_budgetNum
         group by t1.sub_id,t1.id;
     </select>
@@ -360,5 +420,11 @@
 
     <select id="selectIdByNum" parameterType="map" resultType="long">
         select id from budget where budget_num = #{budgetNum} and import_date = #{importDate}
+    </select>
+
+    <select id="selectAll"  resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from budget
     </select>
 </mapper>

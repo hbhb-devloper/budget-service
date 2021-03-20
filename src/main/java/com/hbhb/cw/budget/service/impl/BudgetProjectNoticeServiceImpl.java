@@ -1,19 +1,18 @@
 package com.hbhb.cw.budget.service.impl;
 
 import com.github.pagehelper.PageHelper;
-import com.hbhb.cw.common.DictCode;
-import com.hbhb.cw.common.DictType;
-import com.hbhb.cw.mapper.BudgetProjectNoticeMapper;
-import com.hbhb.cw.model.BudgetProjectNotice;
-import com.hbhb.cw.rpc.DictApiExp;
-import com.hbhb.cw.service.BudgetProjectNoticeService;
+import com.hbhb.cw.budget.mapper.BudgetProjectNoticeMapper;
+import com.hbhb.cw.budget.model.BudgetProjectNotice;
+import com.hbhb.cw.budget.model.Page;
+import com.hbhb.cw.budget.rpc.DictApiExp;
+import com.hbhb.cw.budget.service.BudgetProjectNoticeService;
+import com.hbhb.cw.budget.web.vo.BudgetProjectNoticeReqVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectNoticeResVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectNoticeVO;
+import com.hbhb.cw.budget.web.vo.WorkBenchAgendaVO;
+import com.hbhb.cw.systemcenter.enums.DictCode;
+import com.hbhb.cw.systemcenter.enums.TypeCode;
 import com.hbhb.cw.systemcenter.vo.DictVO;
-import com.hbhb.cw.systemcenter.vo.UserInfo;
-import com.hbhb.cw.web.vo.BudgetProjectNoticeReqVO;
-import com.hbhb.cw.web.vo.BudgetProjectNoticeResVO;
-import com.hbhb.cw.web.vo.BudgetProjectNoticeVO;
-import com.hbhb.cw.web.vo.WorkBenchAgendaVO;
-import com.hbhb.springboot.web.view.Page;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -51,8 +50,8 @@ public class BudgetProjectNoticeServiceImpl implements BudgetProjectNoticeServic
         PageHelper.startPage(pageNum, pageSize);
         List<BudgetProjectNoticeResVO> list = noticeMapper.selectNoticeListByCond(bpnVo);
         // 获取项目状态字典
-         List<DictVO> stateList = dictApi.getDict(
-                DictType.BUDGET.value(), DictCode.BUDGET_PROJECT_STATUS.value());
+        List<DictVO> stateList = dictApi.getDict(
+                TypeCode.BUDGET.value(), DictCode.BUDGET_PROJECT_STATUS.value());
 
         Map<String, String> stateMap = stateList.stream().collect(
                 Collectors.toMap(DictVO::getValue, DictVO::getLabel));
@@ -83,12 +82,12 @@ public class BudgetProjectNoticeServiceImpl implements BudgetProjectNoticeServic
     }
 
     @Override
-    public int getNoticeAccount(Integer userId) {
+    public Long getNoticeAccount(Integer userId) {
         return noticeMapper.selectCountByUserId(userId);
     }
 
     @Override
-    public List<WorkBenchAgendaVO> getBudgetNoticeList(UserInfo user) {
-        return noticeMapper.selectNoticeByUserId(user.getId());
+    public List<WorkBenchAgendaVO> getBudgetNoticeList(Integer userId) {
+        return noticeMapper.selectNoticeByUserId(userId);
     }
 }

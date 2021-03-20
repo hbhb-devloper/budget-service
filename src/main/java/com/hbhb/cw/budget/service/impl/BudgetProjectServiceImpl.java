@@ -3,74 +3,76 @@ package com.hbhb.cw.budget.service.impl;
 import com.google.common.collect.Lists;
 
 import com.github.pagehelper.PageHelper;
-import com.hbhb.cw.common.AllName;
-import com.hbhb.cw.common.DictCode;
-import com.hbhb.cw.common.DictType;
-import com.hbhb.cw.common.EnableCond;
-import com.hbhb.cw.common.FlowNodeNoticeState;
-import com.hbhb.cw.common.OperationType;
-import com.hbhb.cw.common.ProjectState;
-import com.hbhb.cw.common.exception.BizException;
-import com.hbhb.cw.common.exception.BizStatus;
-import com.hbhb.cw.mapper.BudgetBelongMapper;
-import com.hbhb.cw.mapper.BudgetProjectApprovedMapper;
-import com.hbhb.cw.mapper.BudgetProjectFileMapper;
-import com.hbhb.cw.mapper.BudgetProjectFlowApprovedMapper;
-import com.hbhb.cw.mapper.BudgetProjectMapper;
-import com.hbhb.cw.mapper.BudgetProjectSplitApprovedMapper;
-import com.hbhb.cw.mapper.BudgetProjectSplitMapper;
-import com.hbhb.cw.model.Budget;
-import com.hbhb.cw.model.BudgetData;
-import com.hbhb.cw.model.BudgetProject;
-import com.hbhb.cw.model.BudgetProjectApproved;
-import com.hbhb.cw.model.BudgetProjectFile;
-import com.hbhb.cw.model.BudgetProjectFlow;
-import com.hbhb.cw.model.BudgetProjectFlowApproved;
-import com.hbhb.cw.model.BudgetProjectFlowHistory;
-import com.hbhb.cw.model.BudgetProjectSplit;
-import com.hbhb.cw.model.BudgetProjectSplitApproved;
-import com.hbhb.cw.model.Flow;
-import com.hbhb.cw.rpc.DictApiExp;
-import com.hbhb.cw.rpc.FileApiExp;
-import com.hbhb.cw.rpc.UnitApiExp;
-import com.hbhb.cw.rpc.UserApiExp;
-import com.hbhb.cw.service.BudgetDataService;
-import com.hbhb.cw.service.BudgetProgressService;
-import com.hbhb.cw.service.BudgetProjectFlowHistoryService;
-import com.hbhb.cw.service.BudgetProjectFlowService;
-import com.hbhb.cw.service.BudgetProjectNoticeService;
-import com.hbhb.cw.service.BudgetProjectService;
-import com.hbhb.cw.service.BudgetProjectSplitService;
-import com.hbhb.cw.service.BudgetService;
-import com.hbhb.cw.service.FlowNodeService;
-import com.hbhb.cw.service.FlowRoleUserService;
-import com.hbhb.cw.service.FlowService;
+import com.hbhb.core.bean.BeanConverter;
+import com.hbhb.core.utils.DateUtil;
+import com.hbhb.cw.budget.enums.BudgetErrorCode;
+import com.hbhb.cw.budget.enums.EnableCond;
+import com.hbhb.cw.budget.enums.OperationType;
+import com.hbhb.cw.budget.exception.BudgetException;
+import com.hbhb.cw.budget.mapper.BudgetBelongMapper;
+import com.hbhb.cw.budget.mapper.BudgetProjectApprovedMapper;
+import com.hbhb.cw.budget.mapper.BudgetProjectFileMapper;
+import com.hbhb.cw.budget.mapper.BudgetProjectFlowApprovedMapper;
+import com.hbhb.cw.budget.mapper.BudgetProjectMapper;
+import com.hbhb.cw.budget.mapper.BudgetProjectSplitApprovedMapper;
+import com.hbhb.cw.budget.mapper.BudgetProjectSplitMapper;
+import com.hbhb.cw.budget.model.Budget;
+import com.hbhb.cw.budget.model.BudgetData;
+import com.hbhb.cw.budget.model.BudgetProject;
+import com.hbhb.cw.budget.model.BudgetProjectApproved;
+import com.hbhb.cw.budget.model.BudgetProjectFile;
+import com.hbhb.cw.budget.model.BudgetProjectFlow;
+import com.hbhb.cw.budget.model.BudgetProjectFlowApproved;
+import com.hbhb.cw.budget.model.BudgetProjectFlowHistory;
+import com.hbhb.cw.budget.model.BudgetProjectSplit;
+import com.hbhb.cw.budget.model.BudgetProjectSplitApproved;
+import com.hbhb.cw.budget.model.Page;
+import com.hbhb.cw.budget.rpc.DictApiExp;
+import com.hbhb.cw.budget.rpc.FileApiExp;
+import com.hbhb.cw.budget.rpc.FlowApiExp;
+import com.hbhb.cw.budget.rpc.FlowNodeApiExp;
+import com.hbhb.cw.budget.rpc.FlowNodePropApiExp;
+import com.hbhb.cw.budget.rpc.FlowRoleUserApiExp;
+import com.hbhb.cw.budget.rpc.UnitApiExp;
+import com.hbhb.cw.budget.rpc.UserApiExp;
+import com.hbhb.cw.budget.service.BudgetDataService;
+import com.hbhb.cw.budget.service.BudgetProgressService;
+import com.hbhb.cw.budget.service.BudgetProjectFlowHistoryService;
+import com.hbhb.cw.budget.service.BudgetProjectFlowService;
+import com.hbhb.cw.budget.service.BudgetProjectNoticeService;
+import com.hbhb.cw.budget.service.BudgetProjectService;
+import com.hbhb.cw.budget.service.BudgetProjectSplitService;
+import com.hbhb.cw.budget.service.BudgetService;
+import com.hbhb.cw.budget.web.vo.BudgetProgressDeclareVO;
+import com.hbhb.cw.budget.web.vo.BudgetProgressReqVO;
+import com.hbhb.cw.budget.web.vo.BudgetProgressResVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectDetailExportReqVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectDetailExportVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectDetailVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectExportVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectFileExportVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectFileVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectFlowExportVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectFlowInfoVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectInitVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectNoticeReqVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectReqVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectResVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectSplitExportVO;
+import com.hbhb.cw.budget.web.vo.BudgetProjectSplitVO;
+import com.hbhb.cw.budget.web.vo.BudgetReqVO;
+import com.hbhb.cw.flowcenter.enums.FlowNodeNoticeState;
+import com.hbhb.cw.flowcenter.enums.FlowNodeNoticeTemp;
+import com.hbhb.cw.flowcenter.enums.FlowState;
+import com.hbhb.cw.flowcenter.model.Flow;
+import com.hbhb.cw.flowcenter.vo.FlowNodePropVO;
+import com.hbhb.cw.systemcenter.enums.DictCode;
+import com.hbhb.cw.systemcenter.enums.TypeCode;
 import com.hbhb.cw.systemcenter.enums.UnitEnum;
 import com.hbhb.cw.systemcenter.model.Unit;
 import com.hbhb.cw.systemcenter.vo.DictVO;
 import com.hbhb.cw.systemcenter.vo.UserInfo;
-import com.hbhb.cw.utils.BeanConverter;
-import com.hbhb.cw.utils.DateUtil;
-import com.hbhb.cw.web.vo.BudgetProgressDeclareVO;
-import com.hbhb.cw.web.vo.BudgetProgressReqVO;
-import com.hbhb.cw.web.vo.BudgetProgressResVO;
-import com.hbhb.cw.web.vo.BudgetProjectDetailExportReqVO;
-import com.hbhb.cw.web.vo.BudgetProjectDetailExportVO;
-import com.hbhb.cw.web.vo.BudgetProjectDetailVO;
-import com.hbhb.cw.web.vo.BudgetProjectExportVO;
-import com.hbhb.cw.web.vo.BudgetProjectFileExportVO;
-import com.hbhb.cw.web.vo.BudgetProjectFileVO;
-import com.hbhb.cw.web.vo.BudgetProjectFlowExportVO;
-import com.hbhb.cw.web.vo.BudgetProjectFlowInfoVO;
-import com.hbhb.cw.web.vo.BudgetProjectInitVO;
-import com.hbhb.cw.web.vo.BudgetProjectNoticeReqVO;
-import com.hbhb.cw.web.vo.BudgetProjectReqVO;
-import com.hbhb.cw.web.vo.BudgetProjectResVO;
-import com.hbhb.cw.web.vo.BudgetProjectSplitExportVO;
-import com.hbhb.cw.web.vo.BudgetProjectSplitVO;
-import com.hbhb.cw.web.vo.BudgetReqVO;
-import com.hbhb.cw.web.vo.FlowPropVO;
-import com.hbhb.springboot.web.view.Page;
+import com.hbhb.web.util.FileUtil;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -126,11 +128,15 @@ public class BudgetProjectServiceImpl implements BudgetProjectService {
     @Resource
     private BudgetProjectFlowHistoryService budgetProjectFlowHistoryService;
     @Resource
-    private FlowService flowService;
+    private FlowNodeApiExp nodeApi;
     @Resource
-    private FlowNodeService flowNodeService;
+    private FlowRoleUserApiExp roleUserApi;
     @Resource
-    private FlowRoleUserService flowRoleUserService;
+    private FlowApiExp flowApi;
+    @Resource
+    private FlowNodePropApiExp propApi;
+
+
     @Resource
     private UserApiExp userApi;
     @Resource
@@ -144,7 +150,7 @@ public class BudgetProjectServiceImpl implements BudgetProjectService {
     public boolean getBudgetApprovedState(Integer id) {
         BudgetProjectApproved budgetProjectApproved = budgetProjectApprovedMapper.selectByProjectId(id);
         BudgetProject project = budgetProjectMapper.selectByPrimaryKey(id);
-        return budgetProjectApproved != null && !ProjectState.APPROVED.value().equals(project.getState());
+        return budgetProjectApproved != null && !FlowState.APPROVED.value().equals(project.getState());
     }
 
     @Override
@@ -155,14 +161,14 @@ public class BudgetProjectServiceImpl implements BudgetProjectService {
         // 获取单位map
         Map<Integer, String> unitMap = unitApi.getUnitMapById();
         // 获取项目状态字典
-        List<DictVO> stateList = dictApi.getDict(DictType.BUDGET.value(), DictCode.BUDGET_PROJECT_STATUS.value());
+        List<DictVO> stateList = dictApi.getDict(TypeCode.BUDGET.value(), DictCode.BUDGET_PROJECT_STATUS.value());
         Map<String, String> stateMap = stateList.stream().collect(Collectors.toMap(DictVO::getValue, DictVO::getLabel));
 
         if (pageable) {
             PageHelper.startPage(pageNum, pageSize);
         }
         List<BudgetProjectResVO> list = budgetProjectMapper.selectListByCond(cond, unitIds);
-        int count = budgetProjectMapper.countListByCond(cond);
+        int count = budgetProjectMapper.countListByCond(cond, unitIds);
 
         // 组装数据
         list.forEach(item -> {
@@ -175,6 +181,10 @@ public class BudgetProjectServiceImpl implements BudgetProjectService {
 
     @Override
     public List<BudgetProgressResVO> getBudgetProgressByBudgetData(BudgetReqVO cond) {
+        BudgetReqVO budgetReqVO = BeanConverter.copyBean(cond, BudgetReqVO.class);
+        if (UnitEnum.HANGZHOU.value().equals(cond.getUnitId())){
+            budgetReqVO.setUnitId(null);
+        }
         return budgetProjectMapper.selectBudgetProgressByBudgetData(cond);
     }
 
@@ -182,7 +192,7 @@ public class BudgetProjectServiceImpl implements BudgetProjectService {
     public BudgetProjectDetailVO getBudgetProject(Long id) {
         BudgetProjectDetailVO detailVO = budgetProjectMapper.selectProjectById(id);
         List<DictVO> rateList = dictApi.getDict(
-                DictType.BUDGET.value(), DictCode.BUDGET_PROJECT_VAT_RATES.value());
+                TypeCode.BUDGET.value(), DictCode.BUDGET_PROJECT_VAT_RATES.value());
         Map<String, String> rateMap = rateList.stream().collect(
                 Collectors.toMap(DictVO::getValue, DictVO::getLabel));
         detailVO.setVatRate(rateMap.get(detailVO.getVatRate()));
@@ -196,7 +206,7 @@ public class BudgetProjectServiceImpl implements BudgetProjectService {
         BudgetData budgetData = budgetDataService
                 .getDataByUnitIdAndBudgetId(user.getUnitId(), vo.getBudgetId());
         if (budgetData == null) {
-            throw new BizException(BizStatus.BUDGET_NOT_ADD_PROJECT.getCode());
+            throw new BudgetException(BudgetErrorCode.BUDGET_NOT_ADD_PROJECT);
         }
         BudgetProject budgetProject = new BudgetProject();
         BeanUtils.copyProperties(vo, budgetProject);
@@ -221,6 +231,7 @@ public class BudgetProjectServiceImpl implements BudgetProjectService {
         }
         // 处理 项目预算总额.amount，可供分配预算.availableAmount、本年价税合计.taxIncludeAmount、本年项目成本.cost、
         // 增值税率.vatRate、本年增值税金.vatAmount,格式(String-->BigDecimal)
+        budgetProject.setSerialNum(budgetNum + DateUtil.dateToStringY(new Date()));
         budgetProject.setAmount(new BigDecimal(vo.getAmount()));
         budgetProject.setAvailableAmount(new BigDecimal(vo.getAvailableAmount()));
         budgetProject.setTaxIncludeAmount(new BigDecimal(vo.getTaxIncludeAmount()));
@@ -231,7 +242,7 @@ public class BudgetProjectServiceImpl implements BudgetProjectService {
         String startTime = vo.getStartTime();
         String endTime = vo.getEndTime();
         if (DateUtil.isExpiredYMD(startTime, endTime)) {
-            throw new BizException(BizStatus.BUDGET_PROJECT_TIME_ERROR.getCode());
+            throw new BudgetException(BudgetErrorCode.BUDGET_PROJECT_TIME_ERROR);
         }
         budgetProject.setStartTime(DateUtil.string2DateYMD(startTime));
         budgetProject.setEndTime(DateUtil.string2DateYMD(endTime));
@@ -239,7 +250,7 @@ public class BudgetProjectServiceImpl implements BudgetProjectService {
         // 设置创建人
         budgetProject.setCreateBy(user.getNickName());
         // 设置默认创建状态-10未开始审批
-        budgetProject.setState(ProjectState.NOT_APPROVED.value());
+        budgetProject.setState(FlowState.NOT_APPROVED.value());
         budgetProjectMapper.insertSelective(budgetProject);
         List<BudgetProjectFileVO> budgetProjectFileVOS = vo.getFiles();
         if (budgetProjectFileVOS.size() != 0) {
@@ -264,7 +275,7 @@ public class BudgetProjectServiceImpl implements BudgetProjectService {
         // 判断登录用户是否有权限进行操作
         BudgetProject budgetProject = budgetProjectMapper.selectByPrimaryKey(id);
         if (!budgetProject.getCreateBy().equals(user.getNickName())) {
-            throw new BizException(BizStatus.BUDGET_PROJECT_INITIATOR_ERROR.getCode());
+            throw new BudgetException(BudgetErrorCode.BUDGET_PROJECT_INITIATOR_ERROR);
         }
         budgetProjectMapper.updateDeleteFlagById(id);
     }
@@ -276,7 +287,7 @@ public class BudgetProjectServiceImpl implements BudgetProjectService {
         BudgetProject bp = budgetProjectMapper
                 .selectByPrimaryKey(Math.toIntExact(budgetProjectDetailVO.getId()));
         if (!bp.getCreateBy().equals(user.getNickName())) {
-            throw new BizException(BizStatus.BUDGET_PROJECT_INITIATOR_ERROR.getCode());
+            throw new BudgetException(BudgetErrorCode.BUDGET_PROJECT_INITIATOR_ERROR);
         }
         BudgetProject budgetProject = new BudgetProject();
         BeanUtils.copyProperties(budgetProjectDetailVO, budgetProject);
@@ -290,19 +301,20 @@ public class BudgetProjectServiceImpl implements BudgetProjectService {
                 .setTaxIncludeAmount(new BigDecimal(budgetProjectDetailVO.getTaxIncludeAmount()));
         budgetProject.setCost(new BigDecimal(budgetProjectDetailVO.getCost()));
         budgetProject.setVatRate(new BigDecimal(budgetProjectDetailVO.getVatRate()));
+        budgetProject.setVatAmount(new BigDecimal(budgetProjectDetailVO.getVatAmount()));
         // 处理 项目开始时间、结束时间、创建时间格式<String-->Date>
         String startTime = budgetProjectDetailVO.getStartTime();
         String endTime = budgetProjectDetailVO.getEndTime();
         if (DateUtil.isExpiredYMD(startTime, endTime)) {
-            throw new BizException(BizStatus.BUDGET_PROJECT_TIME_ERROR.getCode());
+            throw new BudgetException(BudgetErrorCode.BUDGET_PROJECT_TIME_ERROR);
         }
         budgetProject.setStartTime(DateUtil.string2DateYMD(startTime));
         budgetProject.setEndTime(DateUtil.string2DateYMD(endTime));
 
         // 判断是修改还是调整
         if (budgetProjectDetailVO.getState() != null &&
-                budgetProjectDetailVO.getState().equals(ProjectState.APPROVED.value())) {
-            budgetProject.setState(ProjectState.IN_ADJUST.value());
+                budgetProjectDetailVO.getState().equals(FlowState.APPROVED.value())) {
+            budgetProject.setState(FlowState.IN_ADJUST.value());
         }
         //修改
         budgetProjectMapper.updateByPrimaryKeySelective(budgetProject);
@@ -367,7 +379,7 @@ public class BudgetProjectServiceImpl implements BudgetProjectService {
         List<BudgetProjectSplitVO> splitList = budgetProjectSplitService
                 .getBudgetProjectSplitList(projectId);
         if (splitList == null || splitList.size() == 0) {
-            throw new BizException(BizStatus.CATEGORY_BUDGET_NOT_WRITE.getCode());
+            throw new BudgetException(BudgetErrorCode.CATEGORY_BUDGET_NOT_WRITE);
         }
         // 得到索要发起的签报详情
         BudgetProject budgetProject = budgetProjectMapper
@@ -375,7 +387,7 @@ public class BudgetProjectServiceImpl implements BudgetProjectService {
         // 1-2.判断登录用户和发起签报用户是否为同一个用户
         UserInfo user = userApi.getUserInfoById(initVO.getUserId());
         if (!user.getNickName().equals(budgetProject.getCreateBy())) {
-            throw new BizException(BizStatus.LACK_OF_FLOW_ROLE.getCode());
+            throw new BudgetException(BudgetErrorCode.LACK_OF_FLOW_ROLE);
         }
         // 1-3.通过签报id获取项目开始时间结束时间，判断用户是否添加分类预算
         int startTime = Integer.parseInt(DateUtil.dateToStringY(budgetProject.getStartTime()));
@@ -385,7 +397,7 @@ public class BudgetProjectServiceImpl implements BudgetProjectService {
         if (endTime - startTime != 0) {
             for (BudgetProjectSplitVO vo : splitList) {
                 if (vo.getYears() == null || "".equals(vo.getYears())) {
-                    throw new BizException(BizStatus.BUDGET_PROJECT_SPLIT_YEAR_ERROR.getCode());
+                    throw new BudgetException(BudgetErrorCode.BUDGET_PROJECT_SPLIT_YEAR_ERROR);
                 }
                 years.add(Integer.valueOf(vo.getYears()));
             }
@@ -394,7 +406,7 @@ public class BudgetProjectServiceImpl implements BudgetProjectService {
                 year.add(i);
             }
             if (!year.equals(years)) {
-                throw new BizException(BizStatus.BUDGET_PROJECT_SPLIT_YEAR_ERROR.getCode());
+                throw new BudgetException(BudgetErrorCode.BUDGET_PROJECT_SPLIT_YEAR_ERROR);
             }
         }
         // 查询当前项目签报详情
@@ -408,7 +420,7 @@ public class BudgetProjectServiceImpl implements BudgetProjectService {
                 .selectUnderUnitId(budgetId, Math.toIntExact(unitId));
         String newUnitId;
         if (underUnitId == null) {
-            throw new BizException(BizStatus.COST_EXCEED_SURPLUS.getCode());
+            throw new BudgetException(BudgetErrorCode.COST_EXCEED_SURPLUS);
         }
         // 判断是否归口与其他单位
         if (underUnitId != Math.toIntExact(unitId)) {
@@ -427,19 +439,20 @@ public class BudgetProjectServiceImpl implements BudgetProjectService {
         progressByState.setSurplus(progressByState.getSurplus() == null ? new BigDecimal("0.0") : progressByState.getSurplus());
         // 判断是否能发起审批
         if (budgetProject.getCost().compareTo(progressByState.getSurplus()) > 0) {
-            throw new BizException(BizStatus.COST_EXCEED_SURPLUS.getCode());
+            throw new BudgetException(BudgetErrorCode.COST_EXCEED_SURPLUS);
         }
 
         // 2.获取项目签报所对应的流程id
         Long flowId = getRelatedFlow(initVO.getFlowTypeId(), unitId, underUnitId);
 
         // 通过i流程id得到流程节点属性
-        List<FlowPropVO> flowProps = flowService.getFlowProp(flowId);
+        // 通过流程id得到流程节点属性
+        List<FlowNodePropVO> flowProps = propApi.getNodeProps(flowId);
         // 3.校验用户发起审批权限
         boolean hasAccess = hasAccess2Approve(flowProps, initVO.getUserId(),
                 Math.toIntExact(unitId));
         if (!hasAccess) {
-            throw new BizException(BizStatus.LACK_OF_FLOW_ROLE.getCode());
+            throw new BudgetException(BudgetErrorCode.LACK_OF_FLOW_ROLE);
         }
         // 4.同步节点属性
         syncBudgetProjectFlow(flowProps, projectId, underUnitId, initVO.getUserId(), budgetProject.getCost(),
@@ -455,7 +468,7 @@ public class BudgetProjectServiceImpl implements BudgetProjectService {
             return;
         }
         // 修改推送模板
-        inform = inform.replace(AllName.TITLE.getValue()
+        inform = inform.replace(FlowNodeNoticeTemp.TITLE.value()
                 , budgetProject.getProjectNum() + "_" + budgetProject.getProjectName());
         // 推送消息给发起人
         budgetProjectNoticeService.andSaveBudgetProjectNotice(
@@ -473,9 +486,9 @@ public class BudgetProjectServiceImpl implements BudgetProjectService {
                 .selectByProjectId(Long.valueOf(projectId));
         // 若存在则表示为第二次发起审批
         if (projectFlowApproves == null || projectFlowApproves.size() == 0) {
-            budgetProjectMapper.updateStateById(projectId, ProjectState.APPROVED_ADJUST.value());
+            budgetProjectMapper.updateStateById(projectId, FlowState.APPROVED_ADJUST.value());
         }
-        budgetProjectMapper.updateStateById(projectId, ProjectState.APPROVING.value());
+        budgetProjectMapper.updateStateById(projectId, FlowState.APPROVING.value());
     }
 
     @Override
@@ -490,7 +503,7 @@ public class BudgetProjectServiceImpl implements BudgetProjectService {
         List<Long> budgetProjectFlowIds = budgetProjectFlowService
                 .getIdListByProjectId(Long.valueOf(id));
         if (!project.getCreateBy().equals(userInfo.getNickName())) {
-            throw new BizException(BizStatus.LACK_OF_REVERT_ROLE.getCode());
+            throw new BudgetException(BudgetErrorCode.LACK_OF_REVERT_ROLE);
         }
         // 通过id得到签报流程信息快照
         List<BudgetProjectFlowApproved> projectFlowApproves = budgetProjectFlowApprovedMapper
@@ -499,7 +512,7 @@ public class BudgetProjectServiceImpl implements BudgetProjectService {
         BudgetProjectApproved projectApproved = budgetProjectApprovedMapper
                 .selectByProjectId(id);
         if (projectApproved == null) {
-            throw new BizException(BizStatus.LACK_OF_REVERT.getCode());
+            throw new BudgetException(BudgetErrorCode.LACK_OF_REVERT);
         }
 
         // 签报赋值
@@ -507,7 +520,7 @@ public class BudgetProjectServiceImpl implements BudgetProjectService {
         BeanUtils.copyProperties(projectApproved, budgetProject);
         budgetProject.setId(projectApproved.getProjectId());
         // 回滚后状态一定为审批通过
-        budgetProject.setState(ProjectState.APPROVED.value());
+        budgetProject.setState(FlowState.APPROVED.value());
         budgetProject.setTaxIncludeAmount(projectApproved.getTaixIncloudAmount());
         // 流程信息赋值
         List<BudgetProjectFlow> budgetProjectFlows = BeanConverter
@@ -559,7 +572,10 @@ public class BudgetProjectServiceImpl implements BudgetProjectService {
             flows.forEach(flow -> {
                 BudgetProjectFlowExportVO exportFlow = new BudgetProjectFlowExportVO();
                 BeanConverter.copyProp(flow, exportFlow);
-                exportFlow.setSuggestion(flow.getSuggestion().getValue());
+                exportFlow.setApproverRole(Optional.ofNullable(flow.getApproverRole()).orElse(""));
+                exportFlow.setNickName(Optional.ofNullable(flow.getNickName()).orElse(""));
+                exportFlow.setUpdateTime(Optional.ofNullable(flow.getUpdateTime()).orElse(""));
+                exportFlow.setSuggestion(Optional.ofNullable(flow.getSuggestion().getValue()).orElse(""));
                 exportFlows.add(exportFlow);
             });
         }
@@ -617,7 +633,7 @@ public class BudgetProjectServiceImpl implements BudgetProjectService {
         // 生成填充文件
         fileApi.fillTemplate(result, "项目签报导出模板.ftl", path);
         // 下载文件
-        fileApi.download(response, path, true);
+        FileUtil.download(response, path, true);
     }
 
     /**
@@ -646,7 +662,7 @@ public class BudgetProjectServiceImpl implements BudgetProjectService {
         // 获取签报详情
         BudgetProject project = budgetProjectMapper.selectByPrimaryKey(projectId);
         // 设置状态为已通过
-        project.setState(ProjectState.APPROVED.value());
+        project.setState(FlowState.APPROVED.value());
 
         BudgetProjectDetailVO detailVO = budgetProjectMapper.selectProjectById(Long.valueOf(projectId));
         for (BudgetProjectSplitVO list : splitList) {
@@ -686,6 +702,7 @@ public class BudgetProjectServiceImpl implements BudgetProjectService {
                     String counts = String.format("%0" + 4 + "d", (count + 1));
                     budgetProject.setProjectNum(budgetNum + abbr + date + counts);
                 }
+                budgetProject.setSerialNum(budgetNum + list.getYears());
                 // 设置项目来源
                 budgetProject.setOrigin("结转");
                 // 签报id置空
@@ -752,7 +769,7 @@ public class BudgetProjectServiceImpl implements BudgetProjectService {
         detailVO.setUnitId(Math.toIntExact(project.getUnitId()));
         detailVO.setBudgetId(project.getBudgetId());
         List<DictVO> rateList = dictApi.getDict(
-                DictType.BUDGET.value(), DictCode.BUDGET_PROJECT_VAT_RATES.value());
+                TypeCode.BUDGET.value(), DictCode.BUDGET_PROJECT_VAT_RATES.value());
         Map<String, String> rateMap = rateList.stream().collect(
                 Collectors.toMap(DictVO::getValue, DictVO::getLabel));
         detailVO.setVatRate(rateMap.get(detailVO.getVatRate()));
@@ -764,31 +781,31 @@ public class BudgetProjectServiceImpl implements BudgetProjectService {
      */
     private Long getRelatedFlow(Long flowTypeId, Long unitId, Integer underUnitId) {
         // 流程节点数量 => 流程id
-        Map<Integer, Long> flowMap = new HashMap<>();
-        List<Flow> flowList = flowService.getFlowsByTypeId(flowTypeId);
+        Map<Long, Long> flowMap = new HashMap<>();
+        List<Flow> flowList = flowApi.getFlowsByTypeId(flowTypeId);
         // 流程有效性校验（项目签报类型下，每个单位只能是有一条或两条流程）
         if (flowList.size() == 0) {
-            throw new BizException(BizStatus.NOT_EXIST_FLOW.getCode());
+            throw new BudgetException(BudgetErrorCode.NOT_EXIST_FLOW);
         } else if (flowList.size() > 2) {
-            throw new BizException(BizStatus.EXCEED_LIMIT_FLOW.getCode());
+            throw new BudgetException(BudgetErrorCode.EXCEED_LIMIT_FLOW);
         }
         flowList.forEach(flow ->
-                flowMap.put(flowNodeService.countFlowNode(flow.getId()), flow.getId()));
+                flowMap.put(nodeApi.getNodeNum(flow.getId()), flow.getId()));
 
-        int flowNodeCount;
+        Long flowNodeCount;
         // 自归口（两节点流程）
         if (underUnitId == Math.toIntExact(unitId)) {
-            flowNodeCount = 2;
+            flowNodeCount = 2L;
         }
         // 被归口（三节点流程）
         else {
-            flowNodeCount = 3;
+            flowNodeCount = 3L;
         }
         // 当前项目签报关联的流程id
         Long flowId = flowMap.get(flowNodeCount);
         // 校验流程是否匹配，如果没有匹配的流程，则抛出提示
         if (flowId == null) {
-            throw new BizException(BizStatus.LACK_OF_FLOW.getCode());
+            throw new BudgetException(BudgetErrorCode.LACK_OF_FLOW);
         }
         return flowId;
     }
@@ -796,10 +813,10 @@ public class BudgetProjectServiceImpl implements BudgetProjectService {
     /**
      * 判断当前用户是否有权限发起审批权限
      */
-    private boolean hasAccess2Approve(List<FlowPropVO> flowProps, Integer userId, Integer unitId) {
-        List<Long> flowRoleIds = flowRoleUserService.getFlowRoleIdByUserId(userId);
+    private boolean hasAccess2Approve(List<FlowNodePropVO> flowProps, Integer userId, Integer unitId) {
+        List<Long> flowRoleIds = roleUserApi.getRoleIdByUserId(userId);
         // 第一个节点属性
-        FlowPropVO firstNodeProp = flowProps.get(0);
+        FlowNodePropVO firstNodeProp = flowProps.get(0);
         // 判断是有默认用户
         // 如果设定了默认用户，且为当前登录用户，则有发起权限
         if (firstNodeProp.getUserId() != null) {
@@ -829,33 +846,33 @@ public class BudgetProjectServiceImpl implements BudgetProjectService {
     /**
      * 同步节点属性
      */
-    private void syncBudgetProjectFlow(List<FlowPropVO> flowProps, Integer projectId,
+    private void syncBudgetProjectFlow(List<FlowNodePropVO> flowProps, Integer projectId,
                                        Integer underUnitId, Integer userId, BigDecimal cost, Integer unitId) {
         // 暂存历史数据list
         List<BudgetProjectFlow> list = new ArrayList<>();
         // 用来存储同步节点的list
         List<BudgetProjectFlow> projectFlowList = new ArrayList<>();
         // 判断节点是否有保存属性
-        for (FlowPropVO flowPropVO : flowProps) {
+        for (FlowNodePropVO flowPropVO : flowProps) {
             if (flowPropVO.getIsJoin() == null || flowPropVO.getControlAccess() == null) {
-                throw new BizException(BizStatus.LACK_OF_NODE_PROP.getCode());
+                throw new BudgetException(BudgetErrorCode.LACK_OF_NODE_PROP);
             }
         }
         // 签报阀值/条件
-        for (FlowPropVO flowProp : flowProps) {
-            Integer amount = flowProp.getAmount();
-            if (amount != null) {
+        for (FlowNodePropVO flowProp : flowProps) {
+            if (flowProp.getAmount() != null) {
+                int amount = flowProp.getAmount().intValue();
                 Integer enableCond = flowProp.getEnableCond();
                 if (EnableCond.GREATER_THAN_OR_EQUAL.value().equals(enableCond) && cost.intValue() < amount) {
-                    throw new BizException(BizStatus.LACK_OF_NODE_PROP.getCode());
+                    throw new BudgetException(BudgetErrorCode.LACK_OF_NODE_PROP);
                 } else if (EnableCond.GREATER_THAN.value().equals(enableCond) && cost.intValue() <= amount) {
-                    throw new BizException(BizStatus.LACK_OF_NODE_PROP.getCode());
+                    throw new BudgetException(BudgetErrorCode.LACK_OF_NODE_PROP);
                 } else if (EnableCond.EQUAL_TO.value().equals(enableCond) && cost.intValue() != amount) {
-                    throw new BizException(BizStatus.LACK_OF_NODE_PROP.getCode());
+                    throw new BudgetException(BudgetErrorCode.LACK_OF_NODE_PROP);
                 } else if (EnableCond.LESS_THAN.value().equals(enableCond) && cost.intValue() >= amount) {
-                    throw new BizException(BizStatus.LACK_OF_NODE_PROP.getCode());
+                    throw new BudgetException(BudgetErrorCode.LACK_OF_NODE_PROP);
                 } else if (EnableCond.LESS_THAN_OR_EQUAL.value().equals(enableCond) && cost.intValue() > amount) {
-                    throw new BizException(BizStatus.LACK_OF_NODE_PROP.getCode());
+                    throw new BudgetException(BudgetErrorCode.LACK_OF_NODE_PROP);
                 }
             }
         }
@@ -878,7 +895,7 @@ public class BudgetProjectServiceImpl implements BudgetProjectService {
         budgetProjectFlowHistoryService.saveBudgetProjectFlowHistory(histories);
         // 所以需要先清空节点，再同步节点。
         budgetProjectMapper.deleteByProjectId(projectId);
-        for (FlowPropVO flowPropVO : flowProps) {
+        for (FlowNodePropVO flowPropVO : flowProps) {
             projectFlowList.add(BudgetProjectFlow.builder()
                     .flowNodeId(flowPropVO.getFlowNodeId())
                     .projectId(Long.valueOf(projectId))
