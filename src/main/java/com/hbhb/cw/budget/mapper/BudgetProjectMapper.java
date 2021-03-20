@@ -68,4 +68,8 @@ public interface BudgetProjectMapper extends BaseMapper<BudgetProject, Integer> 
     int updateBatchById(@Param("list") List<BudgetProject> list);
 
     List<BudgetProject> selectAll();
+
+    List<BudgetProjectResVO> selectListByProjectNum(@Param("projectNum") String projectNum);
+
+    int countListByProjectNum(@Param("projectNum") String projectNum);
 }
